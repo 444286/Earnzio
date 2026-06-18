@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Watch & Earn</title>
+
+<!-- Telegram WebApp SDK -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<!-- Adsgram SDK — আনকমেন্ট করুন Adsgram ব্যবহার করতে চাইলে -->
+<!-- <script src="https://sad.adsgram.ai/js/sad.min.js"></script> -->
+
+<!-- Monetag SDK — আপনার Monetag dashboard থেকে দেওয়া script tag এখানে বসান -->
+<!-- <script src="YOUR_MONETAG_SDK_SCRIPT_URL"></script> -->
+
+<style>
+:root{
+  --primary:#5B4FE9;
+  --primary-dark:#4A3FD0;
+  --primary-light:#7B6FF0;
+  --accent-gold:#FFB800;
+  --accent-gold-dark:#F59E00;
+  --bg:#F5F6FA;
+  --card:#FFFFFF;
+  --text-dark:#1A1A2E;
+  --text-gray:#8A8DA8;
+  --text-light:#B4B6CC;
+  --success:#22C55E;
+  --danger:#EF4444;
+  --border:#EDEEF5;
+  --radius-lg:18px;
+  --radius-md:14px;
+  --radius-sm:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text-dark);
+  overscroll-behavior:none;
+  user-select:none;
+}
+#app{
+  max-width:480px;
+  margin:0 auto;
+  min-height:100vh;
+  position:relative;
+  padding-bottom:78px;
+}
+
+/* ===== TOP BAR ===== */
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 18px 10px;
+  background:var(--bg);
+  position:sticky;
+  top:0;
+  z-index:50;
+}
+.topbar h1{font-size:18px;font-weight:700;}
+.topbar .icon-btn{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--card);
+  border:1px solid var(--border);
+  font-size:16px;
+  position:relative;
+}
+.topbar .icon-btn .dot{
+  position:absolute;top:8px;right:9px;
+  width:7px;height:7px;border-radius:50%;
+  background:var(--danger);
+  border:1.5px solid var(--card);
+}
+
+/* ===== PAGE WRAP ===== */
+.page{display:none;padding:6px 18px 18px;animation:fadeIn .25s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===== BALANCE CARD ===== */
+.balance-card{
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);
+  border-radius:var(--radius-lg);
+  padding:22px 22px 24px;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:18px;
+  box-shadow:0 12px 24px -8px rgba(91,79,233,.45);
+}
+.balance-card::after{
+  content:"";
+  position:absolute;
+  right:-30px;bottom:-40px;
+  width:160px;height:160px;
+  background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 70%);
+}
+.balance-card .label{font-size:13.5px;opacity:.85;font-weight:500;margin-bottom:10px;}
+.balance-row{display:flex;align-items:center;gap:8px;}
+.coin-icon-sm{
+  width:22px;height:22px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #FFD75E, var(--accent-gold-dark));
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:#8a5b00;
+  flex-shrink:0;
+}
+.balance-amount{font-size:32px;font-weight:800;letter-spacing:-.5px;}
+.balance-usd{font-size:13px;opacity:.8;margin-top:4px;margin-bottom:16px;}
+.withdraw-btn-sm{
+  background:rgba(255,255,255,.97);
+  color:var(--primary-dark);
+  border:none;
+  padding:10px 18px;
+  border-radius:11px;
+  font-size:14px;font-weight:700;
+  display:inline-flex;align-items:center;gap:7px;
+}
+
+/* ===== TASK CARDS ===== */
+.task-card{
+  background:var(--card);
+  border-radius:var(--radius-md);
+  padding:18px;
+  margin-bottom:14px;
+  border:1px solid var(--border);
+}
+.task-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.task-title{font-size:15.5px;font-weight:700;}
+.task-reward{
+  font-size:12px;font-weight:700;
+  padding:4px 10px;border-radius:20px;
+  display:flex;align-items:center;gap:4px;
+}
+.task-reward.green{background:#E7F9EF;color:#16A34A;}
+.task-reward.amber{background:#FFF4DC;color:#B7791F;}
+.task-reward.blue{background:#EAE8FD;color:var(--primary);}
+.task-sub{font-size:13px;color:var(--text-gray);margin-bottom:14px;}
+.btn{
+  width:100%;
+  padding:13px;
+  border-radius:12px;
+  border:none;
+  font-size:14.5px;
+  font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  cursor:pointer;
+}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-outline{background:#fff;color:var(--text-dark);border:1.5px solid var(--border);}
+.btn:disabled{opacity:.55;}
+.btn-primary:active,.btn-outline:active{transform:scale(.98);}
+
+/* ===== BOTTOM NAV ===== */
+.bottomnav{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  max-width:480px;
+  margin:0 auto;
+  background:var(--card);
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-around;
+  padding:9px 4px 11px;
+  z-index:100;
+}
+.navitem{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  font-size:11px;color:var(--text-gray);font-weight:600;
+  flex:1;
+}
+.navitem .nav-ico{font-size:19px;}
+.navitem.active{color:var(--primary);}
+
+/* ===== HEADER WITH BACK ===== */
+.page-header{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 0 18px;
+}
+.back-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--card);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+.page-header h2{font-size:17px;font-weight:700;}
+
+/* ===== WATCH AD PAGE ===== */
+.ad-box{
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
+  border-radius:var(--radius-lg);
+  height:200px;
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;
+  overflow:hidden;
+}
+.ad-box .ad-badge{
+  position:absolute;top:12px;right:12px;
+  background:rgba(0,0,0,.35);color:#fff;
+  font-size:11px;font-weight:700;
+  padding:4px 9px;border-radius:7px;
+}
+.play-circle{
+  width:64px;height:64px;border-radius:50%;
+  background:rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;color:#fff;
+}
+.ad-progressbar{
+  position:absolute;bottom:16px;left:16px;right:16px;
+  height:4px;background:rgba(255,255,255,.3);border-radius:4px;overflow:hidden;
+}
+.ad-progressbar .fill{
+  height:100%;background:#fff;width:0%;
+  transition:width .2s linear;
+}
+.chain-dots{
+  display:flex;justify-content:center;gap:8px;margin-bottom:18px;
+}
+.chain-dot{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;
+  background:var(--border);color:var(--text-gray);
+  border:2px solid transparent;
+}
+.chain-dot.done{background:var(--success);color:#fff;}
+.chain-dot.current{background:var(--primary);color:#fff;border-color:#cfcafa;}
+.info-card{
+  background:var(--card);
+  border-radius:var(--radius-md);
+  padding:18px;
+  border:1px solid var(--border);
+  margin-bottom:18px;
+}
+.info-card h3{font-size:15px;font-weight:700;margin-bottom:6px;}
+.reward-line{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:800;color:var(--accent-gold-dark);margin-bottom:14px;}
+.howit{font-size:13.5px;font-weight:700;color:var(--text-dark);margin-bottom:10px;}
+.step{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--text-gray);margin-bottom:9px;}
+.step .num{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--primary);color:#fff;
+  font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+}
+
+/* ===== WALLET PAGE ===== */
+.wallet-history{
+  background:var(--card);border-radius:var(--radius-md);
+  border:1px solid var(--border);overflow:hidden;
+}
+.hist-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+}
+.hist-row:last-child{border-bottom:none;}
+.hist-left{display:flex;align-items:center;gap:11px;}
+.hist-ico{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.hist-ico.in{background:#E7F9EF;color:#16A34A;}
+.hist-ico.out{background:#FDEAEA;color:#EF4444;}
+.hist-title{font-size:13.5px;font-weight:700;}
+.hist-date{font-size:11.5px;color:var(--text-gray);margin-top:2px;}
+.hist-amt{font-size:14px;font-weight:700;}
+.hist-amt.in{color:var(--success);}
+.hist-amt.out{color:var(--danger);}
+
+/* ===== WITHDRAW PAGE ===== */
+.method-list{background:var(--card);border-radius:var(--radius-md);border:1px solid var(--border);overflow:hidden;margin-bottom:18px;}
+.method-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:15px 16px;border-bottom:1px solid var(--border);
+}
+.method-row:last-child{border-bottom:none;}
+.method-row.selected{background:#F4F2FF;}
+.method-left{display:flex;align-items:center;gap:12px;font-size:14.5px;font-weight:600;}
+.method-ico{
+  width:34px;height:34px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;font-weight:800;
+}
+.field-label{font-size:13px;font-weight:700;color:var(--text-gray);margin:14px 0 8px;}
+.input-field{
+  width:100%;padding:14px 16px;
+  border-radius:12px;border:1.5px solid var(--border);
+  font-size:15px;background:var(--card);
+  font-weight:600;
+}
+.hint{font-size:12px;color:var(--text-gray);margin-top:7px;}
+
+/* ===== REFERRALS PAGE ===== */
+.ref-banner{
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);
+  border-radius:var(--radius-lg);color:#fff;padding:20px;margin-bottom:18px;
+}
+.ref-banner h3{font-size:17px;font-weight:800;margin-bottom:6px;}
+.ref-banner .rwd{font-size:14px;font-weight:700;color:#FFE69E;margin-bottom:8px;}
+.ref-banner p{font-size:13px;opacity:.9;}
+.code-box{
+  display:flex;gap:10px;align-items:center;
+  background:var(--card);border:1.5px dashed var(--primary);
+  border-radius:12px;padding:14px 16px;margin-bottom:18px;
+}
+.code-box .code{font-size:16px;font-weight:800;color:var(--primary);letter-spacing:1px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.copy-chip{
+  background:var(--primary);color:#fff;font-size:12.5px;font-weight:700;
+  padding:8px 14px;border-radius:8px;flex-shrink:0;
+}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;}
+.stat-box .lbl{font-size:12.5px;color:var(--text-gray);font-weight:600;margin-bottom:8px;}
+.stat-box .val{font-size:21px;font-weight:800;display:flex;align-items:center;gap:6px;}
+
+/* ===== PROFILE PAGE ===== */
+.profile-head{display:flex;flex-direction:column;align-items:center;padding:14px 0 22px;}
+.avatar{
+  width:78px;height:78px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:800;color:#fff;margin-bottom:12px;
+}
+.profile-head h2{font-size:18px;font-weight:800;}
+.profile-head p{font-size:13px;color:var(--text-gray);margin-top:3px;}
+.menu-list{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
+.menu-row{
+  display:flex;align-items:center;gap:13px;
+  padding:15px 16px;border-bottom:1px solid var(--border);font-size:14.5px;font-weight:600;
+}
+.menu-row:last-child{border-bottom:none;}
+.menu-row .mico{font-size:17px;width:22px;text-align:center;}
+.menu-row .chev{margin-left:auto;color:var(--text-light);}
+
+/* ===== TOAST / MODAL ===== */
+.overlay{
+  position:fixed;inset:0;background:rgba(20,18,40,.55);
+  display:none;align-items:center;justify-content:center;z-index:200;padding:20px;
+}
+.overlay.show{display:flex;}
+.modal{
+  background:var(--card);border-radius:20px;
+  padding:30px 26px 26px;text-align:center;max-width:340px;width:100%;
+  position:relative;animation:popIn .25s ease;
+}
+@keyframes popIn{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+.modal .check-circle{
+  width:66px;height:66px;border-radius:50%;
+  background:var(--success);color:#fff;font-size:30px;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
+}
+.modal h3{font-size:18px;font-weight:800;margin-bottom:6px;}
+.modal .sub{font-size:13.5px;color:var(--text-gray);margin-bottom:6px;}
+.modal .gain{font-size:21px;font-weight:800;color:var(--accent-gold-dark);margin:10px 0;display:flex;align-items:center;justify-content:center;gap:6px;}
+.modal .note{font-size:12.5px;color:var(--text-gray);margin-bottom:20px;}
+.modal .close-x{position:absolute;top:14px;right:16px;font-size:18px;color:var(--text-light);}
+
+.toast{
+  position:fixed;bottom:96px;left:50%;transform:translateX(-50%);
+  background:#1A1A2E;color:#fff;font-size:13.5px;font-weight:600;
+  padding:11px 20px;border-radius:30px;z-index:300;
+  opacity:0;transition:opacity .25s;pointer-events:none;
+  max-width:90%;text-align:center;
+}
+.toast.show{opacity:1;}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--text-gray);}
+.empty-state .ico{font-size:38px;margin-bottom:10px;}
+.empty-state p{font-size:13.5px;}
+
+.loading-screen{
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;
+}
+.loading-screen .spinner{
+  width:42px;height:42px;border-radius:50%;
+  border:4px solid var(--border);border-top-color:var(--primary);
+  animation:spin .8s linear infinite;margin-bottom:14px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-screen p{font-size:13.5px;color:var(--text-gray);font-weight:600;}
+</style>
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="spinner"></div>
+  <p>Loading...</p>
+</div>
+
+<div id="app">
+
+  <!-- ============ TOP BAR ============ -->
+  <div class="topbar">
+    <div class="icon-btn" onclick="showPage('profile')">☰</div>
+    <h1 id="pageTitle">Home</h1>
+    <div class="icon-btn">🔔<span class="dot"></span></div>
+  </div>
+
+  <!-- ============ HOME PAGE ============ -->
+  <div class="page active" id="page-home">
+    <div class="balance-card">
+      <div class="label">Your Balance</div>
+      <div class="balance-row">
+        <div class="coin-icon-sm">$</div>
+        <div class="balance-amount" id="homeBalance">0</div>
+      </div>
+      <div class="balance-usd" id="homeBalanceUsd">≈ $0.00</div>
+      <button class="withdraw-btn-sm" onclick="showPage('withdraw')">💸 Withdraw</button>
+    </div>
+
+    <div class="task-card">
+      <div class="task-head">
+        <div class="task-title">Watch Ads & Earn</div>
+        <div class="task-reward green" id="perAdRewardChip">+50 Coins</div>
+      </div>
+      <div class="task-sub">Watch a short ad and earn coins</div>
+      <button class="btn btn-primary" onclick="showPage('watchads')">▶ Watch Ad</button>
+    </div>
+
+    <div class="task-card">
+      <div class="task-head">
+        <div class="task-title">Daily Bonus</div>
+        <div class="task-reward amber" id="dailyBonusChip">+100 Coins</div>
+      </div>
+      <div class="task-sub" id="dailyBonusSub">Claim your daily bonus</div>
+      <button class="btn btn-outline" id="dailyBonusBtn" onclick="claimDailyBonus()">🎁 Claim Bonus</button>
+    </div>
+
+    <div class="task-card">
+      <div class="task-head">
+        <div class="task-title">Invite & Earn</div>
+        <div class="task-reward blue" id="referralRewardChip">+500 Coins</div>
+      </div>
+      <div class="task-sub">Invite friends and earn more</div>
+      <button class="btn btn-outline" onclick="showPage('referrals')">👥 Invite Now</button>
+    </div>
+  </div>
+
+  <!-- ============ WATCH AD PAGE ============ -->
+  <div class="page" id="page-watchads">
+    <div class="page-header">
+      <div class="back-btn" onclick="showPage('home')">←</div>
+      <h2>Watch Ads</h2>
+    </div>
+
+    <div class="chain-dots" id="chainDots"></div>
+
+    <div class="ad-box" id="adBox">
+      <span class="ad-badge" id="adBadge">Ad <span id="adTimer">15s</span></span>
+      <div class="play-circle" id="playCircle">▶</div>
+      <div class="ad-progressbar"><div class="fill" id="adFill"></div></div>
+    </div>
+
+    <div class="info-card" id="rewardInfoCard">
+      <h3>Watch this ad to earn coins</h3>
+      <div class="reward-line"><span class="coin-icon-sm" style="width:18px;height:18px;font-size:10px;">$</span><span id="thisAdReward">+50 Coins</span></div>
+    </div>
+
+    <div class="info-card">
+      <div class="howit">How it works?</div>
+      <div class="step"><span class="num">1</span><span>Click on Watch Ad</span></div>
+      <div class="step"><span class="num">2</span><span>Watch the full ad chain (<span id="chainLenText">5</span> ads)</span></div>
+      <div class="step"><span class="num">3</span><span>Get coins instantly after the last ad</span></div>
+    </div>
+
+    <button class="btn btn-primary" id="watchAdMainBtn" onclick="startAdChain()">▶ Watch Ad</button>
+  </div>
+
+  <!-- ============ WITHDRAW PAGE ============ -->
+  <div class="page" id="page-withdraw">
+    <div class="page-header">
+      <div class="back-btn" onclick="showPage('home')">←</div>
+      <h2>Withdraw</h2>
+    </div>
+
+    <div class="task-card" style="margin-bottom:18px;">
+      <div class="task-sub" style="margin-bottom:8px;">Your Balance</div>
+      <div class="balance-row">
+        <div class="coin-icon-sm">$</div>
+        <div class="balance-amount" style="font-size:24px;" id="withdrawBalance">0</div>
+      </div>
+      <div class="balance-usd" id="withdrawBalanceUsd">≈ $0.00</div>
+    </div>
+
+    <div class="field-label" style="margin-top:0;">Select Withdraw Method</div>
+    <div class="method-list" id="methodList">
+      <div class="method-row" data-method="Bkash" onclick="selectMethod(this,'Bkash')">
+        <div class="method-left"><div class="method-ico" style="background:#E2136E;">b</div>Bkash</div>
+        <span class="chev">›</span>
+      </div>
+      <div class="method-row" data-method="Nagad" onclick="selectMethod(this,'Nagad')">
+        <div class="method-left"><div class="method-ico" style="background:#EC1D24;">N</div>Nagad</div>
+        <span class="chev">›</span>
+      </div>
+      <div class="method-row" data-method="Rocket" onclick="selectMethod(this,'Rocket')">
+        <div class="method-left"><div class="method-ico" style="background:#8C3B9F;">R</div>Rocket</div>
+        <span class="chev">›</span>
+      </div>
+    </div>
+
+    <div class="field-label">Wallet Number</div>
+    <input type="tel" class="input-field" id="walletNumberInput" placeholder="e.g. 01XXXXXXXXX">
+
+    <div class="field-label">Enter Amount (Coins)</div>
+    <input type="number" class="input-field" id="withdrawAmountInput" placeholder="1000">
+    <div class="hint" id="minWithdrawHint">Minimum withdraw: 1000 Coins</div>
+
+    <div style="height:18px;"></div>
+    <button class="btn btn-primary" onclick="submitWithdraw()">Withdraw Now</button>
+  </div>
+
+  <!-- ============ REFERRALS PAGE ============ -->
+  <div class="page" id="page-referrals">
+    <div class="page-header">
+      <div class="back-btn" onclick="showPage('home')">←</div>
+      <h2>Referrals</h2>
+    </div>
+
+    <div class="ref-banner">
+      <h3>Invite & Earn</h3>
+      <div class="rwd" id="refBonusText">+500 Coins</div>
+      <p>Invite friends and earn coins for each friend who joins using your link.</p>
+    </div>
+
+    <div class="field-label" style="margin-top:0;">Your Referral Link</div>
+    <div class="code-box">
+      <div class="code" id="refCode">...</div>
+      <div class="copy-chip" onclick="copyReferral()">Copy</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="lbl">Total Referrals</div>
+        <div class="val" id="totalReferrals">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="lbl">Total Earned</div>
+        <div class="val"><span class="coin-icon-sm" style="width:16px;height:16px;font-size:9px;">$</span><span id="referralEarned">0</span></div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="shareReferral()">↗ Invite Now</button>
+  </div>
+
+  <!-- ============ WALLET PAGE ============ -->
+  <div class="page" id="page-wallet">
+    <div class="page-header">
+      <div class="back-btn" onclick="showPage('home')">←</div>
+      <h2>Wallet</h2>
+    </div>
+
+    <div class="balance-card">
+      <div class="label">Your Balance</div>
+      <div class="balance-row">
+        <div class="coin-icon-sm">$</div>
+        <div class="balance-amount" id="walletBalance">0</div>
+      </div>
+      <div class="balance-usd" id="walletBalanceUsd">≈ $0.00</div>
+    </div>
+
+    <div class="field-label" style="margin-top:0;">Recent Activity</div>
+    <div class="wallet-history" id="walletHistory">
+      <div class="empty-state"><div class="ico">📭</div><p>No transactions yet</p></div>
+    </div>
+  </div>
+
+  <!-- ============ PROFILE PAGE ============ -->
+  <div class="page" id="page-profile">
+    <div class="profile-head">
+      <div class="avatar" id="avatarLetter">U</div>
+      <h2 id="profileName">User</h2>
+      <p id="profileId">ID: ...</p>
+    </div>
+
+    <div class="menu-list">
+      <div class="menu-row" onclick="showPage('wallet')"><span class="mico">💰</span>Wallet<span class="chev">›</span></div>
+      <div class="menu-row" onclick="showPage('referrals')"><span class="mico">👥</span>Referrals<span class="chev">›</span></div>
+      <div class="menu-row" onclick="showPage('withdraw')"><span class="mico">💸</span>Withdraw History<span class="chev">›</span></div>
+      <div class="menu-row" onclick="window.open('https://t.me/your_support_username','_blank')"><span class="mico">💬</span>Support<span class="chev">›</span></div>
+      <div class="menu-row" onclick="window.open('https://t.me/your_channel','_blank')"><span class="mico">📢</span>Join Channel<span class="chev">›</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ BOTTOM NAV ============ -->
+<div class="bottomnav" id="bottomnav">
+  <div class="navitem active" data-page="home" onclick="showPage('home')"><span class="nav-ico">🏠</span>Home</div>
+  <div class="navitem" data-page="watchads" onclick="showPage('watchads')"><span class="nav-ico">▶</span>Ads</div>
+  <div class="navitem" data-page="wallet" onclick="showPage('wallet')"><span class="nav-ico">💼</span>Wallet</div>
+  <div class="navitem" data-page="referrals" onclick="showPage('referrals')"><span class="nav-ico">👥</span>Referrals</div>
+  <div class="navitem" data-page="profile" onclick="showPage('profile')"><span class="nav-ico">👤</span>Profile</div>
+</div>
+
+<!-- ============ SUCCESS MODAL ============ -->
+<div class="overlay" id="successOverlay">
+  <div class="modal">
+    <div class="close-x" onclick="closeModal()">✕</div>
+    <div class="check-circle">✓</div>
+    <h3>Congratulations!</h3>
+    <div class="sub">You have earned</div>
+    <div class="gain"><span class="coin-icon-sm">$</span><span id="modalGainAmount">+50 Coins</span></div>
+    <div class="note">Keep watching ads and earn more.</div>
+    <button class="btn btn-primary" onclick="closeModal()">Ok</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===================================================================
+// FIREBASE CONFIG — এখানে আপনার Firebase প্রজেক্টের config বসান
+// Firebase Console > Project Settings > General > Your apps > SDK config
+// ===================================================================
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+
+// =====================================================================
+// WATCH & EARN — MAIN APP LOGIC
+// =====================================================================
+
+// ---------- Telegram WebApp Init ----------
+const tg = window.Telegram?.WebApp;
+if (tg) {
+  tg.ready();
+  tg.expand();
+}
+
+// Get Telegram user info (fallback to test user if opened outside Telegram, for local testing)
+const tgUser = tg?.initDataUnsafe?.user || { id: 999999999, first_name: "Test", username: "test_user" };
+const USER_ID = String(tgUser.id);
+const USER_NAME = tgUser.first_name || tgUser.username || "User";
+
+// Referral param (if user opened via t.me/bot/app?startapp=REF_CODE)
+const startParam = tg?.initDataUnsafe?.start_param || null;
+
+// ---------- Global State ----------
+let userData = {
+  balance: 0,
+  totalEarned: 0,
+  referralCount: 0,
+  referralEarned: 0,
+  lastDailyBonus: 0,
+  history: {}
+};
+
+let settings = {
+  perAdReward: 50,
+  adChainLength: 5,
+  dailyBonusReward: 100,
+  referralBonusReward: 500,
+  minWithdraw: 1000,
+  coinToUsdRate: 0.0001, // 1 coin = $0.0001  => 10000 coins = $1
+  adNetworks: {
+    adsterra: { enabled: true, smartlinkUrl: "https://example.com/adsterra-smartlink" },
+    adsgram: { enabled: true, blockId: "YOUR_ADSGRAM_BLOCK_ID" },
+    monetag: { enabled: true, zoneId: "YOUR_MONETAG_ZONE_ID" }
+  }
+};
+
+let adChainState = {
+  running: false,
+  currentStep: 0,
+  totalSteps: 5
+};
+
+// ---------- DOM Ready ----------
+document.addEventListener("DOMContentLoaded", () => {
+  initUser();
+});
+
+// =====================================================================
+// FIREBASE: INIT USER + LOAD SETTINGS
+// =====================================================================
+function initUser() {
+  // 1. Load global settings first
+  db.ref("settings").once("value").then(snap => {
+    if (snap.exists()) {
+      const s = snap.val();
+      settings = { ...settings, ...s, adNetworks: { ...settings.adNetworks, ...(s.adNetworks || {}) } };
+    }
+    adChainState.totalSteps = settings.adChainLength;
+    applySettingsToUI();
+    loadOrCreateUser();
+  }).catch(() => {
+    loadOrCreateUser();
+  });
+}
+
+function loadOrCreateUser() {
+  const userRef = db.ref("users/" + USER_ID);
+
+  userRef.once("value").then(snap => {
+    if (snap.exists()) {
+      userData = { ...userData, ...snap.val() };
+    } else {
+      // New user — create record
+      userData.balance = 0;
+      userData.name = USER_NAME;
+      userData.username = tgUser.username || "";
+      userData.joinedAt = Date.now();
+      userData.referralCode = USER_ID; // referral code = telegram id
+
+      userRef.set(userData);
+
+      // Handle referral credit if user came from a referral link
+      if (startParam && startParam !== USER_ID) {
+        creditReferral(startParam);
+      }
+    }
+
+    // Live listener — keep UI synced with DB in real time
+    userRef.on("value", snap => {
+      if (snap.exists()) {
+        userData = { ...userData, ...snap.val() };
+        renderUserData();
+      }
+    });
+
+    document.getElementById("loadingScreen").style.display = "none";
+  }).catch(err => {
+    console.error("Firebase load error:", err);
+    document.getElementById("loadingScreen").style.display = "none";
+    showToast("Connection error. Check Firebase config.");
+  });
+}
+
+function creditReferral(referrerId) {
+  const referrerRef = db.ref("users/" + referrerId);
+  referrerRef.once("value").then(snap => {
+    if (snap.exists()) {
+      const refBonus = settings.referralBonusReward;
+      referrerRef.update({
+        balance: (snap.val().balance || 0) + refBonus,
+        referralCount: (snap.val().referralCount || 0) + 1,
+        referralEarned: (snap.val().referralEarned || 0) + refBonus
+      });
+      addHistory(referrerId, "Referral Bonus", refBonus, "in");
+    }
+  });
+}
+
+// =====================================================================
+// RENDER UI FROM userData / settings
+// =====================================================================
+function applySettingsToUI() {
+  document.getElementById("perAdRewardChip").textContent = `+${settings.perAdReward} Coins`;
+  document.getElementById("thisAdReward").textContent = `+${settings.perAdReward} Coins`;
+  document.getElementById("dailyBonusChip").textContent = `+${settings.dailyBonusReward} Coins`;
+  document.getElementById("referralRewardChip").textContent = `+${settings.referralBonusReward} Coins`;
+  document.getElementById("refBonusText").textContent = `+${settings.referralBonusReward} Coins per friend`;
+  document.getElementById("minWithdrawHint").textContent = `Minimum withdraw: ${settings.minWithdraw} Coins`;
+  document.getElementById("chainLenText").textContent = settings.adChainLength;
+  buildChainDots();
+}
+
+function renderUserData() {
+  const bal = userData.balance || 0;
+  const usd = (bal * settings.coinToUsdRate).toFixed(2);
+
+  document.getElementById("homeBalance").textContent = formatNum(bal);
+  document.getElementById("homeBalanceUsd").textContent = `≈ $${usd}`;
+  document.getElementById("withdrawBalance").textContent = formatNum(bal);
+  document.getElementById("withdrawBalanceUsd").textContent = `≈ $${usd}`;
+  document.getElementById("walletBalance").textContent = formatNum(bal);
+  document.getElementById("walletBalanceUsd").textContent = `≈ $${usd}`;
+
+  document.getElementById("totalReferrals").textContent = userData.referralCount || 0;
+  document.getElementById("referralEarned").textContent = formatNum(userData.referralEarned || 0);
+  document.getElementById("refCode").textContent = userData.referralCode || USER_ID;
+
+  document.getElementById("profileName").textContent = userData.name || USER_NAME;
+  document.getElementById("profileId").textContent = "ID: " + USER_ID;
+  document.getElementById("avatarLetter").textContent = (userData.name || USER_NAME).charAt(0).toUpperCase();
+
+  renderDailyBonusState();
+  renderWalletHistory();
+}
+
+function formatNum(n) {
+  return Number(n || 0).toLocaleString("en-US");
+}
+
+// =====================================================================
+// NAVIGATION
+// =====================================================================
+function showPage(pageName) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + pageName).classList.add("active");
+
+  document.querySelectorAll(".navitem").forEach(n => n.classList.remove("active"));
+  const navItem = document.querySelector(`.navitem[data-page="${pageName}"]`);
+  if (navItem) navItem.classList.add("active");
+
+  const titles = { home: "Home", watchads: "Watch Ads", withdraw: "Withdraw", referrals: "Referrals", wallet: "Wallet", profile: "Profile" };
+  document.getElementById("pageTitle").textContent = titles[pageName] || "Home";
+
+  // Reset ad chain UI if leaving watchads mid-way without completing (state stays, but visuals reset on re-entry only if not running)
+  if (pageName === "watchads" && !adChainState.running) {
+    resetAdChainUI();
+  }
+}
+
+// =====================================================================
+// DAILY BONUS
+// =====================================================================
+function renderDailyBonusState() {
+  const last = userData.lastDailyBonus || 0;
+  const now = Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+  const btn = document.getElementById("dailyBonusBtn");
+  const sub = document.getElementById("dailyBonusSub");
+
+  if (now - last < oneDay) {
+    const remainMs = oneDay - (now - last);
+    const hrs = Math.floor(remainMs / 3600000);
+    const mins = Math.floor((remainMs % 3600000) / 60000);
+    btn.disabled = true;
+    btn.textContent = "🎁 Already Claimed";
+    sub.textContent = `Come back in ${hrs}h ${mins}m`;
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = "🎁 Claim Bonus";
+    sub.textContent = "Claim your daily bonus";
+  }
+}
+
+function claimDailyBonus() {
+  const last = userData.lastDailyBonus || 0;
+  const now = Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  if (now - last < oneDay) {
+    showToast("Already claimed. Come back later!");
+    return;
+  }
+
+  const bonus = settings.dailyBonusReward;
+  const newBalance = (userData.balance || 0) + bonus;
+
+  db.ref("users/" + USER_ID).update({
+    balance: newBalance,
+    lastDailyBonus: now
+  }).then(() => {
+    addHistory(USER_ID, "Daily Bonus", bonus, "in");
+    openSuccessModal(bonus);
+  });
+}
+
+// =====================================================================
+// WATCH AD CHAIN LOGIC
+// Rotates between Adsterra Smartlink, Adsgram Interstitial, Monetag.
+// Runs N ads in sequence (settings.adChainLength), one after another.
+// Balance is credited only after the FULL chain completes.
+// =====================================================================
+
+function buildChainDots() {
+  const wrap = document.getElementById("chainDots");
+  wrap.innerHTML = "";
+  for (let i = 1; i <= settings.adChainLength; i++) {
+    const dot = document.createElement("div");
+    dot.className = "chain-dot";
+    dot.id = "dot-" + i;
+    dot.textContent = i;
+    wrap.appendChild(dot);
+  }
+}
+
+function resetAdChainUI() {
+  adChainState.currentStep = 0;
+  document.querySelectorAll(".chain-dot").forEach(d => {
+    d.classList.remove("done", "current");
+  });
+  document.getElementById("watchAdMainBtn").disabled = false;
+  document.getElementById("watchAdMainBtn").innerHTML = "▶ Watch Ad";
+  document.getElementById("adFill").style.width = "0%";
+  document.getElementById("playCircle").style.display = "flex";
+}
+
+function startAdChain() {
+  if (adChainState.running) return;
+  adChainState.running = true;
+  adChainState.currentStep = 0;
+  adChainState.totalSteps = settings.adChainLength;
+
+  document.getElementById("watchAdMainBtn").disabled = true;
+  document.getElementById("watchAdMainBtn").innerHTML = "⏳ Watching...";
+
+  runNextAdInChain();
+}
+
+function runNextAdInChain() {
+  adChainState.currentStep++;
+  const step = adChainState.currentStep;
+
+  // update dots
+  for (let i = 1; i <= adChainState.totalSteps; i++) {
+    const dot = document.getElementById("dot-" + i);
+    if (!dot) continue;
+    dot.classList.remove("current", "done");
+    if (i < step) dot.classList.add("done");
+    if (i === step) dot.classList.add("current");
+  }
+
+  if (step > adChainState.totalSteps) {
+    finishAdChain();
+    return;
+  }
+
+  // Pick ad network in rotation: adsterra -> adsgram -> monetag -> repeat
+  const networkOrder = getEnabledNetworkOrder();
+  const network = networkOrder[(step - 1) % networkOrder.length];
+
+  playAdFromNetwork(network, step, () => {
+    // on this ad's completion, move to next
+    runNextAdInChain();
+  });
+}
+
+function getEnabledNetworkOrder() {
+  const order = [];
+  if (settings.adNetworks.adsterra?.enabled) order.push("adsterra");
+  if (settings.adNetworks.adsgram?.enabled) order.push("adsgram");
+  if (settings.adNetworks.monetag?.enabled) order.push("monetag");
+  return order.length ? order : ["adsterra"]; // fallback
+}
+
+// ---------- Plays one ad of the given network, then calls onComplete() ----------
+function playAdFromNetwork(network, stepNumber, onComplete) {
+  document.getElementById("playCircle").style.display = "none";
+  const fill = document.getElementById("adFill");
+  const badge = document.getElementById("adBadge");
+  fill.style.width = "0%";
+
+  if (network === "adsgram") {
+    // Adsgram Interstitial SDK call
+    // Requires the Adsgram SDK tag added in the page head section (see top of file)
+    try {
+      if (window.Adsgram) {
+        const AdController = window.Adsgram.init({ blockId: settings.adNetworks.adsgram.blockId });
+        badge.innerHTML = `Adsgram Ad`;
+        simulateProgressBar(fill, 3000);
+        AdController.show().then(() => {
+          onComplete();
+        }).catch(() => {
+          // user closed early or ad failed — still proceed in demo mode, or you can block reward here
+          onComplete();
+        });
+        return;
+      }
+    } catch (e) { console.warn("Adsgram not loaded, falling back to demo", e); }
+  }
+
+  if (network === "monetag") {
+    // Monetag SDK call (In-App Interstitial), e.g. window.show_9999999()
+    // Add Monetag's script tag in index.html and replace show_XXXXXXX with your function name
+    try {
+      const monetagFn = "show_" + (settings.adNetworks.monetag.zoneId || "");
+      if (typeof window[monetagFn] === "function") {
+        badge.innerHTML = `Monetag Ad`;
+        simulateProgressBar(fill, 3000);
+        window[monetagFn]().then(() => {
+          onComplete();
+        }).catch(() => onComplete());
+        return;
+      }
+    } catch (e) { console.warn("Monetag not loaded, falling back to demo", e); }
+  }
+
+  if (network === "adsterra") {
+    // Adsterra Smartlink — typically opened as a new tab/window since it's a redirect-based ad,
+    // not an in-page interstitial SDK. We open it, then continue the chain after a short watch timer.
+    badge.innerHTML = `Adsterra`;
+    try {
+      if (settings.adNetworks.adsterra.smartlinkUrl) {
+        window.open(settings.adNetworks.adsterra.smartlinkUrl, "_blank");
+      }
+    } catch (e) { console.warn("Adsterra open failed", e); }
+    simulateProgressBar(fill, 4000, () => {
+      onComplete();
+    });
+    return;
+  }
+
+  // ---- DEMO fallback ad (used if no SDK detected — keeps chain functional for testing) ----
+  badge.innerHTML = `Ad ${stepNumber}`;
+  simulateProgressBar(fill, 3000, () => {
+    onComplete();
+  });
+}
+
+function simulateProgressBar(fillEl, durationMs, callback) {
+  let start = Date.now();
+  function tick() {
+    const elapsed = Date.now() - start;
+    const pct = Math.min(100, (elapsed / durationMs) * 100);
+    fillEl.style.width = pct + "%";
+    if (pct < 100) {
+      requestAnimationFrame(tick);
+    } else if (callback) {
+      callback();
+    }
+  }
+  tick();
+}
+
+function finishAdChain() {
+  adChainState.running = false;
+  const reward = settings.perAdReward * settings.adChainLength;
+  const newBalance = (userData.balance || 0) + reward;
+
+  db.ref("users/" + USER_ID).update({
+    balance: newBalance
+  }).then(() => {
+    addHistory(USER_ID, `Watched ${settings.adChainLength} Ads`, reward, "in");
+    resetAdChainUI();
+    openSuccessModal(reward);
+  });
+}
+
+// =====================================================================
+// WITHDRAW
+// =====================================================================
+let selectedMethod = null;
+
+function selectMethod(el, method) {
+  document.querySelectorAll(".method-row").forEach(r => r.classList.remove("selected"));
+  el.classList.add("selected");
+  selectedMethod = method;
+}
+
+function submitWithdraw() {
+  const amount = parseInt(document.getElementById("withdrawAmountInput").value, 10);
+  const number = document.getElementById("walletNumberInput").value.trim();
+
+  if (!selectedMethod) { showToast("Please select a withdraw method"); return; }
+  if (!number || number.length < 6) { showToast("Please enter a valid wallet number"); return; }
+  if (!amount || amount < settings.minWithdraw) { showToast(`Minimum withdraw is ${settings.minWithdraw} coins`); return; }
+  if (amount > (userData.balance || 0)) { showToast("Insufficient balance"); return; }
+
+  const newBalance = (userData.balance || 0) - amount;
+  const withdrawId = db.ref("withdrawRequests").push().key;
+
+  const requestData = {
+    userId: USER_ID,
+    userName: userData.name || USER_NAME,
+    method: selectedMethod,
+    number: number,
+    amount: amount,
+    status: "pending",
+    requestedAt: Date.now()
+  };
+
+  db.ref("withdrawRequests/" + withdrawId).set(requestData).then(() => {
+    return db.ref("users/" + USER_ID).update({ balance: newBalance });
+  }).then(() => {
+    addHistory(USER_ID, `Withdraw via ${selectedMethod}`, amount, "out");
+    showToast("Withdraw request submitted! Pending approval.");
+    document.getElementById("withdrawAmountInput").value = "";
+    document.getElementById("walletNumberInput").value = "";
+    document.querySelectorAll(".method-row").forEach(r => r.classList.remove("selected"));
+    selectedMethod = null;
+    showPage("home");
+  }).catch(err => {
+    console.error(err);
+    showToast("Something went wrong. Try again.");
+  });
+}
+
+// =====================================================================
+// REFERRALS
+// =====================================================================
+function copyReferral() {
+  const code = userData.referralCode || USER_ID;
+  const link = `https://t.me/YOUR_BOT_USERNAME/YOUR_APP_NAME?startapp=${code}`;
+  navigator.clipboard?.writeText(link).then(() => {
+    showToast("Referral link copied!");
+  }).catch(() => {
+    showToast("Code: " + code);
+  });
+}
+
+function shareReferral() {
+  const code = userData.referralCode || USER_ID;
+  const link = `https://t.me/YOUR_BOT_USERNAME/YOUR_APP_NAME?startapp=${code}`;
+  const text = "Join this app and start earning coins! 🎉";
+  if (tg) {
+    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`);
+  } else {
+    navigator.clipboard?.writeText(link);
+    showToast("Referral link copied!");
+  }
+}
+
+// =====================================================================
+// WALLET HISTORY
+// =====================================================================
+function addHistory(uid, title, amount, type) {
+  const histRef = db.ref("users/" + uid + "/history").push();
+  histRef.set({
+    title: title,
+    amount: amount,
+    type: type, // "in" or "out"
+    time: Date.now()
+  });
+}
+
+function renderWalletHistory() {
+  const wrap = document.getElementById("walletHistory");
+  const history = userData.history || {};
+  const entries = Object.values(history).sort((a, b) => b.time - a.time).slice(0, 30);
+
+  if (!entries.length) {
+    wrap.innerHTML = `<div class="empty-state"><div class="ico">📭</div><p>No transactions yet</p></div>`;
+    return;
+  }
+
+  wrap.innerHTML = entries.map(e => {
+    const date = new Date(e.time).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const icon = e.type === "in" ? "💰" : "💸";
+    const sign = e.type === "in" ? "+" : "-";
+    return `
+      <div class="hist-row">
+        <div class="hist-left">
+          <div class="hist-ico ${e.type}">${icon}</div>
+          <div>
+            <div class="hist-title">${e.title}</div>
+            <div class="hist-date">${date}</div>
+          </div>
+        </div>
+        <div class="hist-amt ${e.type}">${sign}${formatNum(e.amount)}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+// =====================================================================
+// MODAL + TOAST HELPERS
+// =====================================================================
+function openSuccessModal(amount) {
+  document.getElementById("modalGainAmount").textContent = `+${formatNum(amount)} Coins`;
+  document.getElementById("successOverlay").classList.add("show");
+  if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+}
+
+function closeModal() {
+  document.getElementById("successOverlay").classList.remove("show");
+}
+
+let toastTimer = null;
+function showToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2500);
+}
+
+</script>
+</body>
+</html>
