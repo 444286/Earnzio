@@ -1282,25 +1282,40 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
   }
 
   // ─────────────── ADSTERRA ───────────────
-  if (network === "adsterra" && creds.adsterra?.active && creds.adsterra?.link) {
-    setAdLoadingText("Ad দেখুন, তারপর Continue চাপুন");
-    try {
-      if (tg && typeof tg.openLink === "function") {
-        tg.openLink(creds.adsterra.link);
-      } else {
-        window.open(creds.adsterra.link, "_blank");
-      }
-    } catch(e) {
-      console.warn("Adsterra open error:", e);
+  // ─────────────── ADSTERRA ───────────────
+if (network === "adsterra" && creds.adsterra?.active && creds.adsterra?.link) {
+  
+  // Last ad হলে link open করে সরাসরি finish — Continue button নেই
+  const isLastAd = adChainState.currentStep >= adChainState.totalSteps;
+
+  try {
+    if (tg && typeof tg.openLink === "function") {
+      tg.openLink(creds.adsterra.link);
+    } else {
+      window.open(creds.adsterra.link, "_blank");
     }
-    // Fill bar quickly, then show Continue button
-    simulateProgressBar(fill, 1500);
+  } catch(e) {
+    console.warn("Adsterra open error:", e);
+  }
+
+  simulateProgressBar(fill, 1500);
+
+  if (isLastAd) {
+    // Last ad — auto finish, no Continue button
     setTimeout(() => {
       fill.style.width = "100%";
-      showContinueBtn(safeNext); // safeNext ensures chain continues exactly once
+      safeNext();
     }, 1500);
-    return;
+  } else {
+    // Middle ad — show Continue button
+    setTimeout(() => {
+      fill.style.width = "100%";
+      setAdLoadingText("Ad দেখুন, তারপর Continue চাপুন");
+      showContinueBtn(safeNext);
+    }, 1500);
   }
+  return;
+}
 
   // ─────────────── NOT CONFIGURED — AUTO SKIP ───────────────
   console.warn("Network not active/configured:", network, "— auto skipping");
