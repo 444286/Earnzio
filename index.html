@@ -387,6 +387,14 @@ body{
 .ad-progress-wrap{width:100%;height:5px;background:rgba(255,255,255,.2);border-radius:6px;overflow:hidden;}
 .ad-progress-fill{height:100%;background:#fff;width:0%;transition:width .15s linear;border-radius:6px;}
 .ad-hint{color:rgba(255,255,255,.55);font-size:12px;font-weight:500;text-align:center;}
+.ad-continue-btn{
+  background:#fff;color:var(--primary-dark);
+  border:none;padding:13px 32px;border-radius:14px;
+  font-size:15px;font-weight:800;cursor:pointer;
+  display:none;width:100%;
+  animation:popIn .2s ease;
+}
+.ad-continue-btn.show{display:block;}
 
 /* ===== TOAST ===== */
 .toast{
@@ -444,10 +452,11 @@ body{
 <!-- AD WATCHING OVERLAY — clean, no dots/steps visible -->
 <div class="ad-overlay" id="adOverlay">
   <div class="ad-watch-box">
-    <div class="ad-spinner"></div>
+    <div class="ad-spinner" id="adSpinner"></div>
     <div class="ad-loading-text" id="adLoadingText">Loading...</div>
     <div class="ad-progress-wrap"><div class="ad-progress-fill" id="adProgressFill"></div></div>
-    <div class="ad-hint">Please wait a moment</div>
+    <div class="ad-hint" id="adHint">Please wait a moment</div>
+    <button class="ad-continue-btn" id="adContinueBtn" onclick="adContinueClicked()">▶ Continue</button>
   </div>
 </div>
 
@@ -1063,6 +1072,7 @@ function showAdOverlay() {
 
 function hideAdOverlay() {
   document.getElementById("adOverlay").classList.remove("show");
+  hideContinueBtn();
 }
 
 function setAdLoadingText(text) {
@@ -1166,6 +1176,7 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
   const creds = settings.credentials || {};
 
   setAdLoadingText("Loading...");
+  hideContinueBtn();
 
   if (network === "adsgram" && creds.adsgram?.active) {
     try {
@@ -1174,10 +1185,17 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
         simulateProgressBar(fill, 4000);
         AdController.show()
           .then(() => onComplete())
-          .catch(() => onComplete());
+          .catch(() => {
+            // Adsgram failed — auto skip to next
+            console.warn("Adsgram failed, skipping");
+            onComplete();
+          });
         return;
       }
-    } catch(e) { console.warn("Adsgram fallback", e); }
+    } catch(e) {
+      console.warn("Adsgram error, skipping:", e);
+      // fall through to auto-skip
+    }
   }
 
   if (network === "monetag" && creds.monetag?.active) {
@@ -1187,24 +1205,68 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
         simulateProgressBar(fill, 4000);
         window[fn]()
           .then(() => onComplete())
-          .catch(() => onComplete());
+          .catch(() => {
+            console.warn("Monetag failed, skipping");
+            onComplete();
+          });
         return;
       }
-    } catch(e) { console.warn("Monetag fallback", e); }
+    } catch(e) {
+      console.warn("Monetag error, skipping:", e);
+    }
   }
 
-  if (network === "adsterra" && creds.adsterra?.active) {
+  if (network === "adsterra" && creds.adsterra?.active && creds.adsterra.link) {
+    // Open adsterra link, then show Continue button when user comes back
     try {
-      if (creds.adsterra.link) {
+      if (tg) {
+        tg.openLink(creds.adsterra.link);
+      } else {
         window.open(creds.adsterra.link, "_blank");
       }
-    } catch(e) {}
-    simulateProgressBar(fill, 5000, () => onComplete());
+    } catch(e) {
+      console.warn("Adsterra open error:", e);
+    }
+    // Fill progress to 100% quickly to show it's "done"
+    simulateProgressBar(fill, 1200);
+    setAdLoadingText("Ad দেখুন, তারপর Continue চাপুন");
+    // Show continue button after short delay (user has switched tab/app)
+    setTimeout(() => showContinueBtn(onComplete), 1500);
     return;
   }
 
-  // Demo fallback
-  simulateProgressBar(fill, 3000, () => onComplete());
+  // Network not configured or missing — auto skip (don't block user)
+  console.warn("Network not active/configured:", network, "— auto skipping");
+  fill.style.width = "100%";
+  setTimeout(() => onComplete(), 500);
+}
+
+// ── Continue button helpers ──
+let _continueCallback = null;
+
+function showContinueBtn(callback) {
+  _continueCallback = callback;
+  const btn = document.getElementById("adContinueBtn");
+  const hint = document.getElementById("adHint");
+  if (btn) btn.classList.add("show");
+  if (hint) hint.style.display = "none";
+}
+
+function hideContinueBtn() {
+  _continueCallback = null;
+  const btn = document.getElementById("adContinueBtn");
+  const hint = document.getElementById("adHint");
+  if (btn) btn.classList.remove("show");
+  if (hint) hint.style.display = "";
+}
+
+function adContinueClicked() {
+  hideContinueBtn();
+  if (_continueCallback) {
+    const cb = _continueCallback;
+    _continueCallback = null;
+    cb();
+  }
 }
 
 function simulateProgressBar(fillEl, durationMs, callback) {
