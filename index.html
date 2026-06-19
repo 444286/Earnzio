@@ -193,7 +193,7 @@ body{
 }
 .page-header h2{font-size:17px;font-weight:700;}
 
-/* ===== WATCH AD PAGE — clean version ===== */
+/* ===== WATCH AD PAGE ===== */
 .info-card{
   background:var(--card);border-radius:var(--radius-md);
   padding:18px;border:1px solid var(--border);margin-bottom:18px;
@@ -229,7 +229,7 @@ body{
 .hist-amt.in{color:var(--success);}
 .hist-amt.out{color:var(--danger);}
 
-/* ===== WITHDRAW PAGE ===== */
+/* ===== WITHDRAW SECTION (used inside wallet page) ===== */
 .method-list{background:var(--card);border-radius:var(--radius-md);border:1px solid var(--border);overflow:hidden;margin-bottom:18px;}
 .method-row{
   display:flex;align-items:center;justify-content:space-between;
@@ -360,34 +360,33 @@ body{
 .modal .note{font-size:12.5px;color:var(--text-gray);margin-bottom:20px;}
 .modal .close-x{position:absolute;top:14px;right:16px;font-size:18px;color:var(--text-light);cursor:pointer;}
 
-/* ===== AD WATCHING OVERLAY ===== */
+/* ===== AD WATCHING OVERLAY — clean loading only ===== */
 .ad-overlay{
-  position:fixed;inset:0;background:rgba(10,8,30,.92);
+  position:fixed;inset:0;background:rgba(10,8,30,.95);
   display:none;flex-direction:column;align-items:center;justify-content:center;
   z-index:500;padding:24px;
 }
 .ad-overlay.show{display:flex;}
 .ad-watch-box{
-  width:100%;max-width:380px;
+  width:100%;max-width:320px;
   background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
-  border-radius:20px;padding:32px 24px 28px;
-  display:flex;flex-direction:column;align-items:center;gap:18px;
-  box-shadow:0 24px 48px rgba(0,0,0,.4);
+  border-radius:24px;padding:36px 28px 32px;
+  display:flex;flex-direction:column;align-items:center;gap:20px;
+  box-shadow:0 24px 48px rgba(0,0,0,.5);
 }
-.ad-watch-title{color:#fff;font-size:16px;font-weight:700;opacity:.9;}
-.ad-step-label{color:#fff;font-size:28px;font-weight:900;letter-spacing:-1px;}
-.ad-chain-dots{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
-.ad-chain-dot{
-  width:32px;height:32px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:700;
-  background:rgba(255,255,255,.2);color:rgba(255,255,255,.7);
+.ad-spinner{
+  width:56px;height:56px;border-radius:50%;
+  border:4px solid rgba(255,255,255,.25);
+  border-top-color:#fff;
+  animation:spin .9s linear infinite;
 }
-.ad-chain-dot.done{background:var(--success);color:#fff;}
-.ad-chain-dot.current{background:#fff;color:var(--primary);}
-.ad-progress-wrap{width:100%;height:6px;background:rgba(255,255,255,.25);border-radius:6px;overflow:hidden;}
+.ad-loading-text{
+  color:#fff;font-size:15px;font-weight:700;opacity:.9;
+  text-align:center;letter-spacing:.2px;
+}
+.ad-progress-wrap{width:100%;height:5px;background:rgba(255,255,255,.2);border-radius:6px;overflow:hidden;}
 .ad-progress-fill{height:100%;background:#fff;width:0%;transition:width .15s linear;border-radius:6px;}
-.ad-status-text{color:rgba(255,255,255,.8);font-size:13px;font-weight:600;}
+.ad-hint{color:rgba(255,255,255,.55);font-size:12px;font-weight:500;text-align:center;}
 
 /* ===== TOAST ===== */
 .toast{
@@ -401,6 +400,20 @@ body{
 .empty-state{text-align:center;padding:50px 20px;color:var(--text-gray);}
 .empty-state .ico{font-size:38px;margin-bottom:10px;}
 .empty-state p{font-size:13.5px;}
+
+/* Wallet page withdraw section */
+.wallet-withdraw-section{
+  background:var(--card);border-radius:var(--radius-md);
+  padding:18px;margin-bottom:18px;border:1px solid var(--border);
+}
+.wallet-withdraw-section .section-title{
+  font-size:15.5px;font-weight:700;margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.wdChainNotice{
+  background:#FFF8E1;border:1px solid #FFE082;border-radius:10px;
+  padding:12px 14px;margin-bottom:14px;font-size:13px;color:#B7791F;font-weight:600;
+}
 </style>
 </head>
 <body>
@@ -428,14 +441,13 @@ body{
   <p>আপনার অ্যাকাউন্ট ব্লক করা হয়েছে। বিস্তারিত জানতে সাপোর্টে যোগাযোগ করুন।</p>
 </div>
 
-<!-- AD WATCHING OVERLAY -->
+<!-- AD WATCHING OVERLAY — clean, no dots/steps visible -->
 <div class="ad-overlay" id="adOverlay">
   <div class="ad-watch-box">
-    <div class="ad-watch-title">Ad চলছে — সম্পূর্ণ দেখুন</div>
-    <div class="ad-step-label" id="adStepLabel">Ad 1 / 5</div>
-    <div class="ad-chain-dots" id="adChainDots"></div>
+    <div class="ad-spinner"></div>
+    <div class="ad-loading-text" id="adLoadingText">Loading...</div>
     <div class="ad-progress-wrap"><div class="ad-progress-fill" id="adProgressFill"></div></div>
-    <div class="ad-status-text" id="adStatusText">Loading ad...</div>
+    <div class="ad-hint">Please wait a moment</div>
   </div>
 </div>
 
@@ -457,7 +469,7 @@ body{
         <div class="balance-amount" id="homeBalance">0.00</div>
       </div>
       <div class="balance-sub">BDT — Bangladeshi Taka</div>
-      <button class="withdraw-btn-sm" onclick="showPage('withdraw')">💸 Withdraw</button>
+      <button class="withdraw-btn-sm" onclick="showPage('wallet')">💸 Withdraw</button>
     </div>
 
     <div class="task-card">
@@ -497,7 +509,7 @@ body{
     </div>
   </div>
 
-  <!-- WATCH AD PAGE — clean version -->
+  <!-- WATCH AD PAGE -->
   <div class="page" id="page-watchads">
     <div class="page-header">
       <div class="back-btn" onclick="showPage('home')">←</div>
@@ -523,45 +535,63 @@ body{
     <button class="btn btn-primary" id="watchAdMainBtn" onclick="startAdChain('watch')">▶ Watch Ad</button>
   </div>
 
-  <!-- WITHDRAW PAGE -->
-  <div class="page" id="page-withdraw">
+  <!-- WALLET PAGE (balance card + withdraw form + history) -->
+  <div class="page" id="page-wallet">
     <div class="page-header">
       <div class="back-btn" onclick="showPage('home')">←</div>
-      <h2>Withdraw</h2>
+      <h2>Wallet</h2>
     </div>
-    <div class="task-card" style="margin-bottom:18px;">
-      <div class="task-sub" style="margin-bottom:8px;">Your Balance</div>
+
+    <!-- Balance Card -->
+    <div class="balance-card">
+      <div class="label">Your Balance</div>
       <div class="balance-row">
-        <div class="bdt-icon" style="background:var(--primary);color:#fff;">৳</div>
-        <div class="balance-amount" style="font-size:24px;color:var(--text-dark);" id="withdrawBalance">0.00</div>
+        <div class="bdt-icon">৳</div>
+        <div class="balance-amount" id="walletBalance">0.00</div>
       </div>
-      <div style="font-size:13px;color:var(--text-gray);margin-top:4px;">BDT</div>
+      <div class="balance-sub">BDT — Bangladeshi Taka</div>
     </div>
-    <div class="info-card" id="wdChainNotice" style="display:none;">
-      <span id="wdChainMsg">উত্তোলনের আগে বিজ্ঞাপন দেখুন 👇</span>
+
+    <!-- Withdraw Section -->
+    <div class="wallet-withdraw-section">
+      <div class="section-title">💸 Withdraw</div>
+
+      <div class="wdChainNotice" id="wdChainNotice" style="display:none;">
+        <span id="wdChainMsg">উত্তোলনের আগে বিজ্ঞাপন দেখুন 👇</span>
+      </div>
+
+      <div class="field-label" style="margin-top:0;">Select Withdraw Method</div>
+      <div class="method-list">
+        <div class="method-row" data-method="Bkash" onclick="selectMethod(this,'Bkash')">
+          <div class="method-left"><div class="method-ico" style="background:#E2136E;">b</div>Bkash</div>
+          <span style="color:var(--text-light);">›</span>
+        </div>
+        <div class="method-row" data-method="Nagad" onclick="selectMethod(this,'Nagad')">
+          <div class="method-left"><div class="method-ico" style="background:#EC1D24;">N</div>Nagad</div>
+          <span style="color:var(--text-light);">›</span>
+        </div>
+        <div class="method-row" data-method="Rocket" onclick="selectMethod(this,'Rocket')">
+          <div class="method-left"><div class="method-ico" style="background:#8C3B9F;">R</div>Rocket</div>
+          <span style="color:var(--text-light);">›</span>
+        </div>
+      </div>
+
+      <div class="field-label">Wallet Number</div>
+      <input type="tel" class="input-field" id="walletNumberInput" placeholder="e.g. 01XXXXXXXXX">
+
+      <div class="field-label">Enter Amount (BDT ৳)</div>
+      <input type="number" class="input-field" id="withdrawAmountInput" placeholder="e.g. 50">
+      <div class="hint" id="minWithdrawHint">Minimum withdraw: ৳10</div>
+
+      <div style="height:14px;"></div>
+      <button class="btn btn-primary" id="withdrawSubmitBtn" onclick="handleWithdrawClick()">💸 Withdraw Now</button>
     </div>
-    <div class="field-label" style="margin-top:0;">Select Withdraw Method</div>
-    <div class="method-list">
-      <div class="method-row" data-method="Bkash" onclick="selectMethod(this,'Bkash')">
-        <div class="method-left"><div class="method-ico" style="background:#E2136E;">b</div>Bkash</div>
-        <span class="chev">›</span>
-      </div>
-      <div class="method-row" data-method="Nagad" onclick="selectMethod(this,'Nagad')">
-        <div class="method-left"><div class="method-ico" style="background:#EC1D24;">N</div>Nagad</div>
-        <span class="chev">›</span>
-      </div>
-      <div class="method-row" data-method="Rocket" onclick="selectMethod(this,'Rocket')">
-        <div class="method-left"><div class="method-ico" style="background:#8C3B9F;">R</div>Rocket</div>
-        <span class="chev">›</span>
-      </div>
+
+    <!-- Transaction History -->
+    <div class="field-label" style="margin-top:4px;">Recent Activity</div>
+    <div class="wallet-history" id="walletHistory">
+      <div class="empty-state"><div class="ico">📭</div><p>No transactions yet</p></div>
     </div>
-    <div class="field-label">Wallet Number</div>
-    <input type="tel" class="input-field" id="walletNumberInput" placeholder="e.g. 01XXXXXXXXX">
-    <div class="field-label">Enter Amount (BDT ৳)</div>
-    <input type="number" class="input-field" id="withdrawAmountInput" placeholder="e.g. 50">
-    <div class="hint" id="minWithdrawHint">Minimum withdraw: ৳10</div>
-    <div style="height:18px;"></div>
-    <button class="btn btn-primary" id="withdrawSubmitBtn" onclick="handleWithdrawClick()">💸 Withdraw Now</button>
   </div>
 
   <!-- REFERRALS PAGE -->
@@ -596,26 +626,6 @@ body{
     <button class="btn btn-primary" onclick="shareReferral()">↗ Invite Now</button>
   </div>
 
-  <!-- WALLET PAGE -->
-  <div class="page" id="page-wallet">
-    <div class="page-header">
-      <div class="back-btn" onclick="showPage('home')">←</div>
-      <h2>Wallet</h2>
-    </div>
-    <div class="balance-card">
-      <div class="label">Your Balance</div>
-      <div class="balance-row">
-        <div class="bdt-icon">৳</div>
-        <div class="balance-amount" id="walletBalance">0.00</div>
-      </div>
-      <div class="balance-sub">BDT — Bangladeshi Taka</div>
-    </div>
-    <div class="field-label" style="margin-top:0;">Recent Activity</div>
-    <div class="wallet-history" id="walletHistory">
-      <div class="empty-state"><div class="ico">📭</div><p>No transactions yet</p></div>
-    </div>
-  </div>
-
   <!-- TASKS PAGE -->
   <div class="page" id="page-tasks">
     <div class="page-header">
@@ -630,7 +640,7 @@ body{
   <!-- SUPPORT PAGE -->
   <div class="page" id="page-support">
     <div class="page-header">
-      <div class="back-btn" onclick="showPage('profile')">←</div>
+      <div class="back-btn" onclick="showPage('home')">←</div>
       <h2>Support</h2>
     </div>
     <div id="supportList">
@@ -661,19 +671,18 @@ body{
       <div class="menu-row" onclick="showPage('referrals')"><span class="mico">👥</span>Referrals<span class="chev">›</span></div>
       <div class="menu-row" onclick="showPage('tasks')"><span class="mico">⚡</span>Tasks & Offers<span class="chev">›</span></div>
       <div class="menu-row" onclick="showPage('tutorial')"><span class="mico">🎬</span>How to Use<span class="chev">›</span></div>
-      <div class="menu-row" onclick="showPage('withdraw')"><span class="mico">💸</span>Withdraw<span class="chev">›</span></div>
       <div class="menu-row" onclick="showPage('support')"><span class="mico">💬</span>Support<span class="chev">›</span></div>
     </div>
   </div>
 
 </div><!-- /#app -->
 
-<!-- BOTTOM NAV -->
+<!-- BOTTOM NAV: Home | Ads | Wallet | Support | Profile -->
 <div class="bottomnav">
   <div class="navitem active" data-page="home" onclick="showPage('home')"><span class="nav-ico">🏠</span>Home</div>
   <div class="navitem" data-page="watchads" onclick="showPage('watchads')"><span class="nav-ico">▶</span>Ads</div>
   <div class="navitem" data-page="wallet" onclick="showPage('wallet')"><span class="nav-ico">💼</span>Wallet</div>
-  <div class="navitem" data-page="referrals" onclick="showPage('referrals')"><span class="nav-ico">👥</span>Referrals</div>
+  <div class="navitem" data-page="support" onclick="showPage('support')"><span class="nav-ico">💬</span>Support</div>
   <div class="navitem" data-page="profile" onclick="showPage('profile')"><span class="nav-ico">👤</span>Profile</div>
 </div>
 
@@ -705,7 +714,7 @@ body{
 
 <script>
 // =====================================================================
-// ⚠️  FIREBASE CONFIG — এখানে আপনার real config বসান
+// FIREBASE CONFIG
 // =====================================================================
 const firebaseConfig = {
   apiKey: "AIzaSyB4krkb2_IZ2MhGyyylHWK2hOfhEn5cuQQ",
@@ -717,9 +726,6 @@ const firebaseConfig = {
   appId: "1:382701659383:web:f0f512b494aa147dc59ff2"
 };
 
-// =====================================================================
-// ⚠️  BOT & APP INFO
-// =====================================================================
 const BOT_USERNAME = "YOUR_BOT_USERNAME";
 const APP_NAME     = "YOUR_APP_NAME";
 
@@ -759,9 +765,6 @@ const startParam = tg?.initDataUnsafe?.start_param || null;
 
 // =====================================================================
 // GLOBAL STATE
-// (field names matched to admin panel expectations: userId, userName,
-//  balance, totalEarned, totalWithdrawn, referralCount, referralEarned,
-//  referredBy, watchedAds[], lastDailyBonus, history{}, blocked)
 // =====================================================================
 let userData = {
   userId: USER_ID,
@@ -778,8 +781,6 @@ let userData = {
   blocked: false
 };
 
-// admin-controlled settings, read from settings/* in Firebase.
-// Matches the structure written by the admin panel (Doc 2).
 let settings = {
   referralBonus: 5,
   welcomeBonus: 2,
@@ -799,10 +800,17 @@ let settings = {
   withdrawChain: { count: 1, slots: ["adsgram"], enabled: false, message: "উত্তোলনের আগে বিজ্ঞাপন দেখুন 👇" }
 };
 
-let adChainState = { running: false, currentStep: 0, totalSteps: 1, mode: "watch" };
+// Ad chain state — tracks current position in chain
+let adChainState = {
+  running: false,
+  currentStep: 0,
+  totalSteps: 1,
+  mode: "watch",
+  slots: []        // ordered slot list from admin config
+};
+
 let selectedMethod = null;
 let liveListener   = null;
-let completedTaskIds = new Set();
 
 // =====================================================================
 // DOM READY
@@ -920,7 +928,7 @@ function creditReferral(referrerId) {
 }
 
 // =====================================================================
-// WELCOME SCREEN (admin-controlled)
+// WELCOME
 // =====================================================================
 function maybeShowWelcome() {
   if (!settings.welcome || !settings.welcome.enabled) return;
@@ -959,7 +967,6 @@ function applySettingsToUI() {
     notice.style.display = "none";
   }
 
-  buildAdOverlayDots(wc.count || 1);
   renderTasksList();
   renderSupportList();
   renderTutorialVideo();
@@ -972,7 +979,6 @@ function renderUserData() {
   const bal = +(userData.balance || 0);
 
   document.getElementById("homeBalance").textContent     = bal.toFixed(2);
-  document.getElementById("withdrawBalance").textContent = bal.toFixed(2);
   document.getElementById("walletBalance").textContent   = bal.toFixed(2);
 
   document.getElementById("totalReferrals").textContent  = userData.referralCount || 0;
@@ -999,8 +1005,8 @@ function showPage(pageName) {
   if (nav) nav.classList.add("active");
 
   const titles = {
-    home:"Home", watchads:"Watch Ads", withdraw:"Withdraw",
-    referrals:"Referrals", wallet:"Wallet", profile:"Profile",
+    home:"Home", watchads:"Watch Ads", wallet:"Wallet",
+    referrals:"Referrals", profile:"Profile",
     tasks:"Tasks & Offers", support:"Support", tutorial:"Tutorial"
   };
   document.getElementById("pageTitle").textContent = titles[pageName] || "Home";
@@ -1008,8 +1014,6 @@ function showPage(pageName) {
 
 // =====================================================================
 // DAILY BONUS
-// (kept as a separate daily claim feature, distinct from admin's
-//  one-time "welcomeBonus" which is credited on first join)
 // =====================================================================
 function renderDailyBonusState() {
   const last     = userData.lastDailyBonus || 0;
@@ -1049,22 +1053,9 @@ function claimDailyBonus() {
 }
 
 // =====================================================================
-// AD CHAIN — overlay-based, driven entirely by admin settings
-// (settings.watchChain for the home "Watch Ad" flow,
-//  settings.withdrawChain for the pre-withdraw flow,
-//  settings.credentials for which network actually plays per slot)
+// AD CHAIN — Sequential, auto-advance, hidden step count
+// Admin controls: slots array (ordered), count, network per slot
 // =====================================================================
-function buildAdOverlayDots(count) {
-  const wrap = document.getElementById("adChainDots");
-  wrap.innerHTML = "";
-  for (let i = 1; i <= count; i++) {
-    const dot = document.createElement("div");
-    dot.className  = "ad-chain-dot";
-    dot.id         = "adDot-" + i;
-    dot.textContent = i;
-    wrap.appendChild(dot);
-  }
-}
 
 function showAdOverlay() {
   document.getElementById("adOverlay").classList.add("show");
@@ -1074,13 +1065,20 @@ function hideAdOverlay() {
   document.getElementById("adOverlay").classList.remove("show");
 }
 
-// mode: "watch" -> uses settings.watchChain, credits watchChain.reward
-// mode: "withdraw" -> uses settings.withdrawChain, then submits withdrawal
+function setAdLoadingText(text) {
+  document.getElementById("adLoadingText").textContent = text;
+}
+
+// mode: "watch" -> uses settings.watchChain, credits reward
+// mode: "withdraw" -> uses settings.withdrawChain, then submits
 function startAdChain(mode) {
   if (adChainState.running) return;
   if (userData.blocked) { showToast("Account blocked."); return; }
 
-  const chainCfg = mode === "withdraw" ? (settings.withdrawChain || {}) : (settings.watchChain || {});
+  const chainCfg = mode === "withdraw"
+    ? (settings.withdrawChain || {})
+    : (settings.watchChain || {});
+
   const totalSteps = chainCfg.count || 1;
 
   // daily limit check for watch chain
@@ -1108,25 +1106,34 @@ function startAdChain(mode) {
     }
   }
 
+  // Build the ordered slots array from admin config
+  const rawSlots = chainCfg.slots && chainCfg.slots.length ? chainCfg.slots : ["adsgram"];
+  // Repeat/cycle slots to fill totalSteps count, preserving order
+  const orderedSlots = [];
+  for (let i = 0; i < totalSteps; i++) {
+    orderedSlots.push(rawSlots[i % rawSlots.length]);
+  }
+
   adChainState.running     = true;
   adChainState.currentStep = 0;
   adChainState.totalSteps  = totalSteps;
   adChainState.mode        = mode;
+  adChainState.slots       = orderedSlots;
 
   setAdButtons(true);
-  buildAdOverlayDots(totalSteps);
   document.getElementById("adProgressFill").style.width = "0%";
+  setAdLoadingText("Loading...");
 
   showAdOverlay();
   runNextAdInChain();
 }
 
 function setAdButtons(disabled) {
-  const h = document.getElementById("homeWatchAdBtn");
-  const w = document.getElementById("watchAdMainBtn");
+  const h  = document.getElementById("homeWatchAdBtn");
+  const w  = document.getElementById("watchAdMainBtn");
   const wd = document.getElementById("withdrawSubmitBtn");
-  if (h) { h.disabled = disabled; h.innerHTML = disabled ? "⏳ Watching..." : "▶ Watch Ad"; }
-  if (w) { w.disabled = disabled; w.innerHTML = disabled ? "⏳ Watching..." : "▶ Watch Ad"; }
+  if (h)  { h.disabled  = disabled; h.innerHTML  = disabled ? "⏳ Watching..." : "▶ Watch Ad"; }
+  if (w)  { w.disabled  = disabled; w.innerHTML  = disabled ? "⏳ Watching..." : "▶ Watch Ad"; }
   if (wd && adChainState.mode === "withdraw") { wd.disabled = disabled; }
 }
 
@@ -1140,34 +1147,34 @@ function runNextAdInChain() {
     return;
   }
 
-  document.getElementById("adStepLabel").textContent  = `Ad ${step} / ${total}`;
-  document.getElementById("adStatusText").textContent = "Ad চলছে...";
+  // Reset progress for this ad
   document.getElementById("adProgressFill").style.width = "0%";
+  setAdLoadingText("Loading...");
 
-  for (let i = 1; i <= total; i++) {
-    const d = document.getElementById("adDot-" + i);
-    if (!d) continue;
-    d.className = "ad-chain-dot";
-    if (i < step)  d.classList.add("done");
-    if (i === step) d.classList.add("current");
-  }
+  // Get the network for this specific slot (admin-ordered)
+  const network = adChainState.slots[step - 1] || "adsgram";
 
-  const chainCfg = adChainState.mode === "withdraw" ? (settings.withdrawChain || {}) : (settings.watchChain || {});
-  const slots = chainCfg.slots && chainCfg.slots.length ? chainCfg.slots : ["adsgram"];
-  const network = slots[(step - 1) % slots.length];
-  playAdFromNetwork(network, step, () => runNextAdInChain());
+  // Play this ad, then auto-advance to next
+  playAdFromNetwork(network, step, () => {
+    // Small pause between ads so user doesn't notice the jump
+    setTimeout(() => runNextAdInChain(), 400);
+  });
 }
 
 function playAdFromNetwork(network, stepNumber, onComplete) {
-  const fill = document.getElementById("adProgressFill");
+  const fill  = document.getElementById("adProgressFill");
   const creds = settings.credentials || {};
+
+  setAdLoadingText("Loading...");
 
   if (network === "adsgram" && creds.adsgram?.active) {
     try {
       if (window.Adsgram) {
         const AdController = window.Adsgram.init({ blockId: creds.adsgram.blockId });
-        simulateProgressBar(fill, 3000);
-        AdController.show().then(() => onComplete()).catch(() => onComplete());
+        simulateProgressBar(fill, 4000);
+        AdController.show()
+          .then(() => onComplete())
+          .catch(() => onComplete());
         return;
       }
     } catch(e) { console.warn("Adsgram fallback", e); }
@@ -1177,8 +1184,10 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
     try {
       const fn = "show_" + (creds.monetag.zoneId || "");
       if (typeof window[fn] === "function") {
-        simulateProgressBar(fill, 3000);
-        window[fn]().then(() => onComplete()).catch(() => onComplete());
+        simulateProgressBar(fill, 4000);
+        window[fn]()
+          .then(() => onComplete())
+          .catch(() => onComplete());
         return;
       }
     } catch(e) { console.warn("Monetag fallback", e); }
@@ -1190,12 +1199,11 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
         window.open(creds.adsterra.link, "_blank");
       }
     } catch(e) {}
-    simulateProgressBar(fill, 4000, () => onComplete());
+    simulateProgressBar(fill, 5000, () => onComplete());
     return;
   }
 
-  // Demo fallback (network not configured/active)
-  document.getElementById("adStatusText").textContent = `Demo Ad ${stepNumber}`;
+  // Demo fallback
   simulateProgressBar(fill, 3000, () => onComplete());
 }
 
@@ -1204,8 +1212,11 @@ function simulateProgressBar(fillEl, durationMs, callback) {
   function tick() {
     const pct = Math.min(100, ((Date.now() - start) / durationMs) * 100);
     fillEl.style.width = pct + "%";
-    if (pct < 100) { requestAnimationFrame(tick); }
-    else if (callback) { setTimeout(callback, 200); }
+    if (pct < 100) {
+      requestAnimationFrame(tick);
+    } else if (callback) {
+      setTimeout(callback, 200);
+    }
   }
   tick();
 }
@@ -1216,17 +1227,19 @@ function finishAdChain() {
   setAdButtons(false);
 
   if (adChainState.mode === "withdraw") {
-    // ad chain before withdraw finished -> actually submit the withdrawal
     doSubmitWithdraw();
     return;
   }
 
-  // "watch" mode -> credit reward + log to watchedAds (admin reads this for today's-ads count)
+  // Credit reward
   const wc = settings.watchChain || {};
   const reward = +(wc.reward || 0);
   const newBalance = +((userData.balance || 0) + reward).toFixed(2);
   const newEarned  = +((userData.totalEarned || 0) + reward).toFixed(2);
-  const watchedAds = [...(userData.watchedAds || []), { date: new Date().toISOString(), count: wc.count || 1 }];
+  const watchedAds = [
+    ...(userData.watchedAds || []),
+    { date: new Date().toISOString(), count: wc.count || 1 }
+  ];
 
   db.ref("users/" + USER_ID).update({
     balance: newBalance,
@@ -1249,7 +1262,6 @@ function selectMethod(el, method) {
   selectedMethod = method;
 }
 
-// Entry point from the button — checks if an ad chain is required first
 function handleWithdrawClick() {
   if (userData.blocked) { showToast("Account blocked."); return; }
   if (!validateWithdrawForm()) return;
@@ -1266,10 +1278,10 @@ function validateWithdrawForm() {
   const amount = parseFloat(document.getElementById("withdrawAmountInput").value);
   const number = document.getElementById("walletNumberInput").value.trim();
 
-  if (!selectedMethod)                                { showToast("Withdraw method select করুন"); return false; }
-  if (!number || number.length < 6)                   { showToast("সঠিক wallet number দিন"); return false; }
+  if (!selectedMethod)                                  { showToast("Withdraw method select করুন"); return false; }
+  if (!number || number.length < 6)                    { showToast("সঠিক wallet number দিন"); return false; }
   if (!amount || amount < (settings.minWithdraw || 0)) { showToast(`Minimum ৳${settings.minWithdraw || 0} লাগবে`); return false; }
-  if (amount > (+(userData.balance || 0)))            { showToast("Balance কম আছে"); return false; }
+  if (amount > (+(userData.balance || 0)))             { showToast("Balance কম আছে"); return false; }
   return true;
 }
 
@@ -1290,8 +1302,6 @@ function doSubmitWithdraw() {
   const newTotalWithdr = +((userData.totalWithdrawn || 0) + amount).toFixed(2);
   const withdrawKey    = db.ref("withdrawals").push().key;
 
-  // field names matched to admin panel expectations:
-  // userId, userName, wallet, walletLabel, account, amount, status, createdAt
   db.ref("withdrawals/" + withdrawKey).set({
     userId: USER_ID,
     userName: userData.userName || USER_NAME,
@@ -1310,7 +1320,6 @@ function doSubmitWithdraw() {
     document.getElementById("walletNumberInput").value   = "";
     document.querySelectorAll(".method-row").forEach(r => r.classList.remove("selected"));
     selectedMethod = null;
-    showPage("home");
   })
   .catch(err => { console.error(err); showToast("Something went wrong. Try again."); });
 }
@@ -1373,10 +1382,10 @@ function renderWalletHistory() {
 }
 
 // =====================================================================
-// TASKS (admin-controlled: settings.tasks[])
+// TASKS
 // =====================================================================
 function renderTasksList() {
-  const wrap = document.getElementById("tasksList");
+  const wrap  = document.getElementById("tasksList");
   const tasks = (settings.tasks || []).filter(t => t.active !== false);
 
   if (!tasks.length) {
@@ -1409,9 +1418,6 @@ function handleTaskClick(taskId) {
 
   if (task.link) window.open(task.link, "_blank");
 
-  // Channel-join tasks need bot-side verification (not available client-side
-  // without exposing the bot token), so here we credit on click for simple
-  // link tasks and skip auto-crediting tasks that require channel verification.
   if (task.type === "channel" && task.channelUsername) {
     showToast("Join করার পর Verify করতে Telegram বট ব্যবহার করুন।");
     return;
@@ -1439,10 +1445,24 @@ function creditTask(task) {
 }
 
 // =====================================================================
-// SUPPORT (admin-controlled: settings.supportCards[])
+// SUPPORT
 // =====================================================================
+function openSupportLink(link) {
+  if (!link || link === '#') return;
+  // Use Telegram's openLink/openTelegramLink for proper in-app handling
+  if (tg) {
+    if (link.startsWith('https://t.me/') || link.startsWith('http://t.me/')) {
+      tg.openTelegramLink(link);
+    } else {
+      tg.openLink(link);
+    }
+  } else {
+    window.open(link, '_blank');
+  }
+}
+
 function renderSupportList() {
-  const wrap = document.getElementById("supportList");
+  const wrap  = document.getElementById("supportList");
   const cards = settings.supportCards || [];
 
   if (!cards.length) {
@@ -1450,8 +1470,8 @@ function renderSupportList() {
     return;
   }
 
-  wrap.innerHTML = cards.map(c => `
-    <div class="support-card" onclick="window.open('${c.link || '#'}','_blank')">
+  wrap.innerHTML = cards.map((c, i) => `
+    <div class="support-card" onclick="openSupportLink('${(c.link || '').replace(/'/g, "\\'")}')">
       <div class="support-ico" style="background:${c.bg || 'var(--as,#EAE8FD)'}">${c.icon || '💬'}</div>
       <div class="support-body">
         <div class="support-title">${c.title}</div>
@@ -1461,11 +1481,11 @@ function renderSupportList() {
 }
 
 // =====================================================================
-// TUTORIAL VIDEO (admin-controlled: settings.video)
+// TUTORIAL VIDEO
 // =====================================================================
 function renderTutorialVideo() {
   const wrap = document.getElementById("tutorialWrap");
-  const v = settings.video;
+  const v    = settings.video;
 
   if (!v || !v.url) {
     wrap.innerHTML = `<div class="empty-state"><div class="ico">🎬</div><p>No tutorial video available</p></div>`;
