@@ -229,7 +229,7 @@ body{
 .hist-amt.in{color:var(--success);}
 .hist-amt.out{color:var(--danger);}
 
-/* ===== WITHDRAW SECTION (used inside wallet page) ===== */
+/* ===== WITHDRAW SECTION ===== */
 .method-list{background:var(--card);border-radius:var(--radius-md);border:1px solid var(--border);overflow:hidden;margin-bottom:18px;}
 .method-row{
   display:flex;align-items:center;justify-content:space-between;
@@ -360,7 +360,7 @@ body{
 .modal .note{font-size:12.5px;color:var(--text-gray);margin-bottom:20px;}
 .modal .close-x{position:absolute;top:14px;right:16px;font-size:18px;color:var(--text-light);cursor:pointer;}
 
-/* ===== AD WATCHING OVERLAY — clean loading only ===== */
+/* ===== AD WATCHING OVERLAY ===== */
 .ad-overlay{
   position:fixed;inset:0;background:rgba(10,8,30,.95);
   display:none;flex-direction:column;align-items:center;justify-content:center;
@@ -449,7 +449,7 @@ body{
   <p>আপনার অ্যাকাউন্ট ব্লক করা হয়েছে। বিস্তারিত জানতে সাপোর্টে যোগাযোগ করুন।</p>
 </div>
 
-<!-- AD WATCHING OVERLAY — clean, no dots/steps visible -->
+<!-- AD WATCHING OVERLAY -->
 <div class="ad-overlay" id="adOverlay">
   <div class="ad-watch-box">
     <div class="ad-spinner" id="adSpinner"></div>
@@ -544,14 +544,13 @@ body{
     <button class="btn btn-primary" id="watchAdMainBtn" onclick="startAdChain('watch')">▶ Watch Ad</button>
   </div>
 
-  <!-- WALLET PAGE (balance card + withdraw form + history) -->
+  <!-- WALLET PAGE -->
   <div class="page" id="page-wallet">
     <div class="page-header">
       <div class="back-btn" onclick="showPage('home')">←</div>
       <h2>Wallet</h2>
     </div>
 
-    <!-- Balance Card -->
     <div class="balance-card">
       <div class="label">Your Balance</div>
       <div class="balance-row">
@@ -561,7 +560,6 @@ body{
       <div class="balance-sub">BDT — Bangladeshi Taka</div>
     </div>
 
-    <!-- Withdraw Section -->
     <div class="wallet-withdraw-section">
       <div class="section-title">💸 Withdraw</div>
 
@@ -596,7 +594,6 @@ body{
       <button class="btn btn-primary" id="withdrawSubmitBtn" onclick="handleWithdrawClick()">💸 Withdraw Now</button>
     </div>
 
-    <!-- Transaction History -->
     <div class="field-label" style="margin-top:4px;">Recent Activity</div>
     <div class="wallet-history" id="walletHistory">
       <div class="empty-state"><div class="ico">📭</div><p>No transactions yet</p></div>
@@ -686,7 +683,7 @@ body{
 
 </div><!-- /#app -->
 
-<!-- BOTTOM NAV: Home | Ads | Wallet | Support | Profile -->
+<!-- BOTTOM NAV -->
 <div class="bottomnav">
   <div class="navitem active" data-page="home" onclick="showPage('home')"><span class="nav-ico">🏠</span>Home</div>
   <div class="navitem" data-page="watchads" onclick="showPage('watchads')"><span class="nav-ico">▶</span>Ads</div>
@@ -809,13 +806,13 @@ let settings = {
   withdrawChain: { count: 1, slots: ["adsgram"], enabled: false, message: "উত্তোলনের আগে বিজ্ঞাপন দেখুন 👇" }
 };
 
-// Ad chain state — tracks current position in chain
+// Ad chain state
 let adChainState = {
   running: false,
   currentStep: 0,
   totalSteps: 1,
   mode: "watch",
-  slots: []        // ordered slot list from admin config
+  slots: []
 };
 
 let selectedMethod = null;
@@ -966,7 +963,6 @@ function applySettingsToUI() {
   document.getElementById("chainLenText").textContent       = wc.count || 1;
   document.getElementById("homeWatchSub").textContent       = `Watch a short ad chain and earn ৳${totalReward} instantly`;
 
-  // withdraw chain notice
   const wdChain = settings.withdrawChain || {};
   const notice = document.getElementById("wdChainNotice");
   if (wdChain.enabled) {
@@ -989,7 +985,6 @@ function renderUserData() {
 
   document.getElementById("homeBalance").textContent     = bal.toFixed(2);
   document.getElementById("walletBalance").textContent   = bal.toFixed(2);
-
   document.getElementById("totalReferrals").textContent  = userData.referralCount || 0;
   document.getElementById("referralEarned").textContent  = (+(userData.referralEarned || 0)).toFixed(2);
   document.getElementById("refCode").textContent         = userData.userId || USER_ID;
@@ -1062,10 +1057,8 @@ function claimDailyBonus() {
 }
 
 // =====================================================================
-// AD CHAIN HELPERS
+// AD CHAIN — FIXED: Sequential, guaranteed next-ad call
 // =====================================================================
-
-let _continueCallback = null;
 
 function showAdOverlay() {
   document.getElementById("adOverlay").classList.add("show");
@@ -1073,54 +1066,13 @@ function showAdOverlay() {
 
 function hideAdOverlay() {
   document.getElementById("adOverlay").classList.remove("show");
-  _hideContinueBtn();
+  hideContinueBtn();
 }
 
 function setAdLoadingText(text) {
   document.getElementById("adLoadingText").textContent = text;
 }
 
-function _showContinueBtn(callback) {
-  _continueCallback = callback;
-  const btn  = document.getElementById("adContinueBtn");
-  const hint = document.getElementById("adHint");
-  if (btn)  btn.classList.add("show");
-  if (hint) hint.style.display = "none";
-}
-
-function _hideContinueBtn() {
-  _continueCallback = null;
-  const btn  = document.getElementById("adContinueBtn");
-  const hint = document.getElementById("adHint");
-  if (btn)  btn.classList.remove("show");
-  if (hint) hint.style.display = "";
-}
-
-function adContinueClicked() {
-  const cb = _continueCallback;
-  _hideContinueBtn();
-  if (cb) cb();
-}
-
-function simulateProgressBar(fillEl, durationMs, callback) {
-  const start = Date.now();
-  function tick() {
-    const pct = Math.min(100, ((Date.now() - start) / durationMs) * 100);
-    fillEl.style.width = pct + "%";
-    if (pct < 100) {
-      requestAnimationFrame(tick);
-    } else if (callback) {
-      setTimeout(callback, 200);
-    }
-  }
-  tick();
-}
-
-// =====================================================================
-// AD CHAIN — Sequential, auto-advance
-
-// mode: "watch" -> uses settings.watchChain, credits reward
-// mode: "withdraw" -> uses settings.withdrawChain, then submits
 function startAdChain(mode) {
   if (adChainState.running) return;
   if (userData.blocked) { showToast("Account blocked."); return; }
@@ -1131,7 +1083,6 @@ function startAdChain(mode) {
 
   const totalSteps = chainCfg.count || 1;
 
-  // daily limit check for watch chain
   if (mode === "watch") {
     const limit = settings.watchChain?.dailyLimit;
     if (limit) {
@@ -1144,7 +1095,6 @@ function startAdChain(mode) {
         return;
       }
     }
-    // cooldown check
     const cd = settings.watchChain?.cooldownSec || 0;
     const lastWatch = (userData.watchedAds || []).slice(-1)[0];
     if (cd && lastWatch) {
@@ -1156,9 +1106,7 @@ function startAdChain(mode) {
     }
   }
 
-  // Build the ordered slots array from admin config
   const rawSlots = chainCfg.slots && chainCfg.slots.length ? chainCfg.slots : ["adsgram"];
-  // Repeat/cycle slots to fill totalSteps count, preserving order
   const orderedSlots = [];
   for (let i = 0; i < totalSteps; i++) {
     orderedSlots.push(rawSlots[i % rawSlots.length]);
@@ -1197,69 +1145,147 @@ function runNextAdInChain() {
     return;
   }
 
-  // Reset progress for this ad
+  // Reset progress bar & UI for each new ad
   document.getElementById("adProgressFill").style.width = "0%";
+  document.getElementById("adHint").style.display = "";
   setAdLoadingText("Loading...");
+  hideContinueBtn();
 
-  // Get the network for this specific slot (admin-ordered)
   const network = adChainState.slots[step - 1] || "adsgram";
-
-  // Play this ad, then auto-advance to next
   playAdFromNetwork(network, step, () => {
-    // Small pause between ads so user doesn't notice the jump
     setTimeout(() => runNextAdInChain(), 400);
   });
 }
 
+// =====================================================================
+// PLAY AD FROM NETWORK — FIXED: safeNext + proper chaining
+// =====================================================================
 function playAdFromNetwork(network, stepNumber, onComplete) {
   const fill  = document.getElementById("adProgressFill");
   const creds = settings.credentials || {};
 
+  fill.style.width = "0%";
   setAdLoadingText("Loading...");
   hideContinueBtn();
+  document.getElementById("adHint").style.display = "";
 
-  if (network === "adsgram" && creds.adsgram?.active) {
-    try {
-      if (window.Adsgram) {
-        const AdController = window.Adsgram.init({ blockId: creds.adsgram.blockId });
-        simulateProgressBar(fill, 4000);
+  // safeNext: guarantees onComplete called exactly once
+  let _called = false;
+  function safeNext() {
+    if (_called) return;
+    _called = true;
+    setTimeout(() => onComplete(), 300);
+  }
+
+  // ─────────────── ADSGRAM ───────────────
+  if (network === "adsgram" && creds.adsgram?.active && creds.adsgram?.blockId) {
+    if (window.Adsgram) {
+      try {
+        const AdController = window.Adsgram.init({ blockId: String(creds.adsgram.blockId) });
+        simulateProgressBar(fill, 5000);
         AdController.show()
-          .then(() => onComplete())
-          .catch(() => {
-            // Adsgram failed — auto skip to next
-            console.warn("Adsgram failed, skipping");
-            onComplete();
+          .then(() => { safeNext(); })
+          .catch((e) => {
+            console.warn("Adsgram show failed:", e);
+            fill.style.width = "100%";
+            safeNext();
           });
         return;
+      } catch(e) {
+        console.warn("Adsgram init error:", e);
+        fill.style.width = "100%";
+        safeNext();
+        return;
       }
-    } catch(e) {
-      console.warn("Adsgram error, skipping:", e);
-      // fall through to auto-skip
+    } else {
+      // SDK not loaded yet — wait up to 3s then skip
+      let waited = 0;
+      const waitInterval = setInterval(() => {
+        waited += 200;
+        if (window.Adsgram) {
+          clearInterval(waitInterval);
+          try {
+            const AdController = window.Adsgram.init({ blockId: String(creds.adsgram.blockId) });
+            simulateProgressBar(fill, 5000);
+            AdController.show()
+              .then(() => safeNext())
+              .catch(() => { fill.style.width = "100%"; safeNext(); });
+          } catch(e) {
+            fill.style.width = "100%";
+            safeNext();
+          }
+        } else if (waited >= 3000) {
+          clearInterval(waitInterval);
+          console.warn("Adsgram SDK not available, skipping");
+          fill.style.width = "100%";
+          safeNext();
+        }
+      }, 200);
+      return;
     }
   }
 
-  if (network === "monetag" && creds.monetag?.active) {
-    try {
-      const fn = "show_" + (creds.monetag.zoneId || "");
-      if (typeof window[fn] === "function") {
-        simulateProgressBar(fill, 4000);
-        window[fn]()
-          .then(() => onComplete())
-          .catch(() => {
-            console.warn("Monetag failed, skipping");
-            onComplete();
-          });
+  // ─────────────── MONETAG ───────────────
+  if (network === "monetag" && creds.monetag?.active && creds.monetag?.zoneId) {
+    const fnName = "show_" + creds.monetag.zoneId;
+    if (typeof window[fnName] === "function") {
+      try {
+        simulateProgressBar(fill, 5000);
+        const result = window[fnName]();
+        if (result && typeof result.then === "function") {
+          result
+            .then(() => { safeNext(); })
+            .catch((e) => {
+              console.warn("Monetag failed:", e);
+              fill.style.width = "100%";
+              safeNext();
+            });
+        } else {
+          // Non-promise Monetag — auto continue after delay
+          setTimeout(() => { fill.style.width = "100%"; safeNext(); }, 3000);
+        }
+        return;
+      } catch(e) {
+        console.warn("Monetag error:", e);
+        fill.style.width = "100%";
+        safeNext();
         return;
       }
-    } catch(e) {
-      console.warn("Monetag error, skipping:", e);
+    } else {
+      // Zone function not loaded yet — wait up to 3s then skip
+      let waited = 0;
+      const waitInterval = setInterval(() => {
+        waited += 200;
+        if (typeof window[fnName] === "function") {
+          clearInterval(waitInterval);
+          try {
+            simulateProgressBar(fill, 5000);
+            const result = window[fnName]();
+            if (result && typeof result.then === "function") {
+              result.then(() => safeNext()).catch(() => { fill.style.width = "100%"; safeNext(); });
+            } else {
+              setTimeout(() => { fill.style.width = "100%"; safeNext(); }, 3000);
+            }
+          } catch(e) {
+            fill.style.width = "100%";
+            safeNext();
+          }
+        } else if (waited >= 3000) {
+          clearInterval(waitInterval);
+          console.warn("Monetag fn not available, skipping");
+          fill.style.width = "100%";
+          safeNext();
+        }
+      }, 200);
+      return;
     }
   }
 
-  if (network === "adsterra" && creds.adsterra?.active && creds.adsterra.link) {
-    // Open adsterra link, then show Continue button when user comes back
+  // ─────────────── ADSTERRA ───────────────
+  if (network === "adsterra" && creds.adsterra?.active && creds.adsterra?.link) {
+    setAdLoadingText("Ad দেখুন, তারপর Continue চাপুন");
     try {
-      if (tg) {
+      if (tg && typeof tg.openLink === "function") {
         tg.openLink(creds.adsterra.link);
       } else {
         window.open(creds.adsterra.link, "_blank");
@@ -1267,18 +1293,64 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
     } catch(e) {
       console.warn("Adsterra open error:", e);
     }
-    // Fill progress to 100% quickly to show it's "done"
-    simulateProgressBar(fill, 1200);
-    setAdLoadingText("Ad দেখুন, তারপর Continue চাপুন");
-    // Show continue button after short delay (user has switched tab/app)
-    setTimeout(() => _showContinueBtn(onComplete), 1500);
+    // Fill bar quickly, then show Continue button
+    simulateProgressBar(fill, 1500);
+    setTimeout(() => {
+      fill.style.width = "100%";
+      showContinueBtn(safeNext); // safeNext ensures chain continues exactly once
+    }, 1500);
     return;
   }
 
-  // Network not configured or missing — auto skip (don't block user)
+  // ─────────────── NOT CONFIGURED — AUTO SKIP ───────────────
   console.warn("Network not active/configured:", network, "— auto skipping");
+  setAdLoadingText("Skipping...");
   fill.style.width = "100%";
-  setTimeout(() => onComplete(), 500);
+  safeNext();
+}
+
+// ── Continue button helpers ──
+let _continueCallback = null;
+
+function showContinueBtn(callback) {
+  // Clear any stale callback first
+  _continueCallback = null;
+  const btn  = document.getElementById("adContinueBtn");
+  const hint = document.getElementById("adHint");
+  if (btn)  btn.classList.add("show");
+  if (hint) hint.style.display = "none";
+  // Small delay before accepting tap — prevents accidental double-tap
+  setTimeout(() => { _continueCallback = callback; }, 400);
+}
+
+function hideContinueBtn() {
+  _continueCallback = null;
+  const btn  = document.getElementById("adContinueBtn");
+  const hint = document.getElementById("adHint");
+  if (btn)  btn.classList.remove("show");
+  if (hint) hint.style.display = "";
+}
+
+function adContinueClicked() {
+  if (!_continueCallback) return; // prevent double-tap
+  const cb = _continueCallback;
+  _continueCallback = null;
+  hideContinueBtn();
+  cb();
+}
+
+function simulateProgressBar(fillEl, durationMs, callback) {
+  const start = Date.now();
+  function tick() {
+    const pct = Math.min(100, ((Date.now() - start) / durationMs) * 100);
+    fillEl.style.width = pct + "%";
+    if (pct < 100) {
+      requestAnimationFrame(tick);
+    } else if (callback) {
+      setTimeout(callback, 200);
+    }
+  }
+  tick();
 }
 
 function finishAdChain() {
@@ -1291,7 +1363,6 @@ function finishAdChain() {
     return;
   }
 
-  // Credit reward
   const wc = settings.watchChain || {};
   const reward = +(wc.reward || 0);
   const newBalance = +((userData.balance || 0) + reward).toFixed(2);
@@ -1509,7 +1580,6 @@ function creditTask(task) {
 // =====================================================================
 function openSupportLink(link) {
   if (!link || link === '#') return;
-  // Use Telegram's openLink/openTelegramLink for proper in-app handling
   if (tg) {
     if (link.startsWith('https://t.me/') || link.startsWith('http://t.me/')) {
       tg.openTelegramLink(link);
