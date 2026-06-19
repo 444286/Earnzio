@@ -422,6 +422,11 @@ body{
   background:#FFF8E1;border:1px solid #FFE082;border-radius:10px;
   padding:12px 14px;margin-bottom:14px;font-size:13px;color:#B7791F;font-weight:600;
 }
+/* Cooldown countdown on Watch Ad button */
+.btn-cooldown{
+  background:var(--primary);color:#fff;opacity:.85;
+  cursor:not-allowed;
+}
 </style>
 </head>
 <body>
@@ -484,7 +489,10 @@ body{
     <div class="task-card">
       <div class="task-head">
         <div class="task-title">Watch Ads & Earn</div>
-        <div class="task-reward green" id="perAdRewardChip">+৳0.50</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="task-reward green" id="perAdRewardChip">+৳0.50</div>
+          <div class="task-reward blue" id="todayAdCountChip" style="display:none;">0/5</div>
+        </div>
       </div>
       <div class="task-sub" id="homeWatchSub">Watch a short ad chain and earn BDT instantly</div>
       <button class="btn btn-primary" id="homeWatchAdBtn" onclick="startAdChain('watch')">▶ Watch Ad</button>
@@ -975,6 +983,7 @@ function applySettingsToUI() {
   renderTasksList();
   renderSupportList();
   renderTutorialVideo();
+  renderWatchAdState();
 }
 
 // =====================================================================
@@ -993,6 +1002,7 @@ function renderUserData() {
   document.getElementById("avatarLetter").textContent    = (userData.userName || USER_NAME).charAt(0).toUpperCase();
 
   renderDailyBonusState();
+  renderWatchAdState();
   renderWalletHistory();
   renderTasksList();
 }
@@ -1014,6 +1024,98 @@ function showPage(pageName) {
     tasks:"Tasks & Offers", support:"Support", tutorial:"Tutorial"
   };
   document.getElementById("pageTitle").textContent = titles[pageName] || "Home";
+}
+
+// =====================================================================
+// WATCH AD STATE — cooldown timer, daily limit, today count badge
+// =====================================================================
+let _cooldownTimerInterval = null;
+
+function renderWatchAdState() {
+  const wc       = settings.watchChain || {};
+  const limit    = wc.dailyLimit || 0;
+  const cd       = wc.cooldownSec || 0;
+  const today    = new Date().toDateString();
+
+  const todayWatched = (userData.watchedAds || []).filter(w => {
+    try { return new Date(w.date).toDateString() === today; } catch(e) { return false; }
+  });
+  const todayCount = todayWatched.length;
+
+  const homeBtn = document.getElementById("homeWatchAdBtn");
+  const watchBtn = document.getElementById("watchAdMainBtn");
+  const countChip = document.getElementById("todayAdCountChip");
+
+  // Today count chip (always show when limit set)
+  if (limit && countChip) {
+    countChip.style.display = "flex";
+    countChip.textContent   = `${todayCount}/${limit}`;
+  }
+
+  // Clear any existing cooldown timer
+  if (_cooldownTimerInterval) {
+    clearInterval(_cooldownTimerInterval);
+    _cooldownTimerInterval = null;
+  }
+
+  // Daily limit reached — disable all day, no cooldown timer
+  if (limit && todayCount >= limit) {
+    _setWatchBtnLimitDone(homeBtn);
+    _setWatchBtnLimitDone(watchBtn);
+    return;
+  }
+
+  // Cooldown check — show countdown on button
+  const lastWatch = (userData.watchedAds || []).slice(-1)[0];
+  if (cd && lastWatch) {
+    const elapsed = (Date.now() - new Date(lastWatch.date).getTime()) / 1000;
+    const remaining = cd - elapsed;
+    if (remaining > 0) {
+      _startCooldownTimer(homeBtn, watchBtn, remaining);
+      return;
+    }
+  }
+
+  // All clear — normal state
+  _setWatchBtnReady(homeBtn);
+  _setWatchBtnReady(watchBtn);
+}
+
+function _setWatchBtnReady(btn) {
+  if (!btn) return;
+  btn.disabled  = false;
+  btn.innerHTML = "▶ Watch Ad";
+  btn.classList.remove("btn-cooldown");
+}
+
+function _setWatchBtnLimitDone(btn) {
+  if (!btn) return;
+  btn.disabled  = true;
+  btn.innerHTML = "আজকের সীমা শেষ";
+  btn.classList.remove("btn-cooldown");
+}
+
+function _startCooldownTimer(homeBtn, watchBtn, remainingSec) {
+  function updateBtns(sec) {
+    const txt = `⏳ ${Math.ceil(sec)}s পর চেষ্টা করুন`;
+    if (homeBtn) { homeBtn.disabled = true; homeBtn.innerHTML = txt; homeBtn.classList.add("btn-cooldown"); }
+    if (watchBtn) { watchBtn.disabled = true; watchBtn.innerHTML = txt; watchBtn.classList.add("btn-cooldown"); }
+  }
+
+  updateBtns(remainingSec);
+
+  let left = remainingSec;
+  _cooldownTimerInterval = setInterval(() => {
+    left -= 1;
+    if (left <= 0) {
+      clearInterval(_cooldownTimerInterval);
+      _cooldownTimerInterval = null;
+      _setWatchBtnReady(homeBtn);
+      _setWatchBtnReady(watchBtn);
+    } else {
+      updateBtns(left);
+    }
+  }, 1000);
 }
 
 // =====================================================================
@@ -1282,40 +1384,25 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
   }
 
   // ─────────────── ADSTERRA ───────────────
-  // ─────────────── ADSTERRA ───────────────
-if (network === "adsterra" && creds.adsterra?.active && creds.adsterra?.link) {
-  
-  // Last ad হলে link open করে সরাসরি finish — Continue button নেই
-  const isLastAd = adChainState.currentStep >= adChainState.totalSteps;
-
-  try {
-    if (tg && typeof tg.openLink === "function") {
-      tg.openLink(creds.adsterra.link);
-    } else {
-      window.open(creds.adsterra.link, "_blank");
+  if (network === "adsterra" && creds.adsterra?.active && creds.adsterra?.link) {
+    setAdLoadingText("Ad দেখুন, তারপর Continue চাপুন");
+    try {
+      if (tg && typeof tg.openLink === "function") {
+        tg.openLink(creds.adsterra.link);
+      } else {
+        window.open(creds.adsterra.link, "_blank");
+      }
+    } catch(e) {
+      console.warn("Adsterra open error:", e);
     }
-  } catch(e) {
-    console.warn("Adsterra open error:", e);
-  }
-
-  simulateProgressBar(fill, 1500);
-
-  if (isLastAd) {
-    // Last ad — auto finish, no Continue button
+    // Fill bar quickly, then show Continue button
+    simulateProgressBar(fill, 1500);
     setTimeout(() => {
       fill.style.width = "100%";
-      safeNext();
+      showContinueBtn(safeNext); // safeNext ensures chain continues exactly once
     }, 1500);
-  } else {
-    // Middle ad — show Continue button
-    setTimeout(() => {
-      fill.style.width = "100%";
-      setAdLoadingText("Ad দেখুন, তারপর Continue চাপুন");
-      showContinueBtn(safeNext);
-    }, 1500);
+    return;
   }
-  return;
-}
 
   // ─────────────── NOT CONFIGURED — AUTO SKIP ───────────────
   console.warn("Network not active/configured:", network, "— auto skipping");
@@ -1394,6 +1481,9 @@ function finishAdChain() {
   })
     .then(() => {
       addHistory(USER_ID, `Watched ${wc.count || 1} Ads`, reward, "in");
+      // Update userData locally so renderWatchAdState reads fresh data
+      userData.watchedAds = watchedAds;
+      renderWatchAdState();
       openSuccessModal(reward);
     })
     .catch(() => showToast("Reward save failed. Try again."));
@@ -1503,26 +1593,28 @@ function addHistory(uid, title, amount, type) {
 function renderWalletHistory() {
   const wrap    = document.getElementById("walletHistory");
   const history = userData.history || {};
-  const entries = Object.values(history).sort((a, b) => b.time - a.time).slice(0, 30);
+  // শুধু withdraw (out) entries দেখাবে
+  const entries = Object.values(history)
+    .filter(e => e.type === "out")
+    .sort((a, b) => b.time - a.time)
+    .slice(0, 30);
 
   if (!entries.length) {
-    wrap.innerHTML = `<div class="empty-state"><div class="ico">📭</div><p>No transactions yet</p></div>`;
+    wrap.innerHTML = `<div class="empty-state"><div class="ico">📭</div><p>No withdrawals yet</p></div>`;
     return;
   }
   wrap.innerHTML = entries.map(e => {
     const date = new Date(e.time).toLocaleDateString("en-US", { month:"short", day:"numeric", year:"numeric" });
-    const sign = e.type === "in" ? "+" : "-";
-    const icon = e.type === "in" ? "💰" : "💸";
     return `
       <div class="hist-row">
         <div class="hist-left">
-          <div class="hist-ico ${e.type}">${icon}</div>
+          <div class="hist-ico out">💸</div>
           <div>
             <div class="hist-title">${e.title}</div>
             <div class="hist-date">${date}</div>
           </div>
         </div>
-        <div class="hist-amt ${e.type}">${sign}৳${(+e.amount).toFixed(2)}</div>
+        <div class="hist-amt out">-৳${(+e.amount).toFixed(2)}</div>
       </div>`;
   }).join("");
 }
