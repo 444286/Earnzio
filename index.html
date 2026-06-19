@@ -1062,9 +1062,10 @@ function claimDailyBonus() {
 }
 
 // =====================================================================
-// AD CHAIN — Sequential, auto-advance, hidden step count
-// Admin controls: slots array (ordered), count, network per slot
+// AD CHAIN HELPERS
 // =====================================================================
+
+let _continueCallback = null;
 
 function showAdOverlay() {
   document.getElementById("adOverlay").classList.add("show");
@@ -1072,12 +1073,51 @@ function showAdOverlay() {
 
 function hideAdOverlay() {
   document.getElementById("adOverlay").classList.remove("show");
-  hideContinueBtn();
+  _hideContinueBtn();
 }
 
 function setAdLoadingText(text) {
   document.getElementById("adLoadingText").textContent = text;
 }
+
+function _showContinueBtn(callback) {
+  _continueCallback = callback;
+  const btn  = document.getElementById("adContinueBtn");
+  const hint = document.getElementById("adHint");
+  if (btn)  btn.classList.add("show");
+  if (hint) hint.style.display = "none";
+}
+
+function _hideContinueBtn() {
+  _continueCallback = null;
+  const btn  = document.getElementById("adContinueBtn");
+  const hint = document.getElementById("adHint");
+  if (btn)  btn.classList.remove("show");
+  if (hint) hint.style.display = "";
+}
+
+function adContinueClicked() {
+  const cb = _continueCallback;
+  _hideContinueBtn();
+  if (cb) cb();
+}
+
+function simulateProgressBar(fillEl, durationMs, callback) {
+  const start = Date.now();
+  function tick() {
+    const pct = Math.min(100, ((Date.now() - start) / durationMs) * 100);
+    fillEl.style.width = pct + "%";
+    if (pct < 100) {
+      requestAnimationFrame(tick);
+    } else if (callback) {
+      setTimeout(callback, 200);
+    }
+  }
+  tick();
+}
+
+// =====================================================================
+// AD CHAIN — Sequential, auto-advance
 
 // mode: "watch" -> uses settings.watchChain, credits reward
 // mode: "withdraw" -> uses settings.withdrawChain, then submits
@@ -1231,7 +1271,7 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
     simulateProgressBar(fill, 1200);
     setAdLoadingText("Ad দেখুন, তারপর Continue চাপুন");
     // Show continue button after short delay (user has switched tab/app)
-    setTimeout(() => showContinueBtn(onComplete), 1500);
+    setTimeout(() => _showContinueBtn(onComplete), 1500);
     return;
   }
 
@@ -1239,48 +1279,6 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
   console.warn("Network not active/configured:", network, "— auto skipping");
   fill.style.width = "100%";
   setTimeout(() => onComplete(), 500);
-}
-
-// ── Continue button helpers ──
-let _continueCallback = null;
-
-function showContinueBtn(callback) {
-  _continueCallback = callback;
-  const btn = document.getElementById("adContinueBtn");
-  const hint = document.getElementById("adHint");
-  if (btn) btn.classList.add("show");
-  if (hint) hint.style.display = "none";
-}
-
-function hideContinueBtn() {
-  _continueCallback = null;
-  const btn = document.getElementById("adContinueBtn");
-  const hint = document.getElementById("adHint");
-  if (btn) btn.classList.remove("show");
-  if (hint) hint.style.display = "";
-}
-
-function adContinueClicked() {
-  hideContinueBtn();
-  if (_continueCallback) {
-    const cb = _continueCallback;
-    _continueCallback = null;
-    cb();
-  }
-}
-
-function simulateProgressBar(fillEl, durationMs, callback) {
-  const start = Date.now();
-  function tick() {
-    const pct = Math.min(100, ((Date.now() - start) / durationMs) * 100);
-    fillEl.style.width = pct + "%";
-    if (pct < 100) {
-      requestAnimationFrame(tick);
-    } else if (callback) {
-      setTimeout(callback, 200);
-    }
-  }
-  tick();
 }
 
 function finishAdChain() {
