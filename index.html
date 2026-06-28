@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Watch & Earn</title>
+<title>দেখো ও আয় করো</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="https://pl30107731.effectivecpmnetwork.com/e2/7c/6a/e27c6a50922c0e26ef6649890117b762.js"></script>
+
 <style>
 :root{
   --primary:#5B4FE9;
@@ -430,297 +430,297 @@ body{
 </style>
 </head>
 <body>
-<script src="https://pl30107732.effectivecpmnetwork.com/ad/f9/01/adf9018bcf79a0a3a2f633bd89cd9623.js"></script>
-<!-- LOADING SCREEN -->
+
+<!-- লোডিং স্ক্রিন -->
 <div class="loading-screen" id="loadingScreen">
   <div class="spinner"></div>
-  <div class="load-title">Watch & Earn</div>
-  <div class="load-sub">Please wait...</div>
+  <div class="load-title">দেখো ও আয় করো</div>
+  <div class="load-sub">অনুগ্রহ করে অপেক্ষা করুন...</div>
 </div>
 
-<!-- ERROR SCREEN -->
+<!-- ত্রুটি স্ক্রিন -->
 <div class="error-screen" id="errorScreen">
   <div class="err-ico">⚠️</div>
-  <h2>Connection Failed</h2>
-  <p>Firebase config সঠিকভাবে বসানো হয়নি অথবা internet connection নেই।</p>
-  <div class="err-code" id="errorMsg">Unknown error</div>
-  <button class="retry-btn" onclick="location.reload()">🔄 Retry</button>
+  <h2>সংযোগ ব্যর্থ হয়েছে</h2>
+  <p>Firebase config সঠিকভাবে বসানো হয়নি অথবা ইন্টারনেট সংযোগ নেই।</p>
+  <div class="err-code" id="errorMsg">অজানা ত্রুটি</div>
+  <button class="retry-btn" onclick="location.reload()">🔄 আবার চেষ্টা করুন</button>
 </div>
 
-<!-- BLOCKED SCREEN -->
+<!-- ব্লকড স্ক্রিন -->
 <div class="blocked-screen" id="blockedScreen">
   <div class="blk-ico">🚫</div>
-  <h2>Account Blocked</h2>
+  <h2>অ্যাকাউন্ট ব্লক করা হয়েছে</h2>
   <p>আপনার অ্যাকাউন্ট ব্লক করা হয়েছে। বিস্তারিত জানতে সাপোর্টে যোগাযোগ করুন।</p>
 </div>
 
-<!-- AD WATCHING OVERLAY -->
+<!-- বিজ্ঞাপন দেখার ওভারলে -->
 <div class="ad-overlay" id="adOverlay">
   <div class="ad-watch-box">
     <div class="ad-spinner" id="adSpinner"></div>
-    <div class="ad-loading-text" id="adLoadingText">Loading...</div>
+    <div class="ad-loading-text" id="adLoadingText">লোড হচ্ছে...</div>
     <div class="ad-progress-wrap"><div class="ad-progress-fill" id="adProgressFill"></div></div>
-    <div class="ad-hint" id="adHint">Please wait a moment</div>
-    <button class="ad-continue-btn" id="adContinueBtn" onclick="adContinueClicked()">▶ Continue</button>
+    <div class="ad-hint" id="adHint">একটু অপেক্ষা করুন</div>
+    <button class="ad-continue-btn" id="adContinueBtn" onclick="adContinueClicked()">▶ পরবর্তী</button>
   </div>
 </div>
 
 <div id="app">
 
-  <!-- TOP BAR -->
+  <!-- টপ বার -->
   <div class="topbar">
     <div class="icon-btn" onclick="showPage('profile')">☰</div>
-    <h1 id="pageTitle">Home</h1>
+    <h1 id="pageTitle">হোম</h1>
     <div class="icon-btn">🔔<span class="dot"></span></div>
   </div>
 
-  <!-- HOME PAGE -->
+  <!-- হোম পেজ -->
   <div class="page active" id="page-home">
     <div class="balance-card">
-      <div class="label">Your Balance</div>
+      <div class="label">আপনার ব্যালেন্স</div>
       <div class="balance-row">
         <div class="bdt-icon">৳</div>
         <div class="balance-amount" id="homeBalance">0.00</div>
       </div>
-      <div class="balance-sub">BDT — Bangladeshi Taka</div>
-      <button class="withdraw-btn-sm" onclick="showPage('wallet')">💸 Withdraw</button>
+      <div class="balance-sub">BDT — বাংলাদেশি টাকা</div>
+      <button class="withdraw-btn-sm" onclick="showPage('wallet')">💸 উত্তোলন করুন</button>
     </div>
 
     <div class="task-card">
       <div class="task-head">
-        <div class="task-title">Watch Ads & Earn</div>
+        <div class="task-title">বিজ্ঞাপন দেখুন ও আয় করুন</div>
         <div style="display:flex;align-items:center;gap:6px;">
-          <div class="task-reward green" id="perAdRewardChip">+৳0.50</div>
-          <div class="task-reward blue" id="todayAdCountChip" style="display:none;">0/5</div>
+          <div class="task-reward green" id="perAdRewardChip">+৳০.৫০</div>
+          <div class="task-reward blue" id="todayAdCountChip" style="display:none;">০/৫</div>
         </div>
       </div>
-      <div class="task-sub" id="homeWatchSub">Watch a short ad chain and earn BDT instantly</div>
-      <button class="btn btn-primary" id="homeWatchAdBtn" onclick="startAdChain('watch')">▶ Watch Ad</button>
+      <div class="task-sub" id="homeWatchSub">একটি ছোট বিজ্ঞাপন চেইন দেখুন এবং সাথে সাথে টাকা আয় করুন</div>
+      <button class="btn btn-primary" id="homeWatchAdBtn" onclick="startAdChain('watch')">▶ বিজ্ঞাপন দেখুন</button>
     </div>
 
     <div class="task-card">
       <div class="task-head">
-        <div class="task-title">Daily Bonus</div>
-        <div class="task-reward amber" id="dailyBonusChip">+৳1.00</div>
+        <div class="task-title">দৈনিক বোনাস</div>
+        <div class="task-reward amber" id="dailyBonusChip">+৳১.০০</div>
       </div>
-      <div class="task-sub" id="dailyBonusSub">Claim your daily bonus</div>
-      <button class="btn btn-outline" id="dailyBonusBtn" onclick="claimDailyBonus()">🎁 Claim Bonus</button>
+      <div class="task-sub" id="dailyBonusSub">আপনার দৈনিক বোনাস নিন</div>
+      <button class="btn btn-outline" id="dailyBonusBtn" onclick="claimDailyBonus()">🎁 বোনাস নিন</button>
     </div>
 
     <div class="task-card">
       <div class="task-head">
-        <div class="task-title">Invite & Earn</div>
-        <div class="task-reward blue" id="referralRewardChip">+৳5.00</div>
+        <div class="task-title">বন্ধু আমন্ত্রণ ও আয়</div>
+        <div class="task-reward blue" id="referralRewardChip">+৳৫.০০</div>
       </div>
-      <div class="task-sub">Invite friends and earn BDT for each friend who joins</div>
-      <button class="btn btn-outline" onclick="showPage('referrals')">👥 Invite Now</button>
+      <div class="task-sub">বন্ধুদের আমন্ত্রণ জানান এবং প্রতিটি বন্ধুর জন্য টাকা আয় করুন</div>
+      <button class="btn btn-outline" onclick="showPage('referrals')">👥 এখনই আমন্ত্রণ করুন</button>
     </div>
 
     <div class="task-card">
       <div class="task-head">
-        <div class="task-title">Tasks & Offers</div>
+        <div class="task-title">কাজ ও অফার</div>
         <div class="task-reward blue">⚡</div>
       </div>
-      <div class="task-sub">Complete simple tasks for extra BDT</div>
-      <button class="btn btn-outline" onclick="showPage('tasks')">⚡ View Tasks</button>
+      <div class="task-sub">সহজ কাজ সম্পন্ন করে অতিরিক্ত টাকা আয় করুন</div>
+      <button class="btn btn-outline" onclick="showPage('tasks')">⚡ কাজ দেখুন</button>
     </div>
   </div>
 
-  <!-- WATCH AD PAGE -->
+  <!-- বিজ্ঞাপন দেখার পেজ -->
   <div class="page" id="page-watchads">
     <div class="page-header">
       <div class="back-btn" onclick="showPage('home')">←</div>
-      <h2>Watch Ads</h2>
+      <h2>বিজ্ঞাপন দেখুন</h2>
     </div>
 
     <div class="info-card">
-      <h3>Watch ads & earn BDT</h3>
+      <h3>বিজ্ঞাপন দেখুন ও টাকা আয় করুন</h3>
       <div class="reward-line">
         <span>৳</span>
-        <span id="thisAdReward">0.50</span>
-        <span style="font-size:14px;color:var(--text-gray);font-weight:600;">per ad chain</span>
+        <span id="thisAdReward">০.৫০</span>
+        <span style="font-size:14px;color:var(--text-gray);font-weight:600;">প্রতি বিজ্ঞাপন চেইনে</span>
       </div>
     </div>
 
     <div class="info-card">
-      <div class="howit">How it works?</div>
-      <div class="step"><span class="num">1</span><span>Click on Watch Ad button</span></div>
-      <div class="step"><span class="num">2</span><span>Watch the full ad chain (<span id="chainLenText">5</span> ads)</span></div>
-      <div class="step"><span class="num">3</span><span>BDT reward instantly added after last ad</span></div>
+      <div class="howit">কীভাবে কাজ করে?</div>
+      <div class="step"><span class="num">১</span><span>বিজ্ঞাপন দেখুন বোতামে ক্লিক করুন</span></div>
+      <div class="step"><span class="num">২</span><span>সম্পূর্ণ বিজ্ঞাপন চেইন দেখুন (<span id="chainLenText">৫</span>টি বিজ্ঞাপন)</span></div>
+      <div class="step"><span class="num">৩</span><span>শেষ বিজ্ঞাপনের পর সাথে সাথে টাকা যোগ হবে</span></div>
     </div>
 
-    <button class="btn btn-primary" id="watchAdMainBtn" onclick="startAdChain('watch')">▶ Watch Ad</button>
+    <button class="btn btn-primary" id="watchAdMainBtn" onclick="startAdChain('watch')">▶ বিজ্ঞাপন দেখুন</button>
   </div>
 
-  <!-- WALLET PAGE -->
+  <!-- ওয়ালেট পেজ -->
   <div class="page" id="page-wallet">
     <div class="page-header">
       <div class="back-btn" onclick="showPage('home')">←</div>
-      <h2>Wallet</h2>
+      <h2>ওয়ালেট</h2>
     </div>
 
     <div class="balance-card">
-      <div class="label">Your Balance</div>
+      <div class="label">আপনার ব্যালেন্স</div>
       <div class="balance-row">
         <div class="bdt-icon">৳</div>
         <div class="balance-amount" id="walletBalance">0.00</div>
       </div>
-      <div class="balance-sub">BDT — Bangladeshi Taka</div>
+      <div class="balance-sub">BDT — বাংলাদেশি টাকা</div>
     </div>
 
     <div class="wallet-withdraw-section">
-      <div class="section-title">💸 Withdraw</div>
+      <div class="section-title">💸 উত্তোলন</div>
 
       <div class="wdChainNotice" id="wdChainNotice" style="display:none;">
         <span id="wdChainMsg">উত্তোলনের আগে বিজ্ঞাপন দেখুন 👇</span>
       </div>
 
-      <div class="field-label" style="margin-top:0;">Select Withdraw Method</div>
+      <div class="field-label" style="margin-top:0;">উত্তোলনের পদ্ধতি বেছে নিন</div>
       <div class="method-list">
         <div class="method-row" data-method="Bkash" onclick="selectMethod(this,'Bkash')">
-          <div class="method-left"><div class="method-ico" style="background:#E2136E;">b</div>Bkash</div>
+          <div class="method-left"><div class="method-ico" style="background:#E2136E;">b</div>বিকাশ</div>
           <span style="color:var(--text-light);">›</span>
         </div>
         <div class="method-row" data-method="Nagad" onclick="selectMethod(this,'Nagad')">
-          <div class="method-left"><div class="method-ico" style="background:#EC1D24;">N</div>Nagad</div>
+          <div class="method-left"><div class="method-ico" style="background:#EC1D24;">N</div>নগদ</div>
           <span style="color:var(--text-light);">›</span>
         </div>
         <div class="method-row" data-method="Rocket" onclick="selectMethod(this,'Rocket')">
-          <div class="method-left"><div class="method-ico" style="background:#8C3B9F;">R</div>Rocket</div>
+          <div class="method-left"><div class="method-ico" style="background:#8C3B9F;">R</div>রকেট</div>
           <span style="color:var(--text-light);">›</span>
         </div>
       </div>
 
-      <div class="field-label">Wallet Number</div>
-      <input type="tel" class="input-field" id="walletNumberInput" placeholder="e.g. 01XXXXXXXXX">
+      <div class="field-label">ওয়ালেট নম্বর</div>
+      <input type="tel" class="input-field" id="walletNumberInput" placeholder="যেমন: ০১XXXXXXXXX">
 
-      <div class="field-label">Enter Amount (BDT ৳)</div>
-      <input type="number" class="input-field" id="withdrawAmountInput" placeholder="e.g. 50">
-      <div class="hint" id="minWithdrawHint">Minimum withdraw: ৳10</div>
+      <div class="field-label">পরিমাণ লিখুন (BDT ৳)</div>
+      <input type="number" class="input-field" id="withdrawAmountInput" placeholder="যেমন: ৫০">
+      <div class="hint" id="minWithdrawHint">সর্বনিম্ন উত্তোলন: ৳১০</div>
 
       <div style="height:14px;"></div>
-      <button class="btn btn-primary" id="withdrawSubmitBtn" onclick="handleWithdrawClick()">💸 Withdraw Now</button>
+      <button class="btn btn-primary" id="withdrawSubmitBtn" onclick="handleWithdrawClick()">💸 এখনই উত্তোলন করুন</button>
     </div>
 
-    <div class="field-label" style="margin-top:4px;">Recent Activity</div>
+    <div class="field-label" style="margin-top:4px;">সাম্প্রতিক কার্যক্রম</div>
     <div class="wallet-history" id="walletHistory">
-      <div class="empty-state"><div class="ico">📭</div><p>No transactions yet</p></div>
+      <div class="empty-state"><div class="ico">📭</div><p>এখনো কোনো লেনদেন নেই</p></div>
     </div>
   </div>
 
-  <!-- REFERRALS PAGE -->
+  <!-- রেফারেল পেজ -->
   <div class="page" id="page-referrals">
     <div class="page-header">
       <div class="back-btn" onclick="showPage('home')">←</div>
-      <h2>Referrals</h2>
+      <h2>রেফারেল</h2>
     </div>
     <div class="ref-banner">
-      <h3>Invite & Earn</h3>
-      <div class="rwd" id="refBonusText">+৳5.00 per friend</div>
-      <p>Invite friends and earn BDT for each friend who joins using your link.</p>
+      <h3>আমন্ত্রণ করুন ও আয় করুন</h3>
+      <div class="rwd" id="refBonusText">+৳৫.০০ প্রতি বন্ধুর জন্য</div>
+      <p>বন্ধুদের আমন্ত্রণ জানান এবং আপনার লিংক ব্যবহার করে যোগ দিলে টাকা আয় করুন।</p>
     </div>
-    <div class="field-label" style="margin-top:0;">Your Referral Link</div>
+    <div class="field-label" style="margin-top:0;">আপনার রেফারেল লিংক</div>
     <div class="code-box">
       <div class="code" id="refCode">...</div>
-      <div class="copy-chip" onclick="copyReferral()">Copy</div>
+      <div class="copy-chip" onclick="copyReferral()">কপি করুন</div>
     </div>
     <div class="stat-grid">
       <div class="stat-box">
-        <div class="lbl">Total Referrals</div>
-        <div class="val" id="totalReferrals">0</div>
+        <div class="lbl">মোট রেফারেল</div>
+        <div class="val" id="totalReferrals">০</div>
       </div>
       <div class="stat-box">
-        <div class="lbl">Total Earned</div>
+        <div class="lbl">মোট আয়</div>
         <div class="val">
           <span style="font-size:14px;">৳</span>
-          <span id="referralEarned">0.00</span>
+          <span id="referralEarned">০.০০</span>
         </div>
       </div>
     </div>
-    <button class="btn btn-primary" onclick="shareReferral()">↗ Invite Now</button>
+    <button class="btn btn-primary" onclick="shareReferral()">↗ এখনই আমন্ত্রণ করুন</button>
   </div>
 
-  <!-- TASKS PAGE -->
+  <!-- কাজের পেজ -->
   <div class="page" id="page-tasks">
     <div class="page-header">
       <div class="back-btn" onclick="showPage('home')">←</div>
-      <h2>Tasks & Offers</h2>
+      <h2>কাজ ও অফার</h2>
     </div>
     <div id="tasksList">
-      <div class="empty-state"><div class="ico">⚡</div><p>No tasks available right now</p></div>
+      <div class="empty-state"><div class="ico">⚡</div><p>এখন কোনো কাজ পাওয়া যাচ্ছে না</p></div>
     </div>
   </div>
 
-  <!-- SUPPORT PAGE -->
+  <!-- সাপোর্ট পেজ -->
   <div class="page" id="page-support">
     <div class="page-header">
       <div class="back-btn" onclick="showPage('home')">←</div>
-      <h2>Support</h2>
+      <h2>সাপোর্ট</h2>
     </div>
     <div id="supportList">
-      <div class="empty-state"><div class="ico">💬</div><p>No support options available</p></div>
+      <div class="empty-state"><div class="ico">💬</div><p>কোনো সাপোর্ট অপশন পাওয়া যাচ্ছে না</p></div>
     </div>
   </div>
 
-  <!-- TUTORIAL VIDEO PAGE -->
+  <!-- টিউটোরিয়াল ভিডিও পেজ -->
   <div class="page" id="page-tutorial">
     <div class="page-header">
       <div class="back-btn" onclick="showPage('profile')">←</div>
-      <h2>Tutorial</h2>
+      <h2>টিউটোরিয়াল</h2>
     </div>
     <div id="tutorialWrap">
-      <div class="empty-state"><div class="ico">🎬</div><p>No tutorial video available</p></div>
+      <div class="empty-state"><div class="ico">🎬</div><p>কোনো টিউটোরিয়াল ভিডিও পাওয়া যাচ্ছে না</p></div>
     </div>
   </div>
 
-  <!-- PROFILE PAGE -->
+  <!-- প্রোফাইল পেজ -->
   <div class="page" id="page-profile">
     <div class="profile-head">
-      <div class="avatar" id="avatarLetter">U</div>
-      <h2 id="profileName">User</h2>
-      <p id="profileId">ID: ...</p>
+      <div class="avatar" id="avatarLetter">ব</div>
+      <h2 id="profileName">ব্যবহারকারী</h2>
+      <p id="profileId">আইডি: ...</p>
     </div>
     <div class="menu-list">
-      <div class="menu-row" onclick="showPage('wallet')"><span class="mico">💰</span>Wallet<span class="chev">›</span></div>
-      <div class="menu-row" onclick="showPage('referrals')"><span class="mico">👥</span>Referrals<span class="chev">›</span></div>
-      <div class="menu-row" onclick="showPage('tasks')"><span class="mico">⚡</span>Tasks & Offers<span class="chev">›</span></div>
-      <div class="menu-row" onclick="showPage('tutorial')"><span class="mico">🎬</span>How to Use<span class="chev">›</span></div>
-      <div class="menu-row" onclick="showPage('support')"><span class="mico">💬</span>Support<span class="chev">›</span></div>
+      <div class="menu-row" onclick="showPage('wallet')"><span class="mico">💰</span>ওয়ালেট<span class="chev">›</span></div>
+      <div class="menu-row" onclick="showPage('referrals')"><span class="mico">👥</span>রেফারেল<span class="chev">›</span></div>
+      <div class="menu-row" onclick="showPage('tasks')"><span class="mico">⚡</span>কাজ ও অফার<span class="chev">›</span></div>
+      <div class="menu-row" onclick="showPage('tutorial')"><span class="mico">🎬</span>কীভাবে ব্যবহার করবেন<span class="chev">›</span></div>
+      <div class="menu-row" onclick="showPage('support')"><span class="mico">💬</span>সাপোর্ট<span class="chev">›</span></div>
     </div>
   </div>
 
 </div><!-- /#app -->
 
-<!-- BOTTOM NAV -->
+<!-- বটম নেভ -->
 <div class="bottomnav">
-  <div class="navitem active" data-page="home" onclick="showPage('home')"><span class="nav-ico">🏠</span>Home</div>
-  <div class="navitem" data-page="watchads" onclick="showPage('watchads')"><span class="nav-ico">▶</span>Ads</div>
-  <div class="navitem" data-page="wallet" onclick="showPage('wallet')"><span class="nav-ico">💼</span>Wallet</div>
-  <div class="navitem" data-page="support" onclick="showPage('support')"><span class="nav-ico">💬</span>Support</div>
-  <div class="navitem" data-page="profile" onclick="showPage('profile')"><span class="nav-ico">👤</span>Profile</div>
+  <div class="navitem active" data-page="home" onclick="showPage('home')"><span class="nav-ico">🏠</span>হোম</div>
+  <div class="navitem" data-page="watchads" onclick="showPage('watchads')"><span class="nav-ico">▶</span>বিজ্ঞাপন</div>
+  <div class="navitem" data-page="wallet" onclick="showPage('wallet')"><span class="nav-ico">💼</span>ওয়ালেট</div>
+  <div class="navitem" data-page="support" onclick="showPage('support')"><span class="nav-ico">💬</span>সাপোর্ট</div>
+  <div class="navitem" data-page="profile" onclick="showPage('profile')"><span class="nav-ico">👤</span>প্রোফাইল</div>
 </div>
 
-<!-- SUCCESS MODAL -->
+<!-- সাফল্য মডাল -->
 <div class="overlay" id="successOverlay">
   <div class="modal">
     <div class="close-x" onclick="closeModal()">✕</div>
     <div class="check-circle">✓</div>
-    <h3>Congratulations!</h3>
-    <div class="sub">You have earned</div>
-    <div class="gain"><span>৳</span><span id="modalGainAmount">0.50</span></div>
-    <div class="note">Keep watching ads and earn more BDT.</div>
-    <button class="btn btn-primary" onclick="closeModal()">Ok, Got it!</button>
+    <h3>অভিনন্দন!</h3>
+    <div class="sub">আপনি আয় করেছেন</div>
+    <div class="gain"><span>৳</span><span id="modalGainAmount">০.৫০</span></div>
+    <div class="note">বিজ্ঞাপন দেখতে থাকুন এবং আরও বেশি টাকা আয় করুন।</div>
+    <button class="btn btn-primary" onclick="closeModal()">ঠিক আছে, বুঝেছি!</button>
   </div>
 </div>
 
-<!-- WELCOME MODAL -->
+<!-- স্বাগত মডাল -->
 <div class="overlay welcome-modal" id="welcomeOverlay">
   <div class="modal">
     <div class="close-x" onclick="closeWelcomeModal()">✕</div>
     <div class="welcome-emoji" id="welcomeEmoji">🎉</div>
-    <h3 id="welcomeTitle">Welcome!</h3>
-    <div class="sub" id="welcomeMsg" style="margin-bottom:18px;">Start watching ads and earn money daily.</div>
-    <button class="btn btn-primary" onclick="closeWelcomeModal()">Let's Start</button>
+    <h3 id="welcomeTitle">স্বাগতম!</h3>
+    <div class="sub" id="welcomeMsg" style="margin-bottom:18px;">বিজ্ঞাপন দেখা শুরু করুন এবং প্রতিদিন টাকা আয় করুন।</div>
+    <button class="btn btn-primary" onclick="closeWelcomeModal()">চলুন শুরু করি</button>
   </div>
 </div>
 
@@ -751,7 +751,7 @@ try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.database();
 } catch(e) {
-  showErrorScreen("Firebase init failed: " + e.message);
+  showErrorScreen("Firebase চালু করতে ব্যর্থ: " + e.message);
 }
 
 function showErrorScreen(msg) {
@@ -772,9 +772,9 @@ function hideLoadingScreen() {
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
-const tgUser   = tg?.initDataUnsafe?.user || { id: 999999999, first_name: "Test", username: "test_user" };
+const tgUser   = tg?.initDataUnsafe?.user || { id: 999999999, first_name: "পরীক্ষা", username: "test_user" };
 const USER_ID   = String(tgUser.id);
-const USER_NAME = tgUser.first_name || tgUser.username || "User";
+const USER_NAME = tgUser.first_name || tgUser.username || "ব্যবহারকারী";
 const startParam = tg?.initDataUnsafe?.start_param || null;
 
 // =====================================================================
@@ -804,7 +804,7 @@ let settings = {
   tasks: [],
   supportCards: [],
   video: null,
-  welcome: { enabled: false, emoji: "🎉", title: "Welcome!", message: "" },
+  welcome: { enabled: false, emoji: "🎉", title: "স্বাগতম!", message: "" },
   credentials: {
     adsgram: { active: false, blockId: "" },
     monetag: { active: false, zoneId: "", type: "onclick" },
@@ -839,7 +839,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // =====================================================================
 function initApp() {
   const loadTimeout = setTimeout(() => {
-    showErrorScreen("Connection timeout. Firebase config চেক করুন।");
+    showErrorScreen("সংযোগ সময় শেষ। Firebase config চেক করুন।");
   }, 10000);
 
   db.ref("settings").once("value")
@@ -867,7 +867,7 @@ function initApp() {
     })
     .catch(err => {
       clearTimeout(loadTimeout);
-      showErrorScreen(err.message || "Firebase connection failed");
+      showErrorScreen(err.message || "Firebase সংযোগ ব্যর্থ হয়েছে");
     });
 }
 
@@ -899,7 +899,7 @@ function loadOrCreateUser() {
       userData = { ...userData, ...newUser };
       userRef.set(newUser).then(() => {
         if (settings.welcomeBonus) {
-          addHistory(USER_ID, "Welcome Bonus", settings.welcomeBonus, "in");
+          addHistory(USER_ID, "স্বাগত বোনাস", settings.welcomeBonus, "in");
         }
         if (startParam && startParam !== USER_ID) creditReferral(startParam);
       });
@@ -937,7 +937,7 @@ function creditReferral(referrerId) {
       referralCount: (d.referralCount || 0) + 1,
       referralEarned: +((d.referralEarned || 0) + bonus).toFixed(2)
     });
-    addHistory(referrerId, "Referral Bonus", bonus, "in");
+    addHistory(referrerId, "রেফারেল বোনাস", bonus, "in");
   });
 }
 
@@ -947,7 +947,7 @@ function creditReferral(referrerId) {
 function maybeShowWelcome() {
   if (!settings.welcome || !settings.welcome.enabled) return;
   document.getElementById("welcomeEmoji").textContent = settings.welcome.emoji || "🎉";
-  document.getElementById("welcomeTitle").textContent = settings.welcome.title || "Welcome!";
+  document.getElementById("welcomeTitle").textContent = settings.welcome.title || "স্বাগতম!";
   document.getElementById("welcomeMsg").textContent   = settings.welcome.message || "";
   document.getElementById("welcomeOverlay").classList.add("show");
 }
@@ -966,10 +966,10 @@ function applySettingsToUI() {
   document.getElementById("thisAdReward").textContent       = totalReward;
   document.getElementById("dailyBonusChip").textContent     = `+৳${Number(settings.welcomeBonus || 0).toFixed(2)}`;
   document.getElementById("referralRewardChip").textContent = `+৳${Number(settings.referralBonus || 0).toFixed(2)}`;
-  document.getElementById("refBonusText").textContent       = `+৳${Number(settings.referralBonus || 0).toFixed(2)} per friend`;
-  document.getElementById("minWithdrawHint").textContent    = `Minimum withdraw: ৳${settings.minWithdraw || 0}`;
+  document.getElementById("refBonusText").textContent       = `+৳${Number(settings.referralBonus || 0).toFixed(2)} প্রতি বন্ধুর জন্য`;
+  document.getElementById("minWithdrawHint").textContent    = `সর্বনিম্ন উত্তোলন: ৳${settings.minWithdraw || 0}`;
   document.getElementById("chainLenText").textContent       = wc.count || 1;
-  document.getElementById("homeWatchSub").textContent       = `Watch a short ad chain and earn ৳${totalReward} instantly`;
+  document.getElementById("homeWatchSub").textContent       = `একটি ছোট বিজ্ঞাপন চেইন দেখুন এবং ৳${totalReward} সাথে সাথে আয় করুন`;
 
   const wdChain = settings.withdrawChain || {};
   const notice = document.getElementById("wdChainNotice");
@@ -998,7 +998,7 @@ function renderUserData() {
   document.getElementById("referralEarned").textContent  = (+(userData.referralEarned || 0)).toFixed(2);
   document.getElementById("refCode").textContent         = userData.userId || USER_ID;
   document.getElementById("profileName").textContent     = userData.userName || USER_NAME;
-  document.getElementById("profileId").textContent       = "ID: " + USER_ID;
+  document.getElementById("profileId").textContent       = "আইডি: " + USER_ID;
   document.getElementById("avatarLetter").textContent    = (userData.userName || USER_NAME).charAt(0).toUpperCase();
 
   renderDailyBonusState();
@@ -1019,11 +1019,11 @@ function showPage(pageName) {
   if (nav) nav.classList.add("active");
 
   const titles = {
-    home:"Home", watchads:"Watch Ads", wallet:"Wallet",
-    referrals:"Referrals", profile:"Profile",
-    tasks:"Tasks & Offers", support:"Support", tutorial:"Tutorial"
+    home:"হোম", watchads:"বিজ্ঞাপন দেখুন", wallet:"ওয়ালেট",
+    referrals:"রেফারেল", profile:"প্রোফাইল",
+    tasks:"কাজ ও অফার", support:"সাপোর্ট", tutorial:"টিউটোরিয়াল"
   };
-  document.getElementById("pageTitle").textContent = titles[pageName] || "Home";
+  document.getElementById("pageTitle").textContent = titles[pageName] || "হোম";
 }
 
 // =====================================================================
@@ -1046,26 +1046,22 @@ function renderWatchAdState() {
   const watchBtn = document.getElementById("watchAdMainBtn");
   const countChip = document.getElementById("todayAdCountChip");
 
-  // Today count chip (always show when limit set)
   if (limit && countChip) {
     countChip.style.display = "flex";
     countChip.textContent   = `${todayCount}/${limit}`;
   }
 
-  // Clear any existing cooldown timer
   if (_cooldownTimerInterval) {
     clearInterval(_cooldownTimerInterval);
     _cooldownTimerInterval = null;
   }
 
-  // Daily limit reached — disable all day, no cooldown timer
   if (limit && todayCount >= limit) {
     _setWatchBtnLimitDone(homeBtn);
     _setWatchBtnLimitDone(watchBtn);
     return;
   }
 
-  // Cooldown check — show countdown on button
   const lastWatch = (userData.watchedAds || []).slice(-1)[0];
   if (cd && lastWatch) {
     const elapsed = (Date.now() - new Date(lastWatch.date).getTime()) / 1000;
@@ -1076,7 +1072,6 @@ function renderWatchAdState() {
     }
   }
 
-  // All clear — normal state
   _setWatchBtnReady(homeBtn);
   _setWatchBtnReady(watchBtn);
 }
@@ -1084,7 +1079,7 @@ function renderWatchAdState() {
 function _setWatchBtnReady(btn) {
   if (!btn) return;
   btn.disabled  = false;
-  btn.innerHTML = "▶ Watch Ad";
+  btn.innerHTML = "▶ বিজ্ঞাপন দেখুন";
   btn.classList.remove("btn-cooldown");
 }
 
@@ -1097,7 +1092,7 @@ function _setWatchBtnLimitDone(btn) {
 
 function _startCooldownTimer(homeBtn, watchBtn, remainingSec) {
   function updateBtns(sec) {
-    const txt = `⏳ ${Math.ceil(sec)}s পর চেষ্টা করুন`;
+    const txt = `⏳ ${Math.ceil(sec)}সেকেন্ড পর চেষ্টা করুন`;
     if (homeBtn) { homeBtn.disabled = true; homeBtn.innerHTML = txt; homeBtn.classList.add("btn-cooldown"); }
     if (watchBtn) { watchBtn.disabled = true; watchBtn.innerHTML = txt; watchBtn.classList.add("btn-cooldown"); }
   }
@@ -1131,19 +1126,19 @@ function renderDailyBonusState() {
     const hrs  = Math.floor(remainMs / 3600000);
     const mins = Math.floor((remainMs % 3600000) / 60000);
     btn.disabled    = true;
-    btn.textContent = "🎁 Already Claimed";
-    sub.textContent = `Come back in ${hrs}h ${mins}m`;
+    btn.textContent = "🎁 ইতিমধ্যে নেওয়া হয়েছে";
+    sub.textContent = `${hrs} ঘন্টা ${mins} মিনিট পর আসুন`;
   } else {
     btn.disabled   = false;
-    btn.innerHTML  = "🎁 Claim Bonus";
-    sub.textContent = "Claim your daily bonus";
+    btn.innerHTML  = "🎁 বোনাস নিন";
+    sub.textContent = "আপনার দৈনিক বোনাস নিন";
   }
 }
 
 function claimDailyBonus() {
   if (userData.blocked) return;
   if ((Date.now() - (userData.lastDailyBonus || 0)) < 24 * 3600000) {
-    showToast("Already claimed. Come back later!");
+    showToast("ইতিমধ্যে নেওয়া হয়েছে। পরে আসুন!");
     return;
   }
   const bonus      = +(settings.welcomeBonus || 1);
@@ -1152,14 +1147,14 @@ function claimDailyBonus() {
 
   db.ref("users/" + USER_ID).update({ balance: newBalance, totalEarned: newEarned, lastDailyBonus: Date.now() })
     .then(() => {
-      addHistory(USER_ID, "Daily Bonus", bonus, "in");
+      addHistory(USER_ID, "দৈনিক বোনাস", bonus, "in");
       openSuccessModal(bonus);
     })
-    .catch(() => showToast("Something went wrong. Try again."));
+    .catch(() => showToast("কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।"));
 }
 
 // =====================================================================
-// AD CHAIN — FIXED: Sequential, guaranteed next-ad call
+// AD CHAIN
 // =====================================================================
 
 function showAdOverlay() {
@@ -1177,7 +1172,7 @@ function setAdLoadingText(text) {
 
 function startAdChain(mode) {
   if (adChainState.running) return;
-  if (userData.blocked) { showToast("Account blocked."); return; }
+  if (userData.blocked) { showToast("অ্যাকাউন্ট ব্লক করা হয়েছে।"); return; }
 
   const chainCfg = mode === "withdraw"
     ? (settings.withdrawChain || {})
@@ -1193,7 +1188,7 @@ function startAdChain(mode) {
         try { return new Date(w.date).toDateString() === today; } catch(e) { return false; }
       }).length;
       if (todayCount >= limit) {
-        showToast(`আজকের সীমা শেষ (${limit}/day)`);
+        showToast(`আজকের সীমা শেষ (${limit}/দিন)`);
         return;
       }
     }
@@ -1202,7 +1197,7 @@ function startAdChain(mode) {
     if (cd && lastWatch) {
       const elapsed = (Date.now() - new Date(lastWatch.date).getTime()) / 1000;
       if (elapsed < cd) {
-        showToast(`আবার চেষ্টা করুন ${Math.ceil(cd - elapsed)}s পর`);
+        showToast(`আবার চেষ্টা করুন ${Math.ceil(cd - elapsed)} সেকেন্ড পর`);
         return;
       }
     }
@@ -1222,7 +1217,7 @@ function startAdChain(mode) {
 
   setAdButtons(true);
   document.getElementById("adProgressFill").style.width = "0%";
-  setAdLoadingText("Loading...");
+  setAdLoadingText("লোড হচ্ছে...");
 
   showAdOverlay();
   runNextAdInChain();
@@ -1232,8 +1227,8 @@ function setAdButtons(disabled) {
   const h  = document.getElementById("homeWatchAdBtn");
   const w  = document.getElementById("watchAdMainBtn");
   const wd = document.getElementById("withdrawSubmitBtn");
-  if (h)  { h.disabled  = disabled; h.innerHTML  = disabled ? "⏳ Watching..." : "▶ Watch Ad"; }
-  if (w)  { w.disabled  = disabled; w.innerHTML  = disabled ? "⏳ Watching..." : "▶ Watch Ad"; }
+  if (h)  { h.disabled  = disabled; h.innerHTML  = disabled ? "⏳ দেখা হচ্ছে..." : "▶ বিজ্ঞাপন দেখুন"; }
+  if (w)  { w.disabled  = disabled; w.innerHTML  = disabled ? "⏳ দেখা হচ্ছে..." : "▶ বিজ্ঞাপন দেখুন"; }
   if (wd && adChainState.mode === "withdraw") { wd.disabled = disabled; }
 }
 
@@ -1247,10 +1242,9 @@ function runNextAdInChain() {
     return;
   }
 
-  // Reset progress bar & UI for each new ad
   document.getElementById("adProgressFill").style.width = "0%";
   document.getElementById("adHint").style.display = "";
-  setAdLoadingText("Loading...");
+  setAdLoadingText("লোড হচ্ছে...");
   hideContinueBtn();
 
   const network = adChainState.slots[step - 1] || "adsgram";
@@ -1260,18 +1254,17 @@ function runNextAdInChain() {
 }
 
 // =====================================================================
-// PLAY AD FROM NETWORK — FIXED: safeNext + proper chaining
+// PLAY AD FROM NETWORK
 // =====================================================================
 function playAdFromNetwork(network, stepNumber, onComplete) {
   const fill  = document.getElementById("adProgressFill");
   const creds = settings.credentials || {};
 
   fill.style.width = "0%";
-  setAdLoadingText("Loading...");
+  setAdLoadingText("লোড হচ্ছে...");
   hideContinueBtn();
   document.getElementById("adHint").style.display = "";
 
-  // safeNext: guarantees onComplete called exactly once
   let _called = false;
   function safeNext() {
     if (_called) return;
@@ -1300,7 +1293,6 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
         return;
       }
     } else {
-      // SDK not loaded yet — wait up to 3s then skip
       let waited = 0;
       const waitInterval = setInterval(() => {
         waited += 200;
@@ -1318,7 +1310,7 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
           }
         } else if (waited >= 3000) {
           clearInterval(waitInterval);
-          console.warn("Adsgram SDK not available, skipping");
+          console.warn("Adsgram SDK পাওয়া যাচ্ছে না, এড়িয়ে যাচ্ছি");
           fill.style.width = "100%";
           safeNext();
         }
@@ -1343,7 +1335,6 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
               safeNext();
             });
         } else {
-          // Non-promise Monetag — auto continue after delay
           setTimeout(() => { fill.style.width = "100%"; safeNext(); }, 3000);
         }
         return;
@@ -1354,7 +1345,6 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
         return;
       }
     } else {
-      // Zone function not loaded yet — wait up to 3s then skip
       let waited = 0;
       const waitInterval = setInterval(() => {
         waited += 200;
@@ -1374,7 +1364,7 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
           }
         } else if (waited >= 3000) {
           clearInterval(waitInterval);
-          console.warn("Monetag fn not available, skipping");
+          console.warn("Monetag fn পাওয়া যাচ্ছে না, এড়িয়ে যাচ্ছি");
           fill.style.width = "100%";
           safeNext();
         }
@@ -1384,44 +1374,39 @@ function playAdFromNetwork(network, stepNumber, onComplete) {
   }
 
   // ─────────────── ADSTERRA ───────────────
-  // ─────────────── ADSTERRA ───────────────
-if (network === "adsterra" && creds.adsterra?.active && creds.adsterra?.link) {
-  
-  // Last ad হলে link open করে সরাসরি finish — Continue button নেই
-  const isLastAd = adChainState.currentStep >= adChainState.totalSteps;
+  if (network === "adsterra" && creds.adsterra?.active && creds.adsterra?.link) {
+    const isLastAd = adChainState.currentStep >= adChainState.totalSteps;
 
-  try {
-    if (tg && typeof tg.openLink === "function") {
-      tg.openLink(creds.adsterra.link);
-    } else {
-      window.open(creds.adsterra.link, "_blank");
+    try {
+      if (tg && typeof tg.openLink === "function") {
+        tg.openLink(creds.adsterra.link);
+      } else {
+        window.open(creds.adsterra.link, "_blank");
+      }
+    } catch(e) {
+      console.warn("Adsterra open error:", e);
     }
-  } catch(e) {
-    console.warn("Adsterra open error:", e);
+
+    simulateProgressBar(fill, 1500);
+
+    if (isLastAd) {
+      setTimeout(() => {
+        fill.style.width = "100%";
+        safeNext();
+      }, 1500);
+    } else {
+      setTimeout(() => {
+        fill.style.width = "100%";
+        setAdLoadingText("বিজ্ঞাপন দেখুন, তারপর পরবর্তী চাপুন");
+        showContinueBtn(safeNext);
+      }, 1500);
+    }
+    return;
   }
 
-  simulateProgressBar(fill, 1500);
-
-  if (isLastAd) {
-    // Last ad — auto finish, no Continue button
-    setTimeout(() => {
-      fill.style.width = "100%";
-      safeNext();
-    }, 1500);
-  } else {
-    // Middle ad — show Continue button
-    setTimeout(() => {
-      fill.style.width = "100%";
-      setAdLoadingText("Ad দেখুন, তারপর Continue চাপুন");
-      showContinueBtn(safeNext);
-    }, 1500);
-  }
-  return;
-}
-
-  // ─────────────── NOT CONFIGURED — AUTO SKIP ───────────────
-  console.warn("Network not active/configured:", network, "— auto skipping");
-  setAdLoadingText("Skipping...");
+  // ─────────────── কনফিগার করা নেই — স্বয়ংক্রিয়ভাবে এড়িয়ে যাচ্ছি ───────────────
+  console.warn("নেটওয়ার্ক সক্রিয়/কনফিগার নয়:", network, "— স্বয়ংক্রিয়ভাবে এড়িয়ে যাচ্ছি");
+  setAdLoadingText("এড়িয়ে যাচ্ছি...");
   fill.style.width = "100%";
   safeNext();
 }
@@ -1430,13 +1415,11 @@ if (network === "adsterra" && creds.adsterra?.active && creds.adsterra?.link) {
 let _continueCallback = null;
 
 function showContinueBtn(callback) {
-  // Clear any stale callback first
   _continueCallback = null;
   const btn  = document.getElementById("adContinueBtn");
   const hint = document.getElementById("adHint");
   if (btn)  btn.classList.add("show");
   if (hint) hint.style.display = "none";
-  // Small delay before accepting tap — prevents accidental double-tap
   setTimeout(() => { _continueCallback = callback; }, 400);
 }
 
@@ -1449,7 +1432,7 @@ function hideContinueBtn() {
 }
 
 function adContinueClicked() {
-  if (!_continueCallback) return; // prevent double-tap
+  if (!_continueCallback) return;
   const cb = _continueCallback;
   _continueCallback = null;
   hideContinueBtn();
@@ -1495,13 +1478,12 @@ function finishAdChain() {
     watchedAds: watchedAds
   })
     .then(() => {
-      addHistory(USER_ID, `Watched ${wc.count || 1} Ads`, reward, "in");
-      // Update userData locally so renderWatchAdState reads fresh data
+      addHistory(USER_ID, `${wc.count || 1}টি বিজ্ঞাপন দেখা হয়েছে`, reward, "in");
       userData.watchedAds = watchedAds;
       renderWatchAdState();
       openSuccessModal(reward);
     })
-    .catch(() => showToast("Reward save failed. Try again."));
+    .catch(() => showToast("পুরস্কার সংরক্ষণ ব্যর্থ। আবার চেষ্টা করুন।"));
 }
 
 // =====================================================================
@@ -1514,7 +1496,7 @@ function selectMethod(el, method) {
 }
 
 function handleWithdrawClick() {
-  if (userData.blocked) { showToast("Account blocked."); return; }
+  if (userData.blocked) { showToast("অ্যাকাউন্ট ব্লক করা হয়েছে।"); return; }
   if (!validateWithdrawForm()) return;
 
   const wdChain = settings.withdrawChain || {};
@@ -1529,10 +1511,10 @@ function validateWithdrawForm() {
   const amount = parseFloat(document.getElementById("withdrawAmountInput").value);
   const number = document.getElementById("walletNumberInput").value.trim();
 
-  if (!selectedMethod)                                  { showToast("Withdraw method select করুন"); return false; }
-  if (!number || number.length < 6)                    { showToast("সঠিক wallet number দিন"); return false; }
-  if (!amount || amount < (settings.minWithdraw || 0)) { showToast(`Minimum ৳${settings.minWithdraw || 0} লাগবে`); return false; }
-  if (amount > (+(userData.balance || 0)))             { showToast("Balance কম আছে"); return false; }
+  if (!selectedMethod)                                  { showToast("উত্তোলনের পদ্ধতি বেছে নিন"); return false; }
+  if (!number || number.length < 6)                    { showToast("সঠিক ওয়ালেট নম্বর দিন"); return false; }
+  if (!amount || amount < (settings.minWithdraw || 0)) { showToast(`সর্বনিম্ন ৳${settings.minWithdraw || 0} লাগবে`); return false; }
+  if (amount > (+(userData.balance || 0)))             { showToast("ব্যালেন্স কম আছে"); return false; }
   return true;
 }
 
@@ -1541,11 +1523,11 @@ function doSubmitWithdraw() {
   const number = document.getElementById("walletNumberInput").value.trim();
 
   if (!amount || !number || !selectedMethod) {
-    showToast("Withdraw তথ্য পূর্ণ নেই");
+    showToast("উত্তোলনের তথ্য পূর্ণ নেই");
     return;
   }
   if (amount > (+(userData.balance || 0))) {
-    showToast("Balance কম আছে");
+    showToast("ব্যালেন্স কম আছে");
     return;
   }
 
@@ -1565,14 +1547,14 @@ function doSubmitWithdraw() {
   })
   .then(() => db.ref("users/" + USER_ID).update({ balance: newBalance, totalWithdrawn: newTotalWithdr }))
   .then(() => {
-    addHistory(USER_ID, `Withdraw via ${selectedMethod}`, amount, "out");
-    showToast("Withdraw request submitted! Pending approval.");
+    addHistory(USER_ID, `${selectedMethod} এর মাধ্যমে উত্তোলন`, amount, "out");
+    showToast("উত্তোলনের অনুরোধ জমা হয়েছে! অনুমোদনের অপেক্ষায়।");
     document.getElementById("withdrawAmountInput").value = "";
     document.getElementById("walletNumberInput").value   = "";
     document.querySelectorAll(".method-row").forEach(r => r.classList.remove("selected"));
     selectedMethod = null;
   })
-  .catch(err => { console.error(err); showToast("Something went wrong. Try again."); });
+  .catch(err => { console.error(err); showToast("কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।"); });
 }
 
 // =====================================================================
@@ -1582,19 +1564,19 @@ function copyReferral() {
   const code = userData.userId || USER_ID;
   const link = `https://t.me/${settings.botUsername || BOT_USERNAME}/${APP_NAME}?startapp=${code}`;
   navigator.clipboard?.writeText(link)
-    .then(() => showToast("Referral link copied!"))
-    .catch(() => showToast("Code: " + code));
+    .then(() => showToast("রেফারেল লিংক কপি হয়েছে!"))
+    .catch(() => showToast("কোড: " + code));
 }
 
 function shareReferral() {
   const code = userData.userId || USER_ID;
   const link = `https://t.me/${settings.botUsername || BOT_USERNAME}/${APP_NAME}?startapp=${code}`;
-  const text = "Join this app and start earning BDT! 🎉";
+  const text = "এই অ্যাপে যোগ দিন এবং টাকা আয় শুরু করুন! 🎉";
   if (tg) {
     tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`);
   } else {
     navigator.clipboard?.writeText(link);
-    showToast("Referral link copied!");
+    showToast("রেফারেল লিংক কপি হয়েছে!");
   }
 }
 
@@ -1608,18 +1590,17 @@ function addHistory(uid, title, amount, type) {
 function renderWalletHistory() {
   const wrap    = document.getElementById("walletHistory");
   const history = userData.history || {};
-  // শুধু withdraw (out) entries দেখাবে
   const entries = Object.values(history)
     .filter(e => e.type === "out")
     .sort((a, b) => b.time - a.time)
     .slice(0, 30);
 
   if (!entries.length) {
-    wrap.innerHTML = `<div class="empty-state"><div class="ico">📭</div><p>No withdrawals yet</p></div>`;
+    wrap.innerHTML = `<div class="empty-state"><div class="ico">📭</div><p>এখনো কোনো উত্তোলন নেই</p></div>`;
     return;
   }
   wrap.innerHTML = entries.map(e => {
-    const date = new Date(e.time).toLocaleDateString("en-US", { month:"short", day:"numeric", year:"numeric" });
+    const date = new Date(e.time).toLocaleDateString("bn-BD", { month:"short", day:"numeric", year:"numeric" });
     return `
       <div class="hist-row">
         <div class="hist-left">
@@ -1642,7 +1623,7 @@ function renderTasksList() {
   const tasks = (settings.tasks || []).filter(t => t.active !== false);
 
   if (!tasks.length) {
-    wrap.innerHTML = `<div class="empty-state"><div class="ico">⚡</div><p>No tasks available right now</p></div>`;
+    wrap.innerHTML = `<div class="empty-state"><div class="ico">⚡</div><p>এখন কোনো কাজ পাওয়া যাচ্ছে না</p></div>`;
     return;
   }
 
@@ -1658,21 +1639,21 @@ function renderTasksList() {
           <div class="task-item-reward">+৳${Number(t.reward || 0).toFixed(2)}</div>
         </div>
         <button class="task-item-btn ${done ? 'done' : ''}" ${done ? 'disabled' : ''} onclick="handleTaskClick('${taskId}')">
-          ${done ? '✓ Done' : 'Go'}
+          ${done ? '✓ সম্পন্ন' : 'যান'}
         </button>
       </div>`;
   }).join("");
 }
 
 function handleTaskClick(taskId) {
-  if (userData.blocked) { showToast("Account blocked."); return; }
+  if (userData.blocked) { showToast("অ্যাকাউন্ট ব্লক করা হয়েছে।"); return; }
   const task = (settings.tasks || []).find(t => (t.id || t.name) === taskId);
   if (!task) return;
 
   if (task.link) window.open(task.link, "_blank");
 
   if (task.type === "channel" && task.channelUsername) {
-    showToast("Join করার পর Verify করতে Telegram বট ব্যবহার করুন।");
+    showToast("যোগ দেওয়ার পর যাচাই করতে Telegram বট ব্যবহার করুন।");
     return;
   }
 
@@ -1691,10 +1672,10 @@ function creditTask(task) {
 
   db.ref("users/" + USER_ID).update({ balance: newBalance, totalEarned: newEarned, completedTasks: completed })
     .then(() => {
-      addHistory(USER_ID, `Task: ${task.name}`, reward, "in");
+      addHistory(USER_ID, `কাজ: ${task.name}`, reward, "in");
       openSuccessModal(reward);
     })
-    .catch(() => showToast("Something went wrong."));
+    .catch(() => showToast("কিছু একটা ভুল হয়েছে।"));
 }
 
 // =====================================================================
@@ -1718,7 +1699,7 @@ function renderSupportList() {
   const cards = settings.supportCards || [];
 
   if (!cards.length) {
-    wrap.innerHTML = `<div class="empty-state"><div class="ico">💬</div><p>No support options available</p></div>`;
+    wrap.innerHTML = `<div class="empty-state"><div class="ico">💬</div><p>কোনো সাপোর্ট অপশন পাওয়া যাচ্ছে না</p></div>`;
     return;
   }
 
@@ -1740,7 +1721,7 @@ function renderTutorialVideo() {
   const v    = settings.video;
 
   if (!v || !v.url) {
-    wrap.innerHTML = `<div class="empty-state"><div class="ico">🎬</div><p>No tutorial video available</p></div>`;
+    wrap.innerHTML = `<div class="empty-state"><div class="ico">🎬</div><p>কোনো টিউটোরিয়াল ভিডিও পাওয়া যাচ্ছে না</p></div>`;
     return;
   }
 
