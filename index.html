@@ -434,7 +434,7 @@ body{
 <!-- লোডিং স্ক্রিন -->
 <div class="loading-screen" id="loadingScreen">
   <div class="spinner"></div>
-  <div class="load-title">Earnzio</div>
+  <div class="load-title">দেখো ও আয় করো</div>
   <div class="load-sub">অনুগ্রহ করে অপেক্ষা করুন...</div>
 </div>
 
@@ -494,7 +494,7 @@ body{
           <div class="task-reward blue" id="todayAdCountChip" style="display:none;">০/৫</div>
         </div>
       </div>
-      <div class="task-sub" id="homeWatchSub">বিজ্ঞাপন দেখুন বাটনে একটি ছোট বিজ্ঞাপন দেখুন এবং পেমেন্ট নিন</div>
+      <div class="task-sub" id="homeWatchSub">একটি ছোট বিজ্ঞাপন চেইন দেখুন এবং সাথে সাথে টাকা আয় করুন</div>
       <button class="btn btn-primary" id="homeWatchAdBtn" onclick="startAdChain('watch')">▶ বিজ্ঞাপন দেখুন</button>
     </div>
 
@@ -538,14 +538,14 @@ body{
       <div class="reward-line">
         <span>৳</span>
         <span id="thisAdReward">০.৫০</span>
-        <span style="font-size:14px;color:var(--text-gray);font-weight:600;">প্রতি বিজ্ঞাপন </span>
+        <span style="font-size:14px;color:var(--text-gray);font-weight:600;">প্রতি বিজ্ঞাপন চেইনে</span>
       </div>
     </div>
 
     <div class="info-card">
       <div class="howit">কীভাবে কাজ করে?</div>
-      <div class="step"><span class="num">১</span><span>বিজ্ঞাপন দেখুন বাটনে ক্লিক করুন</span></div>
-      <div class="step"><span class="num">২</span><span>সম্পূর্ণ বিজ্ঞাপন চেইন দেখুন </span></div>
+      <div class="step"><span class="num">১</span><span>বিজ্ঞাপন দেখুন বোতামে ক্লিক করুন</span></div>
+      <div class="step"><span class="num">২</span><span>সম্পূর্ণ বিজ্ঞাপন চেইন দেখুন (<span id="chainLenText">৫</span>টি বিজ্ঞাপন)</span></div>
       <div class="step"><span class="num">৩</span><span>শেষ বিজ্ঞাপনের পর সাথে সাথে টাকা যোগ হবে</span></div>
     </div>
 
@@ -694,8 +694,8 @@ body{
 <!-- বটম নেভ -->
 <div class="bottomnav">
   <div class="navitem active" data-page="home" onclick="showPage('home')"><span class="nav-ico">🏠</span>হোম</div>
-  <div class="navitem" data-page="watchads" onclick="showPage('watchads')"><span class="nav-ico">▶</span>কাজ</div>
-  <div class="navitem" data-page="wallet" onclick="showPage('wallet')"><span class="nav-ico">💼</span>উইথড্র</div>
+  <div class="navitem" data-page="watchads" onclick="showPage('watchads')"><span class="nav-ico">▶</span>বিজ্ঞাপন</div>
+  <div class="navitem" data-page="wallet" onclick="showPage('wallet')"><span class="nav-ico">💼</span>ওয়ালেট</div>
   <div class="navitem" data-page="support" onclick="showPage('support')"><span class="nav-ico">💬</span>সাপোর্ট</div>
   <div class="navitem" data-page="profile" onclick="showPage('profile')"><span class="nav-ico">👤</span>প্রোফাইল</div>
 </div>
@@ -956,28 +956,42 @@ function closeWelcomeModal() {
 }
 
 // =====================================================================
+// SAFE DOM HELPER
+// =====================================================================
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+function setHtml(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = val;
+}
+
+// =====================================================================
 // APPLY SETTINGS TO UI
 // =====================================================================
 function applySettingsToUI() {
   const wc = settings.watchChain || {};
   const totalReward = Number(wc.reward || 0).toFixed(2);
 
-  document.getElementById("perAdRewardChip").textContent    = `+৳${totalReward}`;
-  document.getElementById("thisAdReward").textContent       = totalReward;
-  document.getElementById("dailyBonusChip").textContent     = `+৳${Number(settings.welcomeBonus || 0).toFixed(2)}`;
-  document.getElementById("referralRewardChip").textContent = `+৳${Number(settings.referralBonus || 0).toFixed(2)}`;
-  document.getElementById("refBonusText").textContent       = `+৳${Number(settings.referralBonus || 0).toFixed(2)} প্রতি বন্ধুর জন্য`;
-  document.getElementById("minWithdrawHint").textContent    = `সর্বনিম্ন উত্তোলন: ৳${settings.minWithdraw || 0}`;
-  document.getElementById("chainLenText").textContent       = wc.count || 1;
-  document.getElementById("homeWatchSub").textContent       = `একটি ছোট বিজ্ঞাপন চেইন দেখুন এবং ৳${totalReward} সাথে সাথে আয় করুন`;
+  setText("perAdRewardChip",    `+৳${totalReward}`);
+  setText("thisAdReward",       totalReward);
+  setText("dailyBonusChip",     `+৳${Number(settings.welcomeBonus || 0).toFixed(2)}`);
+  setText("referralRewardChip", `+৳${Number(settings.referralBonus || 0).toFixed(2)}`);
+  setText("refBonusText",       `+৳${Number(settings.referralBonus || 0).toFixed(2)} প্রতি বন্ধুর জন্য`);
+  setText("minWithdrawHint",    `সর্বনিম্ন উত্তোলন: ৳${settings.minWithdraw || 0}`);
+  setText("chainLenText",       wc.count || 1);
+  setText("homeWatchSub",       `একটি ছোট বিজ্ঞাপন চেইন দেখুন এবং ৳${totalReward} সাথে সাথে আয় করুন`);
 
   const wdChain = settings.withdrawChain || {};
   const notice = document.getElementById("wdChainNotice");
-  if (wdChain.enabled) {
-    notice.style.display = "block";
-    document.getElementById("wdChainMsg").textContent = wdChain.message || "উত্তোলনের আগে বিজ্ঞাপন দেখুন 👇";
-  } else {
-    notice.style.display = "none";
+  if (notice) {
+    if (wdChain.enabled) {
+      notice.style.display = "block";
+      setText("wdChainMsg", wdChain.message || "উত্তোলনের আগে বিজ্ঞাপন দেখুন 👇");
+    } else {
+      notice.style.display = "none";
+    }
   }
 
   renderTasksList();
@@ -992,14 +1006,14 @@ function applySettingsToUI() {
 function renderUserData() {
   const bal = +(userData.balance || 0);
 
-  document.getElementById("homeBalance").textContent     = bal.toFixed(2);
-  document.getElementById("walletBalance").textContent   = bal.toFixed(2);
-  document.getElementById("totalReferrals").textContent  = userData.referralCount || 0;
-  document.getElementById("referralEarned").textContent  = (+(userData.referralEarned || 0)).toFixed(2);
-  document.getElementById("refCode").textContent         = userData.userId || USER_ID;
-  document.getElementById("profileName").textContent     = userData.userName || USER_NAME;
-  document.getElementById("profileId").textContent       = "আইডি: " + USER_ID;
-  document.getElementById("avatarLetter").textContent    = (userData.userName || USER_NAME).charAt(0).toUpperCase();
+  setText("homeBalance",     bal.toFixed(2));
+  setText("walletBalance",   bal.toFixed(2));
+  setText("totalReferrals",  userData.referralCount || 0);
+  setText("referralEarned",  (+(userData.referralEarned || 0)).toFixed(2));
+  setText("refCode",         userData.userId || USER_ID);
+  setText("profileName",     userData.userName || USER_NAME);
+  setText("profileId",       "আইডি: " + USER_ID);
+  setText("avatarLetter",    (userData.userName || USER_NAME).charAt(0).toUpperCase());
 
   renderDailyBonusState();
   renderWatchAdState();
