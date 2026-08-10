@@ -1202,7 +1202,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
     </div>
   </div>
 
-  <!-- ===================== SUPPORT PAGE — NEW DESIGN ===================== -->
+  <!-- ===================== SUPPORT PAGE ===================== -->
   <div class="page" id="page-support">
 
     <!-- Hidden elements required by JS (renderSupport, renderVideo, openTutorial) -->
@@ -1237,37 +1237,36 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
       </div>
     </div>
 
-    <!-- দ্রুত সহায়তা -->
+    <!-- দ্রুত সহায়তা — 4 quick cards (admin card 0,1,2,3 mapped) -->
     <div class="sp-section-lbl">
       <span class="sp-lbl-icon">✦</span> দ্রুত সহায়তা
     </div>
     <div class="sp-quick-grid" id="spQuickGrid">
-      <!-- These 4 static cards mirror the screenshot -->
       <div class="sp-quick-card" onclick="spQuickAction('chat')">
         <div class="sp-quick-ic purple">💬</div>
-        <div class="sp-quick-name">লাইভ চ্যাট</div>
-        <div class="sp-quick-sub">এখনই কথা বলুন</div>
+        <div class="sp-quick-name" id="sqn0">লাইভ চ্যাট</div>
+        <div class="sp-quick-sub" id="sqs0">এখনই কথা বলুন</div>
       </div>
       <div class="sp-quick-card" onclick="spQuickAction('telegram')">
         <div class="sp-quick-ic green">
           <i class="fa-brands fa-telegram" style="font-size:22px;color:#fff;"></i>
         </div>
-        <div class="sp-quick-name">টেলিগ্রাম</div>
-        <div class="sp-quick-sub">আমাদের চ্যানেল</div>
+        <div class="sp-quick-name" id="sqn1">টেলিগ্রাম</div>
+        <div class="sp-quick-sub" id="sqs1">আমাদের চ্যানেল</div>
       </div>
       <div class="sp-quick-card" onclick="spQuickAction('email')">
         <div class="sp-quick-ic orange">✉️</div>
-        <div class="sp-quick-name">ইমেইল করুন</div>
-        <div class="sp-quick-sub">সরাসরি মেইল পাঠান</div>
+        <div class="sp-quick-name" id="sqn2">ইমেইল করুন</div>
+        <div class="sp-quick-sub" id="sqs2">সরাসরি মেইল পাঠান</div>
       </div>
       <div class="sp-quick-card" onclick="spQuickAction('faq')">
         <div class="sp-quick-ic blue">❓</div>
-        <div class="sp-quick-name">সাধারণ প্রশ্ন</div>
-        <div class="sp-quick-sub">প্রশ্নের উত্তর দেখুন</div>
+        <div class="sp-quick-name" id="sqn3">সাধারণ প্রশ্ন</div>
+        <div class="sp-quick-sub" id="sqs3">প্রশ্নের উত্তর দেখুন</div>
       </div>
     </div>
 
-    <!-- যোগাযোগের মাধ্যম -->
+    <!-- যোগাযোগের মাধ্যম — 3 contact rows (admin card 1=tg, 2=email, 0=live) -->
     <div class="sp-contact-card">
       <div class="sp-contact-head">
         <div class="sp-contact-head-ic">🎧</div>
@@ -1277,12 +1276,13 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
         </div>
       </div>
 
+      <!-- Row: Telegram → admin card index 1 -->
       <div class="sp-contact-row" id="spContactTg">
         <div class="sp-cicon tg">
           <i class="fa-brands fa-telegram" style="color:#fff;font-size:20px;"></i>
         </div>
         <div class="sp-cinfo">
-          <div class="sp-cname">টেলিগ্রাম সাপোর্ট</div>
+          <div class="sp-cname" id="spTgName">টেলিগ্রাম সাপোর্ট</div>
           <div class="sp-chandle" id="spTgHandle">@ZomatoSupport</div>
         </div>
         <button class="sp-cbtn" onclick="spContactAction('telegram')">
@@ -1290,10 +1290,11 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
         </button>
       </div>
 
+      <!-- Row: Email → admin card index 2 -->
       <div class="sp-contact-row" id="spContactEmail">
         <div class="sp-cicon em">✉️</div>
         <div class="sp-cinfo">
-          <div class="sp-cname">ইমেইল সাপোর্ট</div>
+          <div class="sp-cname" id="spEmailName">ইমেইল সাপোর্ট</div>
           <div class="sp-chandle" id="spEmailHandle">support@zomato-platform.com</div>
         </div>
         <button class="sp-cbtn" onclick="spContactAction('email')">
@@ -1301,11 +1302,12 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
         </button>
       </div>
 
+      <!-- Row: Live Chat → admin card index 0 -->
       <div class="sp-contact-row" id="spContactLive">
         <div class="sp-cicon lv">💬</div>
         <div class="sp-cinfo">
-          <div class="sp-cname">লাইভ সাপোর্ট</div>
-          <div class="sp-chandle">সকাল ১০টা - রাত ১০টা (প্রতিদিন)</div>
+          <div class="sp-cname" id="spLiveName">লাইভ সাপোর্ট</div>
+          <div class="sp-chandle" id="spLiveHandle">সকাল ১০টা - রাত ১০টা (প্রতিদিন)</div>
         </div>
         <button class="sp-cbtn" onclick="spContactAction('live')">
           💬 এখনই চ্যাট
@@ -1340,9 +1342,6 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
         <i class="fa-solid fa-chevron-down sp-faq-arrow"></i>
       </div>
     </div>
-
-    <!-- Admin-managed support cards (invisible but functional for renderSupport) -->
-    <!-- sgrid is already hidden above via CSS, renderSupport() still writes to it -->
 
   </div>
 
@@ -1586,6 +1585,127 @@ function openMiniLink(link){
   else window.open(link,'_blank');
 }
 
+/* ───────────────────────────────────────────────────────
+   HELPER: open any link (tg-aware)
+─────────────────────────────────────────────────────── */
+function _openLink(link){
+  if(!link)return;
+  const tg=window.Telegram?.WebApp;
+  if(tg){
+    if(link.startsWith('mailto:')){tg.openLink(link);}
+    else if(link.includes('t.me')||link.includes('telegram.me')){tg.openTelegramLink(link);}
+    else{tg.openLink(link);}
+  }else{
+    window.open(link,'_blank');
+  }
+}
+
+/* ───────────────────────────────────────────────────────
+   SUPPORT PAGE — card index mapping:
+     Index 0 → লাইভ চ্যাট  (quick[0] + contact row "live")
+     Index 1 → টেলিগ্রাম  (quick[1] + contact row "tg")
+     Index 2 → ইমেইল       (quick[2] + contact row "email")
+     Index 3 → সাধারণ প্রশ্ন (quick[3] → scroll to FAQ)
+─────────────────────────────────────────────────────── */
+
+/* ── Quick grid 4 button clicks ── */
+function spQuickAction(type){
+  const cards=APP.settings.supportCards||[];
+  if(type==='chat'){
+    // card index 0 → লাইভ চ্যাট
+    const c=cards[0];
+    if(c&&c.link){_openLink(c.link);}
+    else showToast('⚠️ লাইভ চ্যাট link set করা নেই');
+  }else if(type==='telegram'){
+    // card index 1 → টেলিগ্রাম
+    const c=cards[1];
+    if(c&&c.link){_openLink(c.link);}
+    else showToast('⚠️ Telegram link set করা নেই');
+  }else if(type==='email'){
+    // card index 2 → ইমেইল
+    const c=cards[2];
+    if(c&&c.link){_openLink(c.link);}
+    else showToast('⚠️ Email link set করা নেই');
+  }else if(type==='faq'){
+    // scroll to FAQ section
+    document.getElementById('spFaqCard')?.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+/* ── Contact row 3 button clicks ── */
+function spContactAction(type){
+  const cards=APP.settings.supportCards||[];
+  if(type==='telegram'){
+    // card index 1
+    const c=cards[1];
+    if(c&&c.link){_openLink(c.link);}
+    else showToast('⚠️ Telegram link set করা নেই');
+  }else if(type==='email'){
+    // card index 2
+    const c=cards[2];
+    if(c&&c.link){_openLink(c.link);}
+    else showToast('⚠️ Email link set করা নেই');
+  }else if(type==='live'){
+    // card index 0
+    const c=cards[0];
+    if(c&&c.link){_openLink(c.link);}
+    else showToast('⚠️ লাইভ চ্যাট link set করা নেই');
+  }
+}
+
+/* ── renderSupport: update UI labels from admin card data ── */
+function renderSupport(){
+  const cards=APP.settings.supportCards||[];
+
+  /* --- Quick grid labels (index 0,1,2 update name+sub; index 3 stays static) --- */
+  const qMeta=[
+    {nameId:'sqn0', subId:'sqs0', fallbackName:'লাইভ চ্যাট',   fallbackSub:'এখনই কথা বলুন'},
+    {nameId:'sqn1', subId:'sqs1', fallbackName:'টেলিগ্রাম',    fallbackSub:'আমাদের চ্যানেল'},
+    {nameId:'sqn2', subId:'sqs2', fallbackName:'ইমেইল করুন',   fallbackSub:'সরাসরি মেইল পাঠান'},
+  ];
+  qMeta.forEach((m,i)=>{
+    const c=cards[i];
+    const nm=document.getElementById(m.nameId);
+    const sb=document.getElementById(m.subId);
+    if(nm) nm.textContent = c?.title || m.fallbackName;
+    if(sb) sb.textContent = c?.desc  || m.fallbackSub;
+  });
+
+  /* --- Contact rows --- */
+  // Row 1: Telegram (card index 1)
+  const tgCard=cards[1];
+  const tgNameEl=document.getElementById('spTgName');
+  const tgHandleEl=document.getElementById('spTgHandle');
+  if(tgNameEl)   tgNameEl.textContent   = tgCard?.title || 'টেলিগ্রাম সাপোর্ট';
+  if(tgHandleEl) tgHandleEl.textContent = tgCard?.desc  || tgCard?.link || '@ZomatoSupport';
+
+  // Row 2: Email (card index 2)
+  const emCard=cards[2];
+  const emNameEl=document.getElementById('spEmailName');
+  const emHandleEl=document.getElementById('spEmailHandle');
+  if(emNameEl)   emNameEl.textContent   = emCard?.title || 'ইমেইল সাপোর্ট';
+  if(emHandleEl) emHandleEl.textContent = emCard?.desc  || emCard?.link || 'support@zomato-platform.com';
+
+  // Row 3: Live Chat (card index 0)
+  const lvCard=cards[0];
+  const lvNameEl=document.getElementById('spLiveName');
+  const lvHandleEl=document.getElementById('spLiveHandle');
+  if(lvNameEl)   lvNameEl.textContent   = lvCard?.title || 'লাইভ সাপোর্ট';
+  if(lvHandleEl) lvHandleEl.textContent = lvCard?.desc  || 'সকাল ১০টা - রাত ১০টা (প্রতিদিন)';
+
+  /* --- Legacy sgrid (hidden, kept for compatibility) --- */
+  const el=document.getElementById('supGrid');
+  if(el){
+    if(!cards.length){el.innerHTML=`<div class="empty" style="grid-column:span 2;font-family:'Hind Siliguri',sans-serif">কোনো সাপোর্ট লিংক নেই</div>`;return;}
+    el.innerHTML=cards.map(c=>`<a href="${c.link||'#'}" class="scard" target="_blank"><div class="sic" style="background:${c.bg||'var(--as)'}">${c.icon||'💬'}</div><div class="st">${c.title}</div><div class="sd">${c.desc||''}</div></a>`).join('');
+  }
+}
+
+function spToggleFaq(el){
+  const arrow=el.querySelector('.sp-faq-arrow');
+  if(arrow){arrow.style.transform=arrow.style.transform==='rotate(180deg)'?'':'rotate(180deg)';}
+}
+
 function selectPM(el, val) {
   document.querySelectorAll('.pm-item').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
@@ -1600,53 +1720,6 @@ function maskAccount(acc){
   var front=3,back=2;
   var stars='*'.repeat(Math.max(s.length-front-back,3));
   return s.slice(0,front)+stars+s.slice(-back);
-}
-
-/* ===== NEW SUPPORT PAGE ACTIONS ===== */
-function spQuickAction(type){
-  const cards=APP.settings.supportCards||[];
-  const tg=window.Telegram?.WebApp;
-  if(type==='telegram'){
-    // find telegram link from support cards or use group link
-    const tgCard=cards.find(c=>(c.link||'').includes('t.me')||(c.title||'').toLowerCase().includes('telegram'));
-    const link=tgCard?tgCard.link:MINI_LINKS.group;
-    if(link){if(tg)tg.openTelegramLink(link);else window.open(link,'_blank');}
-    else showToast('⚠️ Telegram link set করা নেই');
-  }else if(type==='chat'){
-    const chatCard=cards.find(c=>(c.title||'').toLowerCase().includes('chat')||(c.title||'').toLowerCase().includes('চ্যাট'));
-    const link=chatCard?chatCard.link:null;
-    if(link){openMiniLink(link);}else showToast('⚠️ Chat link set করা নেই');
-  }else if(type==='email'){
-    const emCard=cards.find(c=>(c.link||'').includes('mailto')||(c.title||'').toLowerCase().includes('email')||(c.title||'').toLowerCase().includes('ইমেইল'));
-    const link=emCard?emCard.link:null;
-    if(link){if(tg)tg.openLink(link);else window.open(link,'_blank');}else showToast('⚠️ Email link set করা নেই');
-  }else if(type==='faq'){
-    document.getElementById('spFaqCard')?.scrollIntoView({behavior:'smooth',block:'start'});
-  }
-}
-
-function spContactAction(type){
-  const cards=APP.settings.supportCards||[];
-  const tg=window.Telegram?.WebApp;
-  if(type==='telegram'){
-    const card=cards.find(c=>(c.link||'').includes('t.me')||(c.title||'').toLowerCase().includes('telegram'));
-    const link=card?card.link:MINI_LINKS.group;
-    if(link){if(tg)tg.openTelegramLink(link);else window.open(link,'_blank');}
-    else showToast('⚠️ Telegram link set করা নেই');
-  }else if(type==='email'){
-    const card=cards.find(c=>(c.link||'').includes('mailto')||(c.title||'').toLowerCase().includes('email')||(c.title||'').toLowerCase().includes('ইমেইল'));
-    const link=card?card.link:null;
-    if(link){if(tg)tg.openLink(link);else window.open(link,'_blank');}else showToast('⚠️ Email link set করা নেই');
-  }else if(type==='live'){
-    const card=cards.find(c=>(c.title||'').toLowerCase().includes('live')||(c.title||'').toLowerCase().includes('লাইভ'));
-    const link=card?card.link:null;
-    if(link){openMiniLink(link);}else showToast('⚠️ Live chat link set করা নেই');
-  }
-}
-
-function spToggleFaq(el){
-  const arrow=el.querySelector('.sp-faq-arrow');
-  if(arrow){arrow.style.transform=arrow.style.transform==='rotate(180deg)'?'':'rotate(180deg)';}
 }
 
 window.addEventListener('DOMContentLoaded',async()=>{
@@ -1977,7 +2050,6 @@ async function submitWithdrawDirect(wdData){
   btn.innerHTML=origHTML;
 }
 
-function renderSupport(){const cards=APP.settings.supportCards||[];const el=document.getElementById('supGrid');if(!cards.length){el.innerHTML=`<div class="empty" style="grid-column:span 2;font-family:'Hind Siliguri',sans-serif">কোনো সাপোর্ট লিংক নেই</div>`;return;}el.innerHTML=cards.map(c=>`<a href="${c.link||'#'}" class="scard" target="_blank"><div class="sic" style="background:${c.bg||'var(--as)'}">${c.icon||'💬'}</div><div class="st">${c.title}</div><div class="sd">${c.desc||''}</div></a>`).join('');}
 function renderVideo(){const v=APP.settings.video||{};document.getElementById('vtitle').textContent=v.title||'কিভাবে কাজ করবেন তার ভিডিও';document.getElementById('vph').innerHTML=`<div style="display:none"></div>`;}
 function openTutorial(){const v=APP.settings.video||{};if(!v.url){showToast('⚠️ Tutorial link set করা নেই');return;}const tg=window.Telegram?.WebApp;if(tg){if(v.url.includes('t.me')||v.url.includes('telegram'))tg.openTelegramLink(v.url);else tg.openLink(v.url);}else window.open(v.url,'_blank');}
 
