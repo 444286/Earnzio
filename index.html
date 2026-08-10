@@ -341,21 +341,340 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
 .adov-complete-txt { font-family:'Poppins',sans-serif; font-size:20px; font-weight:800; color:#fff; }
 .adov-complete-sub { font-size:13px; color:rgba(255,255,255,.7); font-family:'Poppins',sans-serif; }
 
-/* ===================== OTHER PAGES ===================== */
-.vcard { background:#000; border-radius:20px; overflow:hidden; margin-bottom:14px; border:1px solid var(--border); }
-.vph { width:100%; aspect-ratio:16/9; background:linear-gradient(135deg,#0a0a1a,#141428); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; position:relative; overflow:hidden; cursor:pointer; }
-.vplay { width:62px; height:62px; border-radius:50%; background:rgba(124,111,253,.75); display:flex; align-items:center; justify-content:center; font-size:26px; border:2px solid rgba(255,255,255,.2); z-index:2; }
-.vbar { padding:12px 16px; background:var(--bg2); }
-.vbart { font-size:13px; font-weight:600; color:#fff; font-family:'Hind Siliguri',sans-serif; }
-.sec2 { font-family:'Poppins',sans-serif; font-size:16px; font-weight:700; color:#fff; margin:16px 0 10px; display:flex; align-items:center; gap:8px; }
-.sgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:4px; }
-.scard { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; cursor:pointer; transition:all .2s; text-decoration:none; }
-.scard:active { transform:scale(.96); }
-.sic { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; }
-.st { font-size:13px; font-weight:600; color:#fff; font-family:'Hind Siliguri',sans-serif; }
-.sd { font-size:11px; color:var(--muted); font-family:'Hind Siliguri',sans-serif; }
+/* ===================== SUPPORT PAGE — NEW DESIGN ===================== */
 
-/* Referral */
+/* hidden video elements kept for JS compatibility */
+.vcard { display:none; }
+.vph { display:none; }
+.vbar { display:none; }
+.sec2 { display:none; }
+.sgrid { display:none; }
+
+/* Hero Banner */
+.sp-hero {
+  background: linear-gradient(135deg, #1a0d3a 0%, #0f0620 60%, #1a0a30 100%);
+  border: 1px solid rgba(139,92,246,0.3);
+  border-radius: 20px;
+  padding: 22px 20px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 130px;
+}
+.sp-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; left: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,0.2), transparent 70%);
+}
+.sp-hero-dots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.sp-hero-dots::before {
+  content: '✦ ✦ ✦';
+  position: absolute;
+  top: 12px; right: 120px;
+  font-size: 8px;
+  color: rgba(167,139,250,0.5);
+  letter-spacing: 8px;
+}
+.sp-hero-dots::after {
+  content: '✦ ✦';
+  position: absolute;
+  bottom: 16px; left: 20px;
+  font-size: 7px;
+  color: rgba(167,139,250,0.35);
+  letter-spacing: 6px;
+}
+.sp-hero-text { position: relative; z-index: 2; flex: 1; }
+.sp-hero-title1 {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+.sp-hero-title2 {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #e879f9;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.sp-hero-sub {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.sp-hero-sub .heart { color: #f43f5e; }
+.sp-hero-avatar {
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sp-hero-3d {
+  font-size: 80px;
+  line-height: 1;
+  filter: drop-shadow(0 8px 20px rgba(139,92,246,0.5));
+  animation: spFloat 3s ease-in-out infinite;
+}
+@keyframes spFloat {
+  0%,100%{ transform:translateY(0) rotate(-3deg); }
+  50%{ transform:translateY(-8px) rotate(3deg); }
+}
+.sp-hero-bubbles {
+  position: absolute;
+  top: 12px; right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 3;
+}
+.sp-bubble {
+  background: rgba(139,92,246,0.8);
+  border-radius: 12px;
+  padding: 4px 7px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(139,92,246,0.4);
+}
+.sp-bubble.mail {
+  background: rgba(168,85,247,0.85);
+  border-radius: 10px;
+  padding: 4px 7px;
+  font-size: 13px;
+  margin-left: 10px;
+}
+
+/* দ্রুত সহায়তা Section Label */
+.sp-section-lbl {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.sp-section-lbl .sp-lbl-icon { color: #c084fc; font-size: 16px; }
+
+/* Quick Help 4-grid */
+.sp-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+  margin-bottom: 20px;
+}
+.sp-quick-card {
+  background: #0e0b1e;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 14px 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.sp-quick-card:active { transform: scale(.94); }
+.sp-quick-ic {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.sp-quick-ic.purple { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+.sp-quick-ic.green  { background: linear-gradient(135deg, #16a34a, #166534); }
+.sp-quick-ic.orange { background: linear-gradient(135deg, #ea580c, #9a3412); }
+.sp-quick-ic.blue   { background: linear-gradient(135deg, #0284c7, #075985); }
+.sp-quick-name {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  line-height: 1.2;
+}
+.sp-quick-sub {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 9.5px;
+  color: rgba(255,255,255,0.45);
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Contact Section Card */
+.sp-contact-card {
+  background: #0c0818;
+  border: 1px solid rgba(139,92,246,0.25);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.sp-contact-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.sp-contact-head-ic {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(124,111,253,0.15);
+  border: 1px solid rgba(124,111,253,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.sp-contact-head-txt { flex: 1; }
+.sp-contact-head-title {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 15px; font-weight: 700; color: #fff;
+}
+.sp-contact-head-sub {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 11px; color: rgba(255,255,255,0.45);
+  margin-top: 2px;
+}
+.sp-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.sp-contact-row:last-child { border-bottom: none; padding-bottom: 0; }
+.sp-contact-row:first-of-type { padding-top: 0; }
+.sp-cicon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.sp-cicon.tg  { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+.sp-cicon.em  { background: linear-gradient(135deg, #e2136e, #9a0e4b); }
+.sp-cicon.lv  { background: linear-gradient(135deg, #22c55e, #166534); }
+.sp-cinfo { flex: 1; min-width: 0; }
+.sp-cname {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 13px; font-weight: 700; color: #fff;
+}
+.sp-chandle {
+  font-size: 11px; color: rgba(255,255,255,0.45);
+  margin-top: 2px; font-family: 'Poppins', sans-serif;
+}
+.sp-cbtn {
+  background: linear-gradient(135deg, #6d28d9, #7c3aed);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Hind Siliguri', sans-serif;
+  white-space: nowrap;
+  display: flex; align-items: center; gap: 5px;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.sp-cbtn:active { transform: scale(.94); }
+
+/* FAQ Section */
+.sp-faq-card {
+  background: #0c0818;
+  border: 1px solid rgba(139,92,246,0.2);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.sp-faq-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.sp-faq-title {
+  display: flex; align-items: center; gap: 9px;
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 15px; font-weight: 700; color: #fff;
+}
+.sp-faq-ic {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #4c1d95);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: #fff; font-weight: 700;
+  flex-shrink: 0;
+}
+.sp-faq-all {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  color: #c084fc;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex; align-items: center; gap: 3px;
+  cursor: pointer;
+}
+.sp-faq-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 13px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all .2s;
+}
+.sp-faq-item:last-child { margin-bottom: 0; }
+.sp-faq-item:active { background: rgba(124,111,253,0.08); }
+.sp-faq-q {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 13px; color: rgba(255,255,255,0.85);
+  font-weight: 500;
+  flex: 1;
+}
+.sp-faq-arrow {
+  color: rgba(255,255,255,0.4);
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+/* Admin-controlled support cards (hidden sgrid kept for JS) */
+.sp-admin-cards-wrap {
+  margin-bottom: 16px;
+}
+/* Keep original sgrid/scard invisible but functional for renderSupport() */
+.sgrid { display:none !important; }
+
+/* ===================== REFERRAL ===================== */
 .rhero { background:linear-gradient(135deg,#0d1117,#1a1f35); border:1px solid rgba(124,111,253,.2); border-radius:20px; padding:24px 20px; text-align:center; margin-bottom:14px; position:relative; overflow:hidden; }
 .rhero::before { content:'👥'; position:absolute; font-size:110px; opacity:.04; top:-10px; right:-20px; }
 .remo { font-size:40px; margin-bottom:8px; }
@@ -883,17 +1202,148 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
     </div>
   </div>
 
+  <!-- ===================== SUPPORT PAGE — NEW DESIGN ===================== -->
   <div class="page" id="page-support">
-    <div class="pgt"><div class="pgtitle" style="font-family:'Hind Siliguri',sans-serif">সাপোর্ট</div></div>
-    <div class="vcard">
-      <div class="vph" id="vph" onclick="openTutorial()">
-        <div class="vplay">▶</div>
-        <div style="font-size:13px;color:rgba(255,255,255,.5);z-index:2;font-family:'Hind Siliguri',sans-serif">টিউটোরিয়াল ভিডিও</div>
-      </div>
-      <div class="vbar"><div class="vbart" id="vtitle">কিভাবে কাজ করবেন তার ভিডিও</div></div>
+
+    <!-- Hidden elements required by JS (renderSupport, renderVideo, openTutorial) -->
+    <div class="vcard" style="display:none!important">
+      <div class="vph" id="vph" onclick="openTutorial()"></div>
+      <div class="vbar"><div class="vbart" id="vtitle"></div></div>
     </div>
-    <div class="sec2" style="font-family:'Hind Siliguri',sans-serif">🛟 সাহায্য নিন</div>
-    <div class="sgrid" id="supGrid"><div class="empty" style="grid-column:span 2;font-family:'Hind Siliguri',sans-serif">লোড হচ্ছে...</div></div>
+    <div class="sec2" style="display:none!important"></div>
+    <div class="sgrid" id="supGrid" style="display:none!important"></div>
+
+    <!-- Page Title -->
+    <div class="pgt">
+      <div class="pgtitle" style="font-family:'Hind Siliguri',sans-serif">সাপোর্ট</div>
+    </div>
+
+    <!-- Hero Banner -->
+    <div class="sp-hero">
+      <div class="sp-hero-dots"></div>
+      <div class="sp-hero-text">
+        <div class="sp-hero-title1">আমরা আছি</div>
+        <div class="sp-hero-title2">আপনার পাশে!</div>
+        <div class="sp-hero-sub">
+          যেকোনো সমস্যা বা সহায়তার জন্য<br>আমাদের সাথে যোগাযোগ করুন <span class="heart">❤️</span>
+        </div>
+      </div>
+      <div class="sp-hero-avatar">
+        <div class="sp-hero-3d">🎧</div>
+        <div class="sp-hero-bubbles">
+          <div class="sp-bubble">💬</div>
+          <div class="sp-bubble mail">✉️</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- দ্রুত সহায়তা -->
+    <div class="sp-section-lbl">
+      <span class="sp-lbl-icon">✦</span> দ্রুত সহায়তা
+    </div>
+    <div class="sp-quick-grid" id="spQuickGrid">
+      <!-- These 4 static cards mirror the screenshot -->
+      <div class="sp-quick-card" onclick="spQuickAction('chat')">
+        <div class="sp-quick-ic purple">💬</div>
+        <div class="sp-quick-name">লাইভ চ্যাট</div>
+        <div class="sp-quick-sub">এখনই কথা বলুন</div>
+      </div>
+      <div class="sp-quick-card" onclick="spQuickAction('telegram')">
+        <div class="sp-quick-ic green">
+          <i class="fa-brands fa-telegram" style="font-size:22px;color:#fff;"></i>
+        </div>
+        <div class="sp-quick-name">টেলিগ্রাম</div>
+        <div class="sp-quick-sub">আমাদের চ্যানেল</div>
+      </div>
+      <div class="sp-quick-card" onclick="spQuickAction('email')">
+        <div class="sp-quick-ic orange">✉️</div>
+        <div class="sp-quick-name">ইমেইল করুন</div>
+        <div class="sp-quick-sub">সরাসরি মেইল পাঠান</div>
+      </div>
+      <div class="sp-quick-card" onclick="spQuickAction('faq')">
+        <div class="sp-quick-ic blue">❓</div>
+        <div class="sp-quick-name">সাধারণ প্রশ্ন</div>
+        <div class="sp-quick-sub">প্রশ্নের উত্তর দেখুন</div>
+      </div>
+    </div>
+
+    <!-- যোগাযোগের মাধ্যম -->
+    <div class="sp-contact-card">
+      <div class="sp-contact-head">
+        <div class="sp-contact-head-ic">🎧</div>
+        <div class="sp-contact-head-txt">
+          <div class="sp-contact-head-title">যোগাযোগের মাধ্যম</div>
+          <div class="sp-contact-head-sub">আপনার পছন্দের মাধ্যমে আমাদের সাথে যোগাযোগ করুন</div>
+        </div>
+      </div>
+
+      <div class="sp-contact-row" id="spContactTg">
+        <div class="sp-cicon tg">
+          <i class="fa-brands fa-telegram" style="color:#fff;font-size:20px;"></i>
+        </div>
+        <div class="sp-cinfo">
+          <div class="sp-cname">টেলিগ্রাম সাপোর্ট</div>
+          <div class="sp-chandle" id="spTgHandle">@ZomatoSupport</div>
+        </div>
+        <button class="sp-cbtn" onclick="spContactAction('telegram')">
+          <i class="fa-brands fa-telegram" style="font-size:12px;"></i> চ্যাট শুরু
+        </button>
+      </div>
+
+      <div class="sp-contact-row" id="spContactEmail">
+        <div class="sp-cicon em">✉️</div>
+        <div class="sp-cinfo">
+          <div class="sp-cname">ইমেইল সাপোর্ট</div>
+          <div class="sp-chandle" id="spEmailHandle">support@zomato-platform.com</div>
+        </div>
+        <button class="sp-cbtn" onclick="spContactAction('email')">
+          ✉️ ইমেইল পাঠান
+        </button>
+      </div>
+
+      <div class="sp-contact-row" id="spContactLive">
+        <div class="sp-cicon lv">💬</div>
+        <div class="sp-cinfo">
+          <div class="sp-cname">লাইভ সাপোর্ট</div>
+          <div class="sp-chandle">সকাল ১০টা - রাত ১০টা (প্রতিদিন)</div>
+        </div>
+        <button class="sp-cbtn" onclick="spContactAction('live')">
+          💬 এখনই চ্যাট
+        </button>
+      </div>
+    </div>
+
+    <!-- সাধারণ প্রশ্নাবলী FAQ -->
+    <div class="sp-faq-card" id="spFaqCard">
+      <div class="sp-faq-head">
+        <div class="sp-faq-title">
+          <div class="sp-faq-ic">?</div>
+          সাধারণ প্রশ্নাবলী
+        </div>
+        <div class="sp-faq-all">সব দেখুন →</div>
+      </div>
+
+      <div class="sp-faq-item" onclick="spToggleFaq(this)">
+        <div class="sp-faq-q">কিভাবে কাজ করে?</div>
+        <i class="fa-solid fa-chevron-down sp-faq-arrow"></i>
+      </div>
+      <div class="sp-faq-item" onclick="spToggleFaq(this)">
+        <div class="sp-faq-q">পেমেন্ট কিভাবে পাবো?</div>
+        <i class="fa-solid fa-chevron-down sp-faq-arrow"></i>
+      </div>
+      <div class="sp-faq-item" onclick="spToggleFaq(this)">
+        <div class="sp-faq-q">অ্যাড না দেখালে কি হবে?</div>
+        <i class="fa-solid fa-chevron-down sp-faq-arrow"></i>
+      </div>
+      <div class="sp-faq-item" onclick="spToggleFaq(this)">
+        <div class="sp-faq-q">আমার একাউন্ট সমস্যা হলে কি করবো?</div>
+        <i class="fa-solid fa-chevron-down sp-faq-arrow"></i>
+      </div>
+    </div>
+
+    <!-- Admin-managed support cards (invisible but functional for renderSupport) -->
+    <!-- sgrid is already hidden above via CSS, renderSupport() still writes to it -->
+
   </div>
 
   <div class="page" id="page-referral">
@@ -913,7 +1363,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
       <div class="rbox"><div class="rtxt" id="rLink">Loading...</div><button class="cbtn" onclick="copyRef()">Copy</button></div>
       <button class="sbtn" onclick="shareRef()">📤 Share on Telegram</button>
     </div>
-    <div class="sec2">👥 Your Referrals</div>
+    <div class="sec2" style="display:block!important;font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:#fff;margin:16px 0 10px;display:flex;align-items:center;gap:8px;">👥 Your Referrals</div>
     <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:4px 16px">
       <div id="rList"><div class="empty"><div class="eic">👤</div>No referrals yet</div></div>
     </div>
@@ -1150,6 +1600,53 @@ function maskAccount(acc){
   var front=3,back=2;
   var stars='*'.repeat(Math.max(s.length-front-back,3));
   return s.slice(0,front)+stars+s.slice(-back);
+}
+
+/* ===== NEW SUPPORT PAGE ACTIONS ===== */
+function spQuickAction(type){
+  const cards=APP.settings.supportCards||[];
+  const tg=window.Telegram?.WebApp;
+  if(type==='telegram'){
+    // find telegram link from support cards or use group link
+    const tgCard=cards.find(c=>(c.link||'').includes('t.me')||(c.title||'').toLowerCase().includes('telegram'));
+    const link=tgCard?tgCard.link:MINI_LINKS.group;
+    if(link){if(tg)tg.openTelegramLink(link);else window.open(link,'_blank');}
+    else showToast('⚠️ Telegram link set করা নেই');
+  }else if(type==='chat'){
+    const chatCard=cards.find(c=>(c.title||'').toLowerCase().includes('chat')||(c.title||'').toLowerCase().includes('চ্যাট'));
+    const link=chatCard?chatCard.link:null;
+    if(link){openMiniLink(link);}else showToast('⚠️ Chat link set করা নেই');
+  }else if(type==='email'){
+    const emCard=cards.find(c=>(c.link||'').includes('mailto')||(c.title||'').toLowerCase().includes('email')||(c.title||'').toLowerCase().includes('ইমেইল'));
+    const link=emCard?emCard.link:null;
+    if(link){if(tg)tg.openLink(link);else window.open(link,'_blank');}else showToast('⚠️ Email link set করা নেই');
+  }else if(type==='faq'){
+    document.getElementById('spFaqCard')?.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+function spContactAction(type){
+  const cards=APP.settings.supportCards||[];
+  const tg=window.Telegram?.WebApp;
+  if(type==='telegram'){
+    const card=cards.find(c=>(c.link||'').includes('t.me')||(c.title||'').toLowerCase().includes('telegram'));
+    const link=card?card.link:MINI_LINKS.group;
+    if(link){if(tg)tg.openTelegramLink(link);else window.open(link,'_blank');}
+    else showToast('⚠️ Telegram link set করা নেই');
+  }else if(type==='email'){
+    const card=cards.find(c=>(c.link||'').includes('mailto')||(c.title||'').toLowerCase().includes('email')||(c.title||'').toLowerCase().includes('ইমেইল'));
+    const link=card?card.link:null;
+    if(link){if(tg)tg.openLink(link);else window.open(link,'_blank');}else showToast('⚠️ Email link set করা নেই');
+  }else if(type==='live'){
+    const card=cards.find(c=>(c.title||'').toLowerCase().includes('live')||(c.title||'').toLowerCase().includes('লাইভ'));
+    const link=card?card.link:null;
+    if(link){openMiniLink(link);}else showToast('⚠️ Live chat link set করা নেই');
+  }
+}
+
+function spToggleFaq(el){
+  const arrow=el.querySelector('.sp-faq-arrow');
+  if(arrow){arrow.style.transform=arrow.style.transform==='rotate(180deg)'?'':'rotate(180deg)';}
 }
 
 window.addEventListener('DOMContentLoaded',async()=>{
@@ -1442,7 +1939,6 @@ async function chainAllDone(){
 
 function updateWdBtn(){
   document.getElementById('wdAdInfo').style.display='none';
-  // button innerHTML kept intact — do not clear it
 }
 
 function handleWithdraw(){
@@ -1482,7 +1978,7 @@ async function submitWithdrawDirect(wdData){
 }
 
 function renderSupport(){const cards=APP.settings.supportCards||[];const el=document.getElementById('supGrid');if(!cards.length){el.innerHTML=`<div class="empty" style="grid-column:span 2;font-family:'Hind Siliguri',sans-serif">কোনো সাপোর্ট লিংক নেই</div>`;return;}el.innerHTML=cards.map(c=>`<a href="${c.link||'#'}" class="scard" target="_blank"><div class="sic" style="background:${c.bg||'var(--as)'}">${c.icon||'💬'}</div><div class="st">${c.title}</div><div class="sd">${c.desc||''}</div></a>`).join('');}
-function renderVideo(){const v=APP.settings.video||{};document.getElementById('vtitle').textContent=v.title||'কিভাবে কাজ করবেন তার ভিডিও';document.getElementById('vph').innerHTML=`<div class="vplay">▶</div><div style="font-size:13px;color:rgba(255,255,255,.5);z-index:2;font-family:'Hind Siliguri',sans-serif">টিউটোরিয়াল ভিডিও</div>`;}
+function renderVideo(){const v=APP.settings.video||{};document.getElementById('vtitle').textContent=v.title||'কিভাবে কাজ করবেন তার ভিডিও';document.getElementById('vph').innerHTML=`<div style="display:none"></div>`;}
 function openTutorial(){const v=APP.settings.video||{};if(!v.url){showToast('⚠️ Tutorial link set করা নেই');return;}const tg=window.Telegram?.WebApp;if(tg){if(v.url.includes('t.me')||v.url.includes('telegram'))tg.openTelegramLink(v.url);else tg.openLink(v.url);}else window.open(v.url,'_blank');}
 
 function renderRefList(){const el=document.getElementById('rList');const refs=APP.referrals;if(!refs.length){el.innerHTML=`<div class="empty"><div class="eic">👤</div>No referrals yet</div>`;return;}el.innerHTML=[...refs].reverse().map(r=>`<div class="ritem"><div class="rava">${(r.name||'?').charAt(0).toUpperCase()}</div><div><div class="run">${r.name||'Unknown'}</div><div class="rdt">${ta(r.date)}</div></div><div class="re">+৳ ${Number(APP.settings.referralBonus||5).toFixed(2)}</div></div>`).join('');}
