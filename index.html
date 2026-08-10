@@ -9,10 +9,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-
-
 <script src='//libtl.com/sdk.js' data-zone='10900318' data-sdk='show_10900318'></script>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&family=Hind+Siliguri:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -258,65 +255,19 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
   gap:0;
   box-shadow:0 24px 64px rgba(0,0,0,.55);
 }
-.adov-spinner-wrap {
-  width:86px; height:86px;
-  display:flex; align-items:center; justify-content:center;
-  margin:0 0 22px;
-}
-.adov-spinner-ring {
-  width:80px; height:80px;
-  border:4px solid rgba(255,255,255,.22);
-  border-top-color:rgba(255,255,255,.88);
-  border-right-color:rgba(255,255,255,.55);
-  border-radius:50%;
-  animation:adovSpin .95s linear infinite;
-}
+.adov-spinner-wrap { width:86px; height:86px; display:flex; align-items:center; justify-content:center; margin:0 0 22px; }
+.adov-spinner-ring { width:80px; height:80px; border:4px solid rgba(255,255,255,.22); border-top-color:rgba(255,255,255,.88); border-right-color:rgba(255,255,255,.55); border-radius:50%; animation:adovSpin .95s linear infinite; }
 @keyframes adovSpin { to{transform:rotate(360deg)} }
-.adov-steps {
-  display:flex; gap:6px;
-  width:100%;
-  margin:0 0 20px;
-}
-.adov-s {
-  height:4px; border-radius:4px;
-  background:rgba(255,255,255,.22);
-  transition:background .35s; flex:1;
-}
+.adov-steps { display:flex; gap:6px; width:100%; margin:0 0 20px; }
+.adov-s { height:4px; border-radius:4px; background:rgba(255,255,255,.22); transition:background .35s; flex:1; }
 .adov-s.done   { background:rgba(255,255,255,.9); }
 .adov-s.active { background:#fff; animation:adovPuls .85s infinite; }
 .adov-s.skip   { background:rgba(255,255,255,.12); }
 @keyframes adovPuls { 0%,100%{opacity:1} 50%{opacity:.4} }
-.adov-waiting {
-  font-family:'Hind Siliguri','Poppins',sans-serif;
-  font-size:17px; font-weight:600;
-  color:#fff;
-  display:none; text-align:center; line-height:1.65;
-  margin-bottom:18px;
-  width:100%;
-}
+.adov-waiting { font-family:'Hind Siliguri','Poppins',sans-serif; font-size:17px; font-weight:600; color:#fff; display:none; text-align:center; line-height:1.65; margin-bottom:18px; width:100%; }
 .adov-waiting.show { display:block; }
-.adov-divider {
-  width:100%; height:2px;
-  background:rgba(255,255,255,.38);
-  border-radius:2px;
-  margin-bottom:20px;
-  display:none;
-}
-.adov-continue {
-  background:#fff;
-  color:#4840c8;
-  border:none;
-  border-radius:50px;
-  padding:16px 0;
-  width:100%;
-  font-size:16px; font-weight:700;
-  cursor:pointer;
-  font-family:'Poppins',sans-serif;
-  display:none;
-  letter-spacing:.2px;
-  box-shadow:0 4px 18px rgba(0,0,0,.18);
-  transition:transform .14s, box-shadow .14s;
-}
+.adov-divider { width:100%; height:2px; background:rgba(255,255,255,.38); border-radius:2px; margin-bottom:20px; display:none; }
+.adov-continue { background:#fff; color:#4840c8; border:none; border-radius:50px; padding:16px 0; width:100%; font-size:16px; font-weight:700; cursor:pointer; font-family:'Poppins',sans-serif; display:none; letter-spacing:.2px; box-shadow:0 4px 18px rgba(0,0,0,.18); transition:transform .14s, box-shadow .14s; }
 .adov-continue.show { display:block; }
 .adov-continue:active { transform:scale(.97); box-shadow:0 2px 8px rgba(0,0,0,.18); }
 .adov-reward-wrap { display:none!important; }
@@ -326,13 +277,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
 .adov-msg         { display:none!important; }
 .adov-wd-loading { display:none; flex-direction:column; align-items:center; gap:16px; }
 .adov-wd-loading.show { display:flex; }
-.adov-wd-spinner {
-  width:52px; height:52px;
-  border:4px solid rgba(255,255,255,.2);
-  border-top-color:#fff;
-  border-radius:50%;
-  animation:adovSpin .8s linear infinite;
-}
+.adov-wd-spinner { width:52px; height:52px; border:4px solid rgba(255,255,255,.2); border-top-color:#fff; border-radius:50%; animation:adovSpin .8s linear infinite; }
 .adov-wd-txt { font-size:14px; color:rgba(255,255,255,.75); font-family:'Poppins',sans-serif; }
 @keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
 .adov-complete { text-align:center; padding:8px 0; display:none; flex-direction:column; align-items:center; gap:10px; }
@@ -379,318 +324,474 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
 .rdt { font-size:11px; color:var(--muted); margin-top:2px; font-family:'Poppins',sans-serif; }
 .re { font-size:13px; font-weight:700; color:var(--green); margin-left:auto; white-space:nowrap; font-family:'Poppins',sans-serif; }
 
-/* ===================== WALLET PAGE — SCREENSHOT STYLE ===================== */
+/* =====================================================================
+   WALLET PAGE — REDESIGNED EXACTLY LIKE SCREENSHOT
+   ===================================================================== */
 
-/* Balance Card */
+/* ---- Balance Card ---- */
 .wbal-card {
-  background:linear-gradient(145deg,#0d0a1f 0%,#130a3a 50%,#0a0818 100%);
-  border:1px solid rgba(124,111,253,0.3);
-  border-radius:20px;
-  padding:22px 20px 20px;
-  margin-bottom:12px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 8px 32px rgba(80,40,200,0.25);
+  background: linear-gradient(145deg, #1a0b3d 0%, #0e0628 60%, #100730 100%);
+  border: 1px solid rgba(124,111,253,0.25);
+  border-radius: 22px;
+  padding: 24px 20px 20px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(80,40,200,0.3);
 }
+/* subtle radial glow bottom-right */
 .wbal-card::after {
-  content:'';
-  position:absolute;
-  bottom:-50px; right:-50px;
-  width:180px; height:180px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(124,111,253,0.18),transparent 70%);
-  pointer-events:none;
+  content: '';
+  position: absolute;
+  bottom: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,111,253,0.14), transparent 70%);
+  pointer-events: none;
 }
+/* dotted pattern top-right like screenshot */
+.wbal-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 120px; height: 120px;
+  background-image: radial-gradient(circle, rgba(124,111,253,0.25) 1.5px, transparent 1.5px);
+  background-size: 12px 12px;
+  border-radius: 0 22px 0 0;
+  pointer-events: none;
+}
+
 .wbal-top {
-  display:flex; align-items:center; justify-content:space-between;
-  margin-bottom:16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
 }
 .wbal-label {
-  display:flex; align-items:center; gap:8px;
-  font-size:13px; font-weight:600; color:#c4b5fd;
-  font-family:'Poppins',sans-serif;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; color: #c4b5fd;
+  font-family: 'Poppins', sans-serif;
 }
-.wbal-label i { font-size:16px; color:#a855f7; }
+.wbal-label i { font-size: 15px; color: #a855f7; }
 
-/* CSS 3D wallet inside balance card */
+/* 3D Wallet illustration — matches screenshot purple wallet with gold coins */
 .wbal-3d {
-  position:relative; width:88px; height:68px;
-  transform:perspective(260px) rotateY(-12deg) rotateX(8deg);
-  flex-shrink:0;
+  position: relative;
+  width: 110px; height: 90px;
+  transform: perspective(280px) rotateY(-14deg) rotateX(8deg);
+  flex-shrink: 0;
 }
 .wbal-body {
-  position:absolute; bottom:0; right:0;
-  width:72px; height:52px;
-  background:linear-gradient(135deg,#9333ea,#4c1d95);
-  border-radius:9px;
-  box-shadow:-5px 8px 14px rgba(0,0,0,0.6),inset 1px 1px 4px rgba(255,255,255,0.25);
-  border:1px solid #7c3aed;
+  position: absolute; bottom: 0; right: 0;
+  width: 85px; height: 65px;
+  background: linear-gradient(135deg, #9333ea, #5b21b6);
+  border-radius: 11px;
+  box-shadow: -6px 10px 18px rgba(0,0,0,0.65), inset 2px 2px 5px rgba(255,255,255,0.25), inset -4px -4px 10px rgba(0,0,0,0.45);
+  border: 1.5px solid #7c3aed;
 }
 .wbal-flap {
-  position:absolute; top:0; right:0;
-  width:50px; height:100%;
-  background:linear-gradient(135deg,#a855f7,#6d28d9);
-  border-radius:0 9px 9px 0;
-  border-left:1px solid #5b21b6;
-  box-shadow:inset 1px 1px 3px rgba(255,255,255,0.2);
+  position: absolute; top: 0; right: 0;
+  width: 55px; height: 100%;
+  background: linear-gradient(135deg, #a855f7, #6d28d9);
+  border-radius: 0 11px 11px 0;
+  border-left: 1.5px solid #5b21b6;
+  box-shadow: inset 2px 2px 4px rgba(255,255,255,0.22);
 }
 .wbal-btn {
-  position:absolute; left:-7px; top:50%; transform:translateY(-50%);
-  width:14px; height:14px;
-  background:radial-gradient(circle at 30% 30%,#fef08a,#ca8a04);
-  border-radius:50%;
-  box-shadow:1px 2px 5px rgba(0,0,0,0.5);
+  position: absolute; left: -9px; top: 50%; transform: translateY(-50%);
+  width: 18px; height: 18px;
+  background: radial-gradient(circle at 30% 30%, #fef08a, #ca8a04);
+  border-radius: 50%;
+  box-shadow: 1px 3px 7px rgba(0,0,0,0.55), inset -1px -1px 3px rgba(0,0,0,0.4);
 }
+/* Coins on the 3D wallet */
 .wbal-c {
-  position:absolute;
-  width:24px; height:24px;
-  background:radial-gradient(circle at 30% 30%,#fef08a,#eab308,#854d0e);
-  border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:11px; font-weight:700; color:#713f12;
-  border:1.5px solid #facc15;
-  box-shadow:1px 3px 7px rgba(0,0,0,0.45);
-  font-family:'Hind Siliguri',sans-serif;
+  position: absolute;
+  width: 30px; height: 30px;
+  background: radial-gradient(circle at 30% 30%, #fef08a, #eab308, #854d0e);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #713f12;
+  border: 2px solid #facc15;
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.5), inset -2px -2px 5px rgba(0,0,0,0.4);
+  font-family: 'Hind Siliguri', sans-serif;
 }
-.wbal-c1 { top:-12px; left:16px; transform:rotate(15deg); }
-.wbal-c2 { top:0; right:-2px; transform:rotate(-20deg); width:20px; height:20px; font-size:9px; }
+.wbal-c1 { top: -14px; left: 20px; transform: rotate(12deg); }
+.wbal-c2 { top: 2px; right: -4px; transform: rotate(-20deg); width: 24px; height: 24px; font-size: 11px; }
 
-.wbal-amount-row { margin-bottom:10px; }
-.wbal-taka { font-size:30px; font-weight:700; color:#fff; font-family:'Poppins',sans-serif; vertical-align:middle; line-height:1; }
-.wbal-num { font-size:40px; font-weight:800; color:#fff; font-family:'Poppins',sans-serif; line-height:1; }
+/* Large amount display */
+.wbal-amount-row {
+  margin-bottom: 14px;
+  line-height: 1;
+}
+.wbal-taka {
+  font-size: 34px; font-weight: 700; color: #fff;
+  font-family: 'Poppins', sans-serif;
+  vertical-align: baseline;
+}
+.wbal-num {
+  font-size: 46px; font-weight: 800; color: #fff;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1;
+}
+
+/* "Total Balance" green badge */
 .wbal-badge {
-  display:inline-flex; align-items:center; gap:7px;
-  background:rgba(0,200,120,0.12);
-  border:1px solid rgba(0,200,120,0.28);
-  border-radius:20px;
-  padding:6px 14px;
-  font-size:12px; font-weight:600; color:#00e096;
-  font-family:'Poppins',sans-serif;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,200,120,0.12);
+  border: 1.5px solid rgba(0,200,120,0.3);
+  border-radius: 22px;
+  padding: 7px 16px;
+  font-size: 13px; font-weight: 600; color: #00e096;
+  font-family: 'Poppins', sans-serif;
+  margin-top: 4px;
 }
-.wbal-badge i { font-size:13px; }
+.wbal-badge i { font-size: 14px; }
 
-/* Stats Row */
+/* ---- Stats Row: Withdrawn | Pending ---- */
 .wstats-row {
-  display:grid; grid-template-columns:1fr 1fr;
-  background:#0c0a1e;
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:16px;
-  overflow:hidden;
-  margin-bottom:16px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  background: #0d0b20;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 16px;
 }
 .wstat-item {
-  padding:16px 18px;
-  display:flex; flex-direction:column; gap:8px;
+  padding: 18px 20px;
+  display: flex; flex-direction: column; gap: 10px;
 }
-.wstat-item:first-child { border-right:1px solid rgba(255,255,255,0.07); }
+.wstat-item:first-child { border-right: 1px solid rgba(255,255,255,0.07); }
 .wstat-top {
-  display:flex; align-items:center; gap:8px;
-  font-size:12px; color:#8e88a8; font-weight:500;
-  font-family:'Poppins',sans-serif;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: #8e88a8; font-weight: 500;
+  font-family: 'Poppins', sans-serif;
 }
 .wstat-ic {
-  width:28px; height:28px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:12px; flex-shrink:0;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
 }
-.wstat-ic.green { background:rgba(0,224,150,0.15); color:#00e096; }
-.wstat-ic.orange { background:rgba(255,160,50,0.15); color:#ffb347; }
+.wstat-ic.green  { background: rgba(0,224,150,0.14); color: #00e096; }
+.wstat-ic.orange { background: rgba(255,160,50,0.14); color: #ffb347; }
 .wstat-val {
-  font-size:22px; font-weight:700; color:#fff;
-  font-family:'Poppins',sans-serif;
+  font-size: 24px; font-weight: 700; color: #fff;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1;
 }
 
-/* Withdraw Form Card */
+/* ---- Withdraw Money Card ---- */
 .wdform-card {
-  background:#0c0a1e;
-  border:1px solid rgba(124,111,253,0.18);
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:16px;
+  background: #0d0b20;
+  border: 1px solid rgba(124,111,253,0.15);
+  border-radius: 20px;
+  padding: 22px 18px;
+  margin-bottom: 18px;
 }
 .wdform-head {
-  display:flex; align-items:center; gap:10px;
-  margin-bottom:20px;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 22px;
 }
 .wdform-head-ic {
-  width:36px; height:36px; border-radius:10px;
-  background:linear-gradient(135deg,#7c3aed,#4c1d95);
-  display:flex; align-items:center; justify-content:center;
-  font-size:15px; color:#fff;
+  width: 38px; height: 38px; border-radius: 11px;
+  background: linear-gradient(135deg, #7c3aed, #4c1d95);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #fff;
 }
 .wdform-head-txt {
-  font-size:17px; font-weight:700; color:#a855f7;
-  font-family:'Poppins',sans-serif;
+  font-size: 18px; font-weight: 700; color: #a855f7;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* Payment Method Icons Grid */
+/* ---- Payment Method Grid — matches screenshot with real logo styling ---- */
 .pm-grid {
-  display:grid; grid-template-columns:repeat(4,1fr);
-  gap:10px; margin-bottom:20px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10px; margin-bottom: 22px;
 }
 .pm-item {
-  background:#13102a;
-  border:2px solid rgba(255,255,255,0.07);
-  border-radius:14px;
-  padding:12px 6px 9px;
-  display:flex; flex-direction:column; align-items:center; gap:7px;
-  cursor:pointer;
-  transition:border-color .2s, background .2s, box-shadow .2s;
-  -webkit-tap-highlight-color:transparent;
+  background: #14112a;
+  border: 2px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 14px 6px 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer;
+  transition: border-color .2s, background .2s, box-shadow .2s;
+  -webkit-tap-highlight-color: transparent;
 }
-.pm-item:active { transform:scale(.93); }
+.pm-item:active { transform: scale(.92); }
 .pm-item.active {
-  border-color:#7c3aed;
-  background:rgba(124,111,253,0.14);
-  box-shadow:0 0 14px rgba(124,111,253,0.38), inset 0 0 8px rgba(124,111,253,0.08);
+  border-color: #7c3aed;
+  background: rgba(124,111,253,0.12);
+  box-shadow: 0 0 16px rgba(124,111,253,0.4), inset 0 0 10px rgba(124,111,253,0.07);
 }
-.pm-ic {
-  width:46px; height:46px; border-radius:12px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:11px; font-weight:800; color:#fff;
-  overflow:hidden; flex-shrink:0;
-}
-.pm-ic.bkash  { background:linear-gradient(135deg,#e2136e,#9a0e4b); }
-.pm-ic.nagad  { background:linear-gradient(135deg,#f6821f,#c8510d); }
-.pm-ic.rocket { background:linear-gradient(135deg,#8b1db8,#5a0f7a); }
-.pm-ic.binance{ background:linear-gradient(135deg,#f0b90b,#c8900a); color:#1a1200; }
-.pm-ic.crypto { background:linear-gradient(135deg,#f7931a,#b56010); }
-.pm-lbl {
-  font-size:10px; font-weight:600; color:#9ca3af;
-  font-family:'Poppins',sans-serif; text-align:center;
-}
-.pm-item.active .pm-lbl { color:#c4b5fd; }
 
-/* Input fields */
-.wdinput-g { margin-bottom:14px; }
+/* Payment method icon containers — sized like screenshot */
+.pm-ic {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; flex-shrink: 0;
+  position: relative;
+}
+
+/* bKash — hot pink, bird/wave shape */
+.pm-ic.bkash {
+  background: linear-gradient(145deg, #e2136e, #b00d56);
+  box-shadow: 0 4px 12px rgba(226,19,110,0.4);
+}
+.pm-ic.bkash::before {
+  content: '';
+  position: absolute;
+  width: 36px; height: 36px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M20,80 Q30,20 80,30 Q60,60 40,50 Q55,70 30,85 Z' fill='white' opacity='0.9'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+/* Nagad — orange, fire swirl */
+.pm-ic.nagad {
+  background: linear-gradient(145deg, #f97316, #c2410c);
+  box-shadow: 0 4px 12px rgba(249,115,22,0.4);
+}
+.pm-ic.nagad::before {
+  content: '';
+  position: absolute;
+  width: 34px; height: 34px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='55' rx='22' ry='30' fill='white' opacity='0.85'/%3E%3Cellipse cx='50' cy='35' rx='12' ry='18' fill='%23fed7aa' opacity='0.9'/%3E%3Ccircle cx='50' cy='22' r='8' fill='white' opacity='0.8'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+/* Rocket — purple */
+.pm-ic.rocket {
+  background: linear-gradient(145deg, #7c3aed, #4c1d95);
+  box-shadow: 0 4px 12px rgba(124,58,237,0.4);
+}
+.pm-ic.rocket::before {
+  content: '';
+  position: absolute;
+  width: 32px; height: 32px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,15 L35,55 L50,48 L65,55 Z' fill='white' opacity='0.9'/%3E%3Cellipse cx='50' cy='55' rx='12' ry='8' fill='%23ddd6fe' opacity='0.8'/%3E%3Cpath d='M38,60 L30,80 L50,70 L70,80 L62,60' fill='white' opacity='0.7'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+/* Binance — gold */
+.pm-ic.binance {
+  background: linear-gradient(145deg, #f0b90b, #d49a09);
+  box-shadow: 0 4px 12px rgba(240,185,11,0.4);
+}
+.pm-ic.binance::before {
+  content: '';
+  position: absolute;
+  width: 34px; height: 34px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,20 62,35 50,28 38,35' fill='%231a1200' opacity='0.85'/%3E%3Cpolygon points='30,38 42,45 30,52 18,45' fill='%231a1200' opacity='0.85'/%3E%3Cpolygon points='70,38 82,45 70,52 58,45' fill='%231a1200' opacity='0.85'/%3E%3Cpolygon points='50,55 62,62 50,80 38,62' fill='%231a1200' opacity='0.85'/%3E%3Cpolygon points='50,38 62,45 50,52 38,45' fill='%231a1200' opacity='0.9'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+.pm-lbl {
+  font-size: 11px; font-weight: 600; color: #9ca3af;
+  font-family: 'Poppins', sans-serif; text-align: center;
+  line-height: 1;
+}
+.pm-item.active .pm-lbl { color: #c4b5fd; }
+
+/* Hidden select */
+select#wdWallet { display: none; }
+
+/* ---- Input fields ---- */
+.wdinput-g { margin-bottom: 16px; }
 .wdinput-lbl {
-  font-size:11px; font-weight:700; color:#6b7280;
-  font-family:'Poppins',sans-serif;
-  text-transform:uppercase; letter-spacing:0.9px;
-  display:block; margin-bottom:8px;
+  font-size: 12px; font-weight: 700; color: #9ca3af;
+  font-family: 'Poppins', sans-serif;
+  display: block; margin-bottom: 9px;
+  letter-spacing: 0.3px;
 }
-.wdinput-wrap { position:relative; }
+.wdinput-wrap { position: relative; }
 .wdinput {
-  width:100%;
-  background:#0f0c22;
-  border:1.5px solid rgba(255,255,255,0.09);
-  border-radius:12px;
-  padding:14px 44px 14px 16px;
-  font-size:14px; color:#fff;
-  font-family:'Poppins',sans-serif;
-  outline:none;
-  transition:border-color .2s;
-  -webkit-appearance:none; appearance:none;
+  width: 100%;
+  background: #0a0818;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 15px 46px 15px 18px;
+  font-size: 14px; color: #fff;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+  transition: border-color .22s;
+  -webkit-appearance: none; appearance: none;
 }
-.wdinput:focus { border-color:rgba(124,111,253,0.55); }
-.wdinput::placeholder { color:#3d3a58; }
+.wdinput:focus { border-color: rgba(124,111,253,0.5); }
+.wdinput::placeholder { color: #3a3658; }
 .wdinput-icon {
-  position:absolute; right:15px; top:50%; transform:translateY(-50%);
-  color:#3d3a58; font-size:16px; pointer-events:none;
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  color: #3a3658; font-size: 16px; pointer-events: none;
 }
 .wdinput-taka {
-  position:absolute; right:15px; top:50%; transform:translateY(-50%);
-  color:#4a5070; font-size:20px; font-weight:700; pointer-events:none;
-  font-family:'Hind Siliguri',sans-serif;
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  color: #4a5070; font-size: 20px; font-weight: 700; pointer-events: none;
+  font-family: 'Hind Siliguri', sans-serif;
 }
 .wdmin-info {
-  display:flex; align-items:center; gap:5px;
-  font-size:11px; color:#4a5070;
-  font-family:'Poppins',sans-serif;
-  margin-top:7px;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: #4a5070;
+  font-family: 'Poppins', sans-serif;
+  margin-top: 8px;
 }
-.wdmin-info i { color:#7c6ffd; font-size:12px; }
-.wdmin-info .mn-val { color:#8b7fd4; font-weight:600; }
+.wdmin-info i { color: #7c6ffd; font-size: 13px; }
+.wdmin-info .mn-val { color: #8b7fd4; font-weight: 600; }
 
-/* Withdraw Now Button */
+/* ---- Withdraw Now Button — matches screenshot full-width purple pill ---- */
 .wd-btn {
-  width:100%;
-  background:linear-gradient(90deg,#6d28d9 0%,#9333ea 50%,#7c3aed 100%);
-  border:none;
-  border-radius:14px;
-  padding:0 20px;
-  height:54px;
-  display:flex; align-items:center; justify-content:space-between;
-  cursor:pointer;
-  box-shadow:0 6px 24px rgba(109,40,217,0.45);
-  transition:all .2s;
-  margin-top:4px;
+  width: 100%;
+  background: linear-gradient(90deg, #6d28d9 0%, #9333ea 50%, #7c3aed 100%);
+  border: none;
+  border-radius: 50px;
+  padding: 0 20px;
+  height: 58px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 28px rgba(109,40,217,0.5);
+  transition: all .2s;
+  margin-top: 6px;
+  position: relative;
+  overflow: hidden;
 }
-.wd-btn:active { transform:scale(.97); box-shadow:0 2px 12px rgba(109,40,217,0.35); }
-.wd-btn:disabled { opacity:.6; pointer-events:none; }
+.wd-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+  border-radius: 50px;
+}
+.wd-btn:active { transform: scale(.97); box-shadow: 0 3px 14px rgba(109,40,217,0.4); }
+.wd-btn:disabled { opacity: .6; pointer-events: none; }
 .wd-btn-txt {
-  font-size:16px; font-weight:700; color:#fff;
-  font-family:'Poppins',sans-serif; letter-spacing:.3px;
+  font-size: 17px; font-weight: 700; color: #fff;
+  font-family: 'Poppins', sans-serif; letter-spacing: .4px;
 }
 .wd-btn-arrow {
-  width:38px; height:38px; border-radius:50%;
-  background:rgba(255,255,255,0.18);
-  display:flex; align-items:center; justify-content:center;
-  font-size:16px; color:#fff;
-  flex-shrink:0;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #fff;
+  flex-shrink: 0;
+  position: relative; z-index: 1;
 }
 
-/* Ad info */
+/* Ad info row */
 .wd-ad-info {
-  background:rgba(124,111,253,.08); border:1px solid rgba(124,111,253,.2);
-  border-radius:12px; padding:12px 14px; margin-top:12px;
-  font-size:12px; color:rgba(255,255,255,.7); display:none;
-  line-height:1.6; font-family:'Poppins',sans-serif;
+  background: rgba(124,111,253,.08); border: 1px solid rgba(124,111,253,.2);
+  border-radius: 12px; padding: 12px 14px; margin-top: 12px;
+  font-size: 12px; color: rgba(255,255,255,.7); display: none;
+  line-height: 1.6; font-family: 'Poppins', sans-serif;
 }
 
-/* Withdrawal History */
+/* ---- Withdrawal History ---- */
 .wdhist-head {
-  display:flex; align-items:center; justify-content:space-between;
-  margin-bottom:14px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
 }
 .wdhist-title {
-  display:flex; align-items:center; gap:8px;
-  font-size:16px; font-weight:700; color:#fff;
-  font-family:'Poppins',sans-serif;
+  display: flex; align-items: center; gap: 9px;
+  font-size: 17px; font-weight: 700; color: #fff;
+  font-family: 'Poppins', sans-serif;
 }
-.wdhist-title i { color:#a855f7; }
+.wdhist-title i { color: #a855f7; }
 .wdhist-all {
-  display:flex; align-items:center; gap:4px;
-  font-size:12px; color:#6b7280;
-  font-family:'Poppins',sans-serif;
-  text-decoration:none; cursor:pointer;
+  display: flex; align-items: center; gap: 4px;
+  font-size: 13px; color: #6b7280;
+  font-family: 'Poppins', sans-serif;
+  text-decoration: none; cursor: pointer;
 }
-.wdhist-all i { font-size:10px; }
+.wdhist-all i { font-size: 11px; }
 
-/* History Item */
+/* ---- History Items — matches screenshot style ---- */
 .hitem-new {
-  background:#0c0a1e;
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:10px;
-  display:flex; align-items:center; gap:12px;
+  background: #0d0b20;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 14px;
 }
 .hitem-logo {
-  width:46px; height:46px; border-radius:12px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:20px; font-weight:800; flex-shrink:0;
-  color:#fff;
+  width: 50px; height: 50px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; flex-shrink: 0;
+  color: #fff; position: relative; overflow: hidden;
 }
-.hitem-logo.bkash  { background:linear-gradient(135deg,#e2136e,#9a0e4b); }
-.hitem-logo.nagad  { background:linear-gradient(135deg,#f6821f,#c8510d); }
-.hitem-logo.rocket { background:linear-gradient(135deg,#8b1db8,#5a0f7a); }
-.hitem-logo.binance{ background:linear-gradient(135deg,#f0b90b,#c8900a); color:#1a1200; }
-.hitem-logo.crypto { background:linear-gradient(135deg,#f7931a,#b56010); }
-.hitem-logo.default{ background:rgba(255,255,255,0.08); }
-.hitem-inf { flex:1; min-width:0; }
-.hitem-name { font-size:14px; font-weight:600; color:#fff; font-family:'Poppins',sans-serif; }
-.hitem-acc  { font-size:11px; color:#4a5070; font-family:monospace; margin-top:2px; }
-.hitem-date { font-size:10px; color:#3d3a58; margin-top:2px; font-family:'Poppins',sans-serif; }
-.hitem-right { text-align:right; flex-shrink:0; }
-.hstatus { font-size:12px; font-weight:600; margin-bottom:4px; }
-.hstatus.approved { color:#00e096; }
-.hstatus.pending  { color:#ffc84a; }
-.hstatus.rejected { color:#ff5f5f; }
-.hitem-amt { font-size:15px; font-weight:700; color:#fff; font-family:'Poppins',sans-serif; }
+/* bKash history logo */
+.hitem-logo.bkash {
+  background: linear-gradient(145deg, #e2136e, #b00d56);
+  box-shadow: 0 3px 10px rgba(226,19,110,0.35);
+}
+.hitem-logo.bkash::before {
+  content: '';
+  position: absolute;
+  width: 34px; height: 34px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M20,80 Q30,20 80,30 Q60,60 40,50 Q55,70 30,85 Z' fill='white' opacity='0.9'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+/* Nagad history logo */
+.hitem-logo.nagad {
+  background: linear-gradient(145deg, #f97316, #c2410c);
+  box-shadow: 0 3px 10px rgba(249,115,22,0.35);
+}
+.hitem-logo.nagad::before {
+  content: '';
+  position: absolute;
+  width: 32px; height: 32px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='55' rx='22' ry='30' fill='white' opacity='0.85'/%3E%3Cellipse cx='50' cy='35' rx='12' ry='18' fill='%23fed7aa' opacity='0.9'/%3E%3Ccircle cx='50' cy='22' r='8' fill='white' opacity='0.8'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+/* Rocket history logo */
+.hitem-logo.rocket {
+  background: linear-gradient(145deg, #7c3aed, #4c1d95);
+  box-shadow: 0 3px 10px rgba(124,58,237,0.35);
+}
+.hitem-logo.rocket::before {
+  content: '';
+  position: absolute;
+  width: 30px; height: 30px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,15 L35,55 L50,48 L65,55 Z' fill='white' opacity='0.9'/%3E%3Cellipse cx='50' cy='55' rx='12' ry='8' fill='%23ddd6fe' opacity='0.8'/%3E%3Cpath d='M38,60 L30,80 L50,70 L70,80 L62,60' fill='white' opacity='0.7'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.hitem-logo.binance {
+  background: linear-gradient(145deg, #f0b90b, #d49a09);
+  box-shadow: 0 3px 10px rgba(240,185,11,0.35);
+}
+.hitem-logo.binance::before {
+  content: '';
+  position: absolute;
+  width: 30px; height: 30px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,20 62,35 50,28 38,35' fill='%231a1200' opacity='0.85'/%3E%3Cpolygon points='30,38 42,45 30,52 18,45' fill='%231a1200' opacity='0.85'/%3E%3Cpolygon points='70,38 82,45 70,52 58,45' fill='%231a1200' opacity='0.85'/%3E%3Cpolygon points='50,55 62,62 50,80 38,62' fill='%231a1200' opacity='0.85'/%3E%3Cpolygon points='50,38 62,45 50,52 38,45' fill='%231a1200' opacity='0.9'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.hitem-logo.crypto {
+  background: linear-gradient(145deg, #f7931a, #b56010);
+  box-shadow: 0 3px 10px rgba(247,147,26,0.35);
+}
+.hitem-logo.default {
+  background: rgba(255,255,255,0.08);
+}
+
+.hitem-inf { flex: 1; min-width: 0; }
+.hitem-name {
+  font-size: 15px; font-weight: 600; color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+.hitem-acc {
+  font-size: 12px; color: #4a5070;
+  font-family: monospace; margin-top: 3px;
+}
+.hitem-date {
+  font-size: 11px; color: #3d3a58; margin-top: 3px;
+  font-family: 'Poppins', sans-serif;
+}
+.hitem-right { text-align: right; flex-shrink: 0; }
+.hstatus {
+  font-size: 13px; font-weight: 700; margin-bottom: 5px;
+}
+.hstatus.approved { color: #00e096; }
+.hstatus.pending  { color: #f59e0b; }
+.hstatus.rejected { color: #ff5f5f; }
+.hitem-amt {
+  font-size: 16px; font-weight: 700; color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
 .hitem-reject-reason {
-  font-size:10px; color:#ff5f5f;
-  font-family:'Poppins',sans-serif; margin-top:4px;
+  font-size: 10px; color: #ff5f5f;
+  font-family: 'Poppins', sans-serif; margin-top: 4px;
 }
 
 /* ===================== BOTTOM NAV ===================== */
@@ -723,7 +824,6 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
 </style>
 </head>
 <body>
-
 
 <!-- Welcome Screen -->
 <div id="welcomeScreen">
@@ -946,7 +1046,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
   <div class="page" id="page-wallet">
     <div class="pgt"><div class="pgtitle">Wallet</div></div>
 
-    <!-- Balance Card -->
+    <!-- Balance Card — matches screenshot exactly -->
     <div class="wbal-card">
       <div class="wbal-top">
         <div class="wbal-label">
@@ -965,7 +1065,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
       <div class="wbal-amount-row">
         <span class="wbal-taka">৳ </span><span class="wbal-num" id="wdBal">0.00</span>
       </div>
-      <div style="margin-top:10px;">
+      <div style="margin-top:12px;">
         <div class="wbal-badge">
           <i class="fa-solid fa-wallet"></i> Total Balance
         </div>
@@ -997,28 +1097,28 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
         <div class="wdform-head-txt">Withdraw Money</div>
       </div>
 
-      <!-- Payment Method Grid -->
+      <!-- Payment Method Grid — matches screenshot -->
       <div class="pm-grid" id="pmGrid">
         <div class="pm-item active" onclick="selectPM(this,'bkash')">
-          <div class="pm-ic bkash">bKash</div>
+          <div class="pm-ic bkash"></div>
           <div class="pm-lbl">bKash</div>
         </div>
         <div class="pm-item" onclick="selectPM(this,'nagad')">
-          <div class="pm-ic nagad">Nagad</div>
+          <div class="pm-ic nagad"></div>
           <div class="pm-lbl">Nagad</div>
         </div>
         <div class="pm-item" onclick="selectPM(this,'rocket')">
-          <div class="pm-ic rocket">Rocket</div>
+          <div class="pm-ic rocket"></div>
           <div class="pm-lbl">Rocket</div>
         </div>
         <div class="pm-item" onclick="selectPM(this,'binance')">
-          <div class="pm-ic binance">BNB</div>
+          <div class="pm-ic binance"></div>
           <div class="pm-lbl">Binance</div>
         </div>
       </div>
 
       <!-- Hidden select for JS compatibility -->
-      <select id="wdWallet" style="display:none;">
+      <select id="wdWallet">
         <option value="bkash" selected>bKash</option>
         <option value="nagad">Nagad</option>
         <option value="rocket">Rocket</option>
@@ -1053,7 +1153,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
         </div>
       </div>
 
-      <!-- Withdraw Button -->
+      <!-- Withdraw Now Button -->
       <button class="wd-btn" id="wdBtn" onclick="handleWithdraw()">
         <span class="wd-btn-txt">Withdraw Now</span>
         <div class="wd-btn-arrow"><i class="fa-solid fa-paper-plane"></i></div>
@@ -1143,7 +1243,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
 
 <div class="toast" id="toast"></div>
 
-<!-- ===================== JAVASCRIPT ===================== -->
+<!-- ===================== JAVASCRIPT — UNCHANGED ===================== -->
 <script>
 const MINI_LINKS = {
   group: 'https://t.me/zomato_app_payment_proof',
@@ -1502,7 +1602,6 @@ async function submitWithdrawDirect(wdData){
     document.getElementById('wdWallet').value='bkash';
     document.getElementById('wdAcc').value='';
     document.getElementById('wdAmt').value='';
-    // reset PM selection to bkash
     document.querySelectorAll('.pm-item').forEach(b=>b.classList.remove('active'));
     const first=document.querySelector('.pm-item');if(first){first.classList.add('active');_selectedPM='bkash';}
     showToast('✅ Withdrawal request submitted!');
@@ -1523,7 +1622,6 @@ function shareRef(){const l=`https://t.me/${APP.settings.botUsername||'YourBot'}
 function renderWdHist(items){
   const el=document.getElementById('wdHist');
 
-  // Calculate pending total for stats
   const pendingTotal=items.filter(h=>h.status==='pending').reduce((s,h)=>s+Number(h.amount),0);
   const wStatWd=document.getElementById('wStatWd');
   const wStatPending=document.getElementById('wStatPending');
@@ -1533,15 +1631,13 @@ function renderWdHist(items){
   if(!items.length){el.innerHTML=`<div class="empty"><div class="eic">📭</div>No withdrawals yet</div>`;return;}
 
   const logoClass={bkash:'bkash',nagad:'nagad',rocket:'rocket',binance:'binance',crypto:'crypto'};
-  const logoText={bkash:'bK',nagad:'N',rocket:'R',binance:'B',crypto:'₿'};
 
   el.innerHTML=items.map(h=>{
     const lc=logoClass[h.wallet]||'default';
-    const lt=logoText[h.wallet]||'💰';
     const stClass=h.status==='approved'?'approved':h.status==='rejected'?'rejected':'pending';
     const stLabel=h.status==='approved'?'Approved':h.status==='rejected'?'Rejected':'Pending';
     return`<div class="hitem-new">
-      <div class="hitem-logo ${lc}">${lt}</div>
+      <div class="hitem-logo ${lc}"></div>
       <div class="hitem-inf">
         <div class="hitem-name">${h.walletLabel||h.wallet}</div>
         <div class="hitem-acc">${h.account}</div>
@@ -1579,7 +1675,6 @@ function updateUI(){
   document.getElementById('rCoins').textContent=`৳${(refCount*(APP.settings.referralBonus||5)).toFixed(2)}`;
   document.getElementById('rActive').textContent=refCount;
   document.getElementById('rLink').textContent=`https://t.me/${APP.settings.botUsername||'YourBot'}?start=${APP.referralCode}`;
-  // Update wallet stats
   const wStatWd=document.getElementById('wStatWd');
   if(wStatWd) wStatWd.textContent=APP.totalWithdrawn.toFixed(2);
   renderRefList();renderTasks();
