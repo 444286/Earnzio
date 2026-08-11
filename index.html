@@ -999,6 +999,249 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
   font-family:'Poppins',sans-serif; margin-top:4px;
 }
 
+/* ===================== RULES BUTTON ===================== */
+.rules-btn-wrap {
+  margin-bottom: 16px;
+}
+.rules-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #1a0d3a 0%, #2d1060 50%, #1a0d3a 100%);
+  border: 1px solid rgba(139,92,246,0.45);
+  border-radius: 16px;
+  padding: 13px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all .2s;
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.rules-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(139,92,246,0.08), transparent);
+  animation: ruleShimmer 2.5s infinite;
+}
+@keyframes ruleShimmer {
+  0%{transform:translateX(-100%)} 100%{transform:translateX(100%)}
+}
+.rules-btn:active { transform: scale(.97); }
+.rules-btn-ic {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #7c3aed, #4c1d95);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(124,58,237,0.4);
+}
+.rules-btn-text { flex: 1; text-align: left; }
+.rules-btn-title {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 14px; font-weight: 700; color: #fff;
+  line-height: 1.2;
+}
+.rules-btn-sub {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 11px; color: rgba(167,139,250,0.8);
+  margin-top: 2px;
+}
+.rules-btn-arrow {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(124,58,237,0.2);
+  border: 1px solid rgba(139,92,246,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: #a78bfa;
+  flex-shrink: 0;
+}
+
+/* ===================== RULES MODAL ===================== */
+.rules-ov {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.85);
+  z-index:700; display:none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+  backdrop-filter: blur(8px);
+}
+.rules-ov.open { display: flex; }
+.rules-modal {
+  background: linear-gradient(180deg, #13102a 0%, #0e0b1e 100%);
+  border: 1px solid rgba(139,92,246,0.3);
+  border-radius: 28px 28px 0 0;
+  width: 100%;
+  max-width: 420px;
+  max-height: 92vh;
+  overflow-y: auto;
+  animation: slideUp .35s cubic-bezier(.34,1.2,.64,1);
+  position: relative;
+}
+@keyframes slideUp {
+  from{transform:translateY(100%)} to{transform:translateY(0)}
+}
+/* close button */
+.rules-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10;
+  -webkit-tap-highlight-color: transparent;
+}
+.rules-close:active { transform: scale(.9); }
+
+/* top hero section */
+.rules-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 28px 20px 16px 20px;
+  position: relative;
+}
+.rules-hero-emoji {
+  font-size: 80px;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 16px rgba(124,58,237,0.5));
+}
+.rules-hero-text { flex: 1; padding-right: 36px; }
+.rules-hero-title1 {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 20px; font-weight: 700; color: #fff;
+  line-height: 1.2; margin-bottom: 2px;
+}
+.rules-hero-title2 {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 26px; font-weight: 800;
+  background: linear-gradient(135deg, #c084fc, #a855f7, #e879f9);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  line-height: 1.15; margin-bottom: 8px;
+}
+.rules-hero-sub {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 12px; color: rgba(255,255,255,0.55);
+  line-height: 1.5;
+}
+
+/* divider */
+.rules-divider {
+  display: flex; align-items: center; justify-content: center;
+  padding: 4px 20px 16px;
+  gap: 10px;
+}
+.rules-divider-line {
+  flex: 1; height: 1px;
+  background: rgba(139,92,246,0.2);
+}
+.rules-divider-ic { color: #7c3aed; font-size: 14px; }
+
+/* rule card */
+.rules-body { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+.rule-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(139,92,246,0.15);
+  border-radius: 18px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.rule-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.rule-card-num-title {
+  display: flex; align-items: center; gap: 10px;
+}
+.rule-num {
+  background: linear-gradient(135deg, #7c3aed, #4c1d95);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px; font-weight: 800;
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(124,58,237,0.4);
+}
+.rule-card-title {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 16px; font-weight: 700; color: #fff;
+}
+.rule-card-emoji-3d {
+  font-size: 52px; line-height: 1;
+  filter: drop-shadow(0 4px 12px rgba(124,58,237,0.5));
+}
+/* check items */
+.rule-items { display: flex; flex-direction: column; gap: 10px; }
+.rule-item {
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.rule-check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #4c1d95);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #fff;
+  flex-shrink: 0; margin-top: 1px;
+}
+.rule-item-text {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 13px; color: rgba(255,255,255,0.85);
+  line-height: 1.5;
+}
+.rule-item-text .hl { color: #f59e0b; font-weight: 700; }
+
+/* tip pill */
+.rule-tip {
+  margin-top: 12px;
+  background: rgba(124,58,237,0.12);
+  border: 1px solid rgba(139,92,246,0.25);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 12px; color: rgba(255,255,255,0.75);
+}
+.rule-tip-ic { font-size: 14px; flex-shrink: 0; }
+.rule-tip .hl { color: #c084fc; font-weight: 700; }
+
+/* warning card */
+.rule-warn {
+  background: linear-gradient(135deg, #f59e0b22, #d9770622);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+.rule-warn-left { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.rule-warn-title {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 16px; font-weight: 800; color: #fff;
+}
+.rule-warn-sub {
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 12px; color: rgba(255,255,255,0.7);
+  line-height: 1.5;
+}
+.rule-warn-emoji { font-size: 52px; flex-shrink: 0; line-height: 1; }
+.rule-warn-lock { font-size: 40px; flex-shrink: 0; opacity: .7; }
+
 /* ===================== BOTTOM NAV ===================== */
 .bottom-bar {
   position:fixed; bottom:0; left:50%; transform:translateX(-50%);
@@ -1096,6 +1339,18 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
         <div class="css-coin coin-2">৳</div>
         <div class="css-coin coin-3">৳</div>
       </div>
+    </div>
+
+    <!-- ── কাজের নিয়ম Button ── -->
+    <div class="rules-btn-wrap">
+      <button class="rules-btn" onclick="openRulesModal()">
+        <div class="rules-btn-ic">📋</div>
+        <div class="rules-btn-text">
+          <div class="rules-btn-title">কাজের সম্পূর্ণ নিয়ম</div>
+          <div class="rules-btn-sub">নিয়ম জানুন, বেশি আয় করুন ✨</div>
+        </div>
+        <div class="rules-btn-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+      </button>
     </div>
 
     <div class="mid-stats" style="display:none;">
@@ -1522,6 +1777,125 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
   </div>
 </div>
 
+<!-- ===================== RULES MODAL ===================== -->
+<div class="rules-ov" id="rulesOv" onclick="rulesOvBgClose(event)">
+  <div class="rules-modal" id="rulesModal">
+    <button class="rules-close" onclick="closeRulesModal()">✕</button>
+
+    <!-- Hero -->
+    <div class="rules-hero">
+      <div class="rules-hero-emoji">📋</div>
+      <div class="rules-hero-text">
+        <div class="rules-hero-title1">কাজ করার</div>
+        <div class="rules-hero-title2">সম্পূর্ণ নিয়ম</div>
+        <div class="rules-hero-sub">নিয়ম মেনে কাজ করলে পুরস্কার পাবেন</div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="rules-divider">
+      <div class="rules-divider-line"></div>
+      <div class="rules-divider-ic">🛡️</div>
+      <div class="rules-divider-line"></div>
+    </div>
+
+    <!-- Body -->
+    <div class="rules-body">
+
+      <!-- Rule Card 01 -->
+      <div class="rule-card">
+        <div class="rule-card-head">
+          <div class="rule-card-num-title">
+            <div class="rule-num">01</div>
+            <div class="rule-card-title">এড দেখুন (প্রধান আয়)</div>
+          </div>
+          <div class="rule-card-emoji-3d">🎬</div>
+        </div>
+        <div class="rule-items">
+          <div class="rule-item">
+            <div class="rule-check">✓</div>
+            <div class="rule-item-text">প্রতি এডে <span class="hl" id="ruleRewardTxt">৳ ০.৫০</span> টাকা করে পাবেন</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-check">✓</div>
+            <div class="rule-item-text">প্রতিদিন সর্বোচ্চ <span class="hl" id="ruleLimitTxt">৫টি</span> এড দেখতে পারবেন</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-check">✓</div>
+            <div class="rule-item-text">এড দেখার পর <span class="hl" id="ruleCooldownTxt">৩০ সেকেন্ড</span> অপেক্ষা করতে হবে</div>
+          </div>
+        </div>
+        <div class="rule-tip">
+          <span class="rule-tip-ic">💡</span>
+          <span>টাচ করুন → <span class="hl">এড দেখুন</span> বাটনে ক্লিক করুন → এড দেখুন</span>
+        </div>
+      </div>
+
+      <!-- Rule Card 02 -->
+      <div class="rule-card">
+        <div class="rule-card-head">
+          <div class="rule-card-num-title">
+            <div class="rule-num">02</div>
+            <div class="rule-card-title">রেফারেল বোনাস</div>
+          </div>
+          <div class="rule-card-emoji-3d">🤝</div>
+        </div>
+        <div class="rule-items">
+          <div class="rule-item">
+            <div class="rule-check">✓</div>
+            <div class="rule-item-text">বন্ধুদের রেফার করুন এবং প্রতিটি রেফারেলে <span class="hl" id="ruleRefTxt">৳ ৫.০০</span> বোনাস পান</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-check">✓</div>
+            <div class="rule-item-text">আপনার রেফারেল লিংক শেয়ার করুন → বন্ধু যোগ দিলেই বোনাস</div>
+          </div>
+        </div>
+        <div class="rule-tip">
+          <span class="rule-tip-ic">💡</span>
+          <span><span class="hl">Referral</span> পেজে যান → লিংক কপি করুন → শেয়ার করুন</span>
+        </div>
+      </div>
+
+      <!-- Rule Card 03 -->
+      <div class="rule-card">
+        <div class="rule-card-head">
+          <div class="rule-card-num-title">
+            <div class="rule-num">03</div>
+            <div class="rule-card-title">উত্তোলন নিয়ম</div>
+          </div>
+          <div class="rule-card-emoji-3d">💸</div>
+        </div>
+        <div class="rule-items">
+          <div class="rule-item">
+            <div class="rule-check">✓</div>
+            <div class="rule-item-text">সর্বনিম্ন <span class="hl" id="ruleMinWdTxt">৳ ৫০</span> টাকা হলে উত্তোলন করতে পারবেন</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-check">✓</div>
+            <div class="rule-item-text">bKash, Nagad, Rocket, Binance — যেকোনো মাধ্যমে পেমেন্ট নিন</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-check">✓</div>
+            <div class="rule-item-text">উত্তোলন রিকোয়েস্ট ২৪ ঘণ্টার মধ্যে প্রসেস করা হবে</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Warning -->
+      <div class="rule-warn">
+        <div class="rule-warn-left">
+          <div class="rule-warn-title">সততা বজায় রাখুন</div>
+          <div class="rule-warn-sub">নিয়ম না মানলে আপনার একাউন্ট সীমিত বা বন্ধ হতে পারে।</div>
+        </div>
+        <div>🏆</div>
+        <div class="rule-warn-lock">🔒</div>
+      </div>
+
+    </div><!-- /rules-body -->
+    <div style="height:16px"></div>
+  </div>
+</div>
+
 <div class="adov" id="adOverlay">
   <div class="adov-card">
     <div class="adov-steps" id="adovSteps"></div>
@@ -1898,237 +2272,4 @@ function updateWatchCard(){
 function buildQueue(chainData){const slots=chainData.slots||[];const creds=APP.settings.credentials||{};return slots.map(n=>({name:n,...(creds[n]||{})}));}
 
 function startChain(type,wdData=null){
-  if(type==='watch'&&isDailyLimitReached()){showToast("✅ Today's limit reached");return;}
-  if(type==='watch'&&cooldownEndTime>Date.now()){showToast(`⏳ Wait ${Math.ceil((cooldownEndTime-Date.now())/1000)}s`);return;}
-  const chainData=type==='watch'?(APP.settings.watchChain||{}):(APP.settings.withdrawChain||{});
-  const queue=buildQueue(chainData);
-  if(!queue.length){if(type==='watch'){showToast('⚠️ No ads configured');return;}else{submitWithdrawDirect(wdData);return;}}
-  CS={active:true,type,queue,idx:0,total:queue.length,reward:chainData.reward||0.5,done:false,wdData};
-  _slotAdvanced=false;
-  document.getElementById('adovComplete').classList.remove('show');
-  document.getElementById('adovWdLoading').classList.remove('show');
-  _hideContinueBtn();
-  if(type==='watch'){
-    document.getElementById('adovReward').textContent=CS.reward.toFixed(2);
-    document.getElementById('adovSteps').style.display='flex';
-  }else{
-    document.getElementById('adovTitle').textContent='Processing...';
-    document.getElementById('adovSteps').style.display='none';
-    document.getElementById('adovWdLoading').classList.add('show');
-  }
-  document.getElementById('adovSteps').innerHTML=queue.map((_,i)=>`<div class="adov-s" id="as_${i}"></div>`).join('');
-  document.getElementById('adOverlay').classList.add('open');
-  playSlot();
-}
-
-let _slotAdvanced=false;
-function _showContinueBtn(){
-  document.getElementById('adovWaiting').classList.add('show');
-  document.getElementById('adovDivider').style.display='block';
-  document.getElementById('adovContinue').classList.add('show');
-}
-function _hideContinueBtn(){
-  document.getElementById('adovWaiting').classList.remove('show');
-  document.getElementById('adovDivider').style.display='none';
-  document.getElementById('adovContinue').classList.remove('show');
-}
-function onAdsterraBack(){_hideContinueBtn();_next();}
-
-function _next(){
-  if(_slotAdvanced||!CS.active)return;_slotAdvanced=true;
-  const el=document.getElementById('as_'+CS.idx);if(el)el.className='adov-s done';
-  CS.idx++;playSlot();
-}
-
-function playSlot(){
-  if(!CS.active)return;
-  if(CS.idx>=CS.total){chainAllDone();return;}
-  _slotAdvanced=false;_hideContinueBtn();
-  const net=CS.queue[CS.idx];
-  document.querySelectorAll('.adov-s').forEach((el,i)=>{el.className='adov-s'+(i<CS.idx?' done':i===CS.idx?' active':'');});
-
-  if(net.name==='adsgram'){
-    if(!net.blockId){_next();return;}
-    try{
-      const ctrl=window.Adsgram?.init({blockId:String(net.blockId)});
-      if(!ctrl){_next();return;}
-      ctrl.show().then(()=>_next()).catch(()=>_next());
-    }catch(e){_next();}
-  }else if(net.name==='monetag'){
-    try{
-      const showFn=window[MONETAG_SDK_FN];
-      if(typeof showFn==='function'){
-        showFn().then(()=>{_next();}).catch(()=>{_next();});
-      }else{
-        let retryCount=0;
-        const retryInterval=setInterval(()=>{
-          retryCount++;
-          const fn=window[MONETAG_SDK_FN];
-          if(typeof fn==='function'){clearInterval(retryInterval);fn().then(()=>_next()).catch(()=>_next());}
-          else if(retryCount>=5){clearInterval(retryInterval);_next();}
-        },1000);
-      }
-    }catch(e){_next();}
-  }else if(net.name==='adsterra'){
-    if(!net.link&&!net.script){_next();return;}
-    try{
-      if(net.link){const tg=window.Telegram?.WebApp;if(tg)tg.openLink(net.link);else window.open(net.link,'_blank','noopener');}
-      else if(net.script){const div=document.createElement('div');div.innerHTML=net.script;div.querySelectorAll('script').forEach(sc=>{const ns=document.createElement('script');if(sc.src){ns.src=sc.src;ns.async=true;}else ns.textContent=sc.textContent;document.body.appendChild(ns);});}
-    }catch(e){}
-    _showContinueBtn();
-  }else{_next();}
-}
-
-function onSlotDone(){_next();}
-function onSlotSkip(){_next();}
-
-async function chainAllDone(){
-  if(CS.done)return;CS.done=true;CS.active=false;_slotAdvanced=true;
-  _hideContinueBtn();
-  document.querySelectorAll('.adov-s').forEach(el=>{if(!el.classList.contains('skip'))el.className='adov-s done';});
-  if(CS.type==='watch'){
-    const reward=CS.reward;const cooldownSec=APP.settings.watchChain?.cooldownSec||30;const newCooldownEnd=Date.now()+(cooldownSec*1000);
-    try{
-      const snap=await db.ref('users/'+APP.userId).get();const d=snap.val();
-      const existingWatched=toArr(d.watchedAds);
-      const nw=[...existingWatched,{date:new Date().toISOString(),reward,type:'watch_chain'}];
-      await db.ref('users/'+APP.userId).update({balance:(d.balance||0)+reward,totalEarned:(d.totalEarned||0)+reward,watchedAds:nw,cooldownEndTime:newCooldownEnd});
-      cooldownEndTime=newCooldownEnd;
-      document.getElementById('adovCompleteTxt').textContent=`+৳ ${reward.toFixed(2)} টাকা Added!`;
-      document.getElementById('adovCompleteSub').textContent='Your balance has been updated';
-      document.getElementById('adovComplete').classList.add('show');
-      setTimeout(()=>{document.getElementById('adOverlay').classList.remove('open');startCooldownUI(newCooldownEnd-Date.now());showToast(`+৳ ${reward.toFixed(2)} টাকা added!`);CS={active:false,type:null,queue:[],idx:0,total:0,reward:0,done:false,wdData:null};},2000);
-    }catch(e){setTimeout(()=>document.getElementById('adOverlay').classList.remove('open'),2000);}
-  }else{
-    const savedWdData={...CS.wdData};
-    document.getElementById('adovComplete').classList.remove('show');
-    document.getElementById('adovWdLoading').classList.add('show');
-    CS={active:false,type:null,queue:[],idx:0,total:0,reward:0,done:false,wdData:null};
-    try{await submitWithdrawDirect(savedWdData);}catch(e){showToast('❌ Submit error: '+e.message);}
-    document.getElementById('adOverlay').classList.remove('open');
-    document.getElementById('adovWdLoading').classList.remove('show');
-  }
-}
-
-function updateWdBtn(){
-  document.getElementById('wdAdInfo').style.display='none';
-}
-
-function handleWithdraw(){
-  const wallet=document.getElementById('wdWallet').value||_selectedPM;
-  const account=document.getElementById('wdAcc').value.trim();
-  const amount=parseFloat(document.getElementById('wdAmt').value);
-  const minWd=APP.settings.minWithdraw||50;
-  if(!wallet)return showToast('⚠️ Select payment method');
-  if(!account)return showToast('⚠️ Enter account number');
-  if(!amount||amount<minWd)return showToast(`⚠️ Minimum ৳${minWd.toFixed(2)}`);
-  if(amount>APP.balance)return showToast('⚠️ Insufficient balance');
-  const wlMap={bkash:'bKash',nagad:'Nagad',rocket:'Rocket',binance:'Binance (USDT)',crypto:'Crypto'};
-  const wdData={wallet,walletLabel:wlMap[wallet]||wallet,account,amount};
-  const wdc=APP.settings.withdrawChain||{};
-  if(wdc.enabled&&(wdc.slots||[]).length>0)startChain('withdraw',wdData);else submitWithdrawDirect(wdData);
-}
-
-async function submitWithdrawDirect(wdData){
-  if(!wdData)return;
-  const btn=document.getElementById('wdBtn');
-  const origHTML=btn.innerHTML;
-  btn.disabled=true;
-  btn.innerHTML='<span class="wd-btn-txt">Processing...</span><div class="wd-btn-arrow"><i class="fa-solid fa-spinner fa-spin"></i></div>';
-  try{
-    const snap=await db.ref('users/'+APP.userId).get();const d=snap.val()||{};
-    await db.ref('users/'+APP.userId).update({balance:(d.balance||0)-wdData.amount,totalWithdrawn:(d.totalWithdrawn||0)+wdData.amount});
-    await db.ref('withdrawals').push({userId:APP.userId,userName:APP.userName,wallet:wdData.wallet,walletLabel:wdData.walletLabel,account:wdData.account,amount:wdData.amount,status:'pending',reason:'',createdAt:new Date().toISOString()});
-    document.getElementById('wdWallet').value='bkash';
-    document.getElementById('wdAcc').value='';
-    document.getElementById('wdAmt').value='';
-    document.querySelectorAll('.pm-item').forEach(b=>b.classList.remove('active'));
-    const first=document.querySelector('.pm-item');if(first){first.classList.add('active');_selectedPM='bkash';}
-    showToast('✅ Withdrawal request submitted!');
-  }catch(e){showToast('❌ Error: '+e.message);}
-  btn.disabled=false;
-  btn.innerHTML=origHTML;
-}
-
-function renderVideo(){const v=APP.settings.video||{};document.getElementById('vtitle').textContent=v.title||'কিভাবে কাজ করবেন তার ভিডিও';document.getElementById('vph').innerHTML=`<div style="display:none"></div>`;}
-function openTutorial(){const v=APP.settings.video||{};if(!v.url){showToast('⚠️ Tutorial link set করা নেই');return;}const tg=window.Telegram?.WebApp;if(tg){if(v.url.includes('t.me')||v.url.includes('telegram'))tg.openTelegramLink(v.url);else tg.openLink(v.url);}else window.open(v.url,'_blank');}
-
-function renderRefList(){const el=document.getElementById('rList');const refs=APP.referrals;if(!refs.length){el.innerHTML=`<div class="empty"><div class="eic">👤</div>No referrals yet</div>`;return;}el.innerHTML=[...refs].reverse().map(r=>`<div class="ritem"><div class="rava">${(r.name||'?').charAt(0).toUpperCase()}</div><div><div class="run">${r.name||'Unknown'}</div><div class="rdt">${ta(r.date)}</div></div><div class="re">+৳ ${Number(APP.settings.referralBonus||5).toFixed(2)}</div></div>`).join('');}
-
-function copyRef(){const l=`https://t.me/${APP.settings.botUsername||'YourBot'}?start=${APP.referralCode}`;navigator.clipboard?.writeText(l).catch(()=>{});showToast('📋 Referral link copied!');}
-function shareRef(){const l=`https://t.me/${APP.settings.botUsername||'YourBot'}?start=${APP.referralCode}`;const tg=window.Telegram?.WebApp;const u=`https://t.me/share/url?url=${encodeURIComponent(l)}&text=${encodeURIComponent('🚀 Join Zomato Platform & earn money daily!')}`;if(tg)tg.openTelegramLink(u);else window.open(u,'_blank');}
-
-function renderWdHist(items){
-  const el=document.getElementById('wdHist');
-  const pendingTotal=items.filter(h=>h.status==='pending').reduce((s,h)=>s+Number(h.amount),0);
-  const wStatWd=document.getElementById('wStatWd');
-  const wStatPending=document.getElementById('wStatPending');
-  if(wStatWd) wStatWd.textContent=APP.totalWithdrawn.toFixed(2);
-  if(wStatPending) wStatPending.textContent=pendingTotal.toFixed(2);
-
-  if(!items.length){el.innerHTML=`<div class="empty"><div class="eic">📭</div>No withdrawals yet</div>`;return;}
-
-  const logoClass={bkash:'bkash',nagad:'nagad',rocket:'rocket',binance:'binance',crypto:'crypto'};
-  const logoText={bkash:'bK',nagad:'N',rocket:'R',binance:'B',crypto:'₿'};
-
-  el.innerHTML=items.map(h=>{
-    const lc=logoClass[h.wallet]||'default';
-    const lt=logoText[h.wallet]||'💰';
-    const stClass=h.status==='approved'?'approved':h.status==='rejected'?'rejected':'pending';
-    const stLabel=h.status==='approved'?'Approved':h.status==='rejected'?'Rejected':'Pending';
-    return`<div class="hitem-new">
-      <div class="hitem-logo ${lc}">${lt}</div>
-      <div class="hitem-inf">
-        <div class="hitem-name">${h.walletLabel||h.wallet}</div>
-        <div class="hitem-acc">${maskAccount(h.account)}</div>
-        <div class="hitem-date">${fd(h.createdAt)}</div>
-        ${h.status==='rejected'&&h.reason?`<div class="hitem-reject-reason">⚠️ ${h.reason}</div>`:''}
-      </div>
-      <div class="hitem-right">
-        <div class="hstatus ${stClass}">${stLabel}</div>
-        <div class="hitem-amt">৳ ${Number(h.amount).toFixed(2)}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function updateProfile(){
-  document.getElementById('uname').textContent='Hello, '+APP.userName+' 👋';
-  document.getElementById('uid').textContent='ID: '+APP.userId;
-  const wrap=document.getElementById('uava-wrap');
-  if(APP.userPhoto){
-    wrap.innerHTML=`<div class="avatar-wrap"><img src="${APP.userPhoto}" alt="avatar"></div>`;
-  }else{
-    wrap.innerHTML=`<div class="avatar-wrap-text">${APP.userName.charAt(0).toUpperCase()}</div>`;
-  }
-}
-
-function updateUI(){
-  const refCount=APP.referrals.length;
-  document.getElementById('hbal').textContent=APP.balance.toFixed(2);
-  document.getElementById('sEarned').textContent=APP.totalEarned.toFixed(2);
-  document.getElementById('sWd').textContent=APP.totalWithdrawn.toFixed(2);
-  document.getElementById('sRef').textContent=refCount;
-  document.getElementById('refEarnedLbl').textContent=`+৳${(refCount*(APP.settings.referralBonus||5)).toFixed(2)} Earned`;
-  document.getElementById('wdBal').textContent=APP.balance.toFixed(2);
-  document.getElementById('rTotal').textContent=refCount;
-  document.getElementById('rCoins').textContent=`৳${(refCount*(APP.settings.referralBonus||5)).toFixed(2)}`;
-  document.getElementById('rActive').textContent=refCount;
-  document.getElementById('rLink').textContent=`https://t.me/${APP.settings.botUsername||'YourBot'}?start=${APP.referralCode}`;
-  const wStatWd=document.getElementById('wStatWd');
-  if(wStatWd) wStatWd.textContent=APP.totalWithdrawn.toFixed(2);
-  renderRefList();renderTasks();
-}
-
-function showPage(p,el){
-  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('active');
-  el.classList.add('active');
-}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
-function ta(iso){if(!iso)return'';const m=Math.floor((Date.now()-new Date(iso))/60000);if(m<1)return'Just now';if(m<60)return`${m}m ago`;const h=Math.floor(m/60);if(h<24)return`${h}h ago`;return`${Math.floor(h/24)}d ago`;}
-function fd(iso){if(!iso)return'—';return new Date(iso).toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'});}
-</script>
-</body>
-</html>
+  if(type==='watch'&&isDailyLimitReached())
