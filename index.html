@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <script data-cfasync="false" async type="text/javascript" src="//cskscenery.com/gDatBXkavuiD6y6s/147317"></script>
@@ -1367,7 +1367,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
           </div>
           <div class="ad-s-item">
             <h4><i class="fa-solid fa-coins gold"></i> <span id="adRewardLbl">৳0.50</span></h4>
-            <p>প্রতি বিজ্ঞাপনে</p>
+            <p>প্রতি এডে</p>
           </div>
         </div>
       </div>
@@ -1375,7 +1375,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
         <div class="btn-left">
           <div class="btn-play-icon"><i class="fa-solid fa-play"></i></div>
           <div class="btn-text">
-            <h3 id="watchBtnTxt">বিজ্ঞাপন দেখুন</h3>
+            <h3 id="watchBtnTxt">এড দেখুন</h3>
             <p>প্রতি বিজ্ঞাপনে <span id="watchBtnReward">৳0.50</span> আয় করুন</p>
           </div>
         </div>
@@ -1550,28 +1550,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
     </div>
   </div>
 
-  <div class="page" id="page-referral">
-    <div class="pgt"><div class="pgtitle">Referral</div></div>
-    <div class="rhero">
-      <div class="remo">🤝</div>
-      <div class="rht">Invite & Earn</div>
-      <div class="rhs">Earn <span id="rbLbl" style="color:var(--taka);font-weight:700;font-family:'Hind Siliguri',sans-serif">৳ 5.00</span> bonus per referral</div>
-      <div class="rstats">
-        <div class="rstat"><div class="rsv" id="rTotal">0</div><div class="rsl">Total Refs</div></div>
-        <div class="rstat"><div class="rsv" id="rCoins">৳0</div><div class="rsl">Earned</div></div>
-        <div class="rstat"><div class="rsv" id="rActive">0</div><div class="rsl">Active</div></div>
-      </div>
-    </div>
-    <div class="rlc">
-      <span class="flbl">Your Referral Link</span>
-      <div class="rbox"><div class="rtxt" id="rLink">Loading...</div><button class="cbtn" onclick="copyRef()">Copy</button></div>
-      <button class="sbtn" onclick="shareRef()">📤 Share on Telegram</button>
-    </div>
-    <div class="sec2" style="display:block!important;font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:#fff;margin:16px 0 10px;display:flex;align-items:center;gap:8px;">👥 Your Referrals</div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:4px 16px">
-      <div id="rList"><div class="empty"><div class="eic">👤</div>No referrals yet</div></div>
-    </div>
-  </div>
+  
 
   <div class="page" id="page-wallet">
     <div class="pgt"><div class="pgtitle">Wallet</div></div>
@@ -1699,15 +1678,14 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
 </div>
 
 <div class="bottom-bar">
-  <div class="nav-link" id="nav-referral" onclick="showPage('referral',this)">
-    <i class="fa-solid fa-users"></i> <span>Referral</span>
-  </div>
   <div class="nav-link" id="nav-support" onclick="showPage('support',this)">
     <i class="fa-solid fa-headset"></i> <span>Support</span>
   </div>
+
   <div class="nav-link active" id="nav-home" onclick="showPage('home',this)">
     <i class="fa-solid fa-house"></i> <span>Home</span>
   </div>
+
   <div class="nav-link" id="nav-wallet" onclick="showPage('wallet',this)">
     <i class="fa-solid fa-wallet"></i> <span>Wallet</span>
   </div>
@@ -1767,7 +1745,7 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
       <div class="rules-header-txt">
         <div class="rules-header-title1">কাজ করার</div>
         <div class="rules-header-title2">সম্পূর্ণ নিয়ম</div>
-        <div class="rules-header-sub">🛡️ নিয়ম মেনে কাজ করলে পুরস্কার পাবেন</div>
+        <div class="rules-header-sub">🛡️ নিয়ম মেনে এড দেখুন</div>
       </div>
       <div class="rules-close-btn" onclick="closeRulesPopupBtn()">✕</div>
     </div>
@@ -1782,19 +1760,19 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
       </div>
       <div class="rules-item">
         <div class="rules-check">✓</div>
-        <div class="rules-item-txt">প্রতি এডে <span>১০ টাকা</span> করে পাবেন</div>
+        <div class="rules-item-txt">হলুদ <span>এড দেখুন</span>বাটনে ক্লিক করলে এড আসবে</div>
       </div>
       <div class="rules-item">
         <div class="rules-check">✓</div>
-        <div class="rules-item-txt">প্রতি ঘন্টায় <span>১০টি</span> এড দেখতে পারবেন</div>
+        <div class="rules-item-txt">এডে কিছুক্ষন <span>অপেক্ষা </span>করতে হবে</div>
       </div>
       <div class="rules-item">
         <div class="rules-check">✓</div>
-        <div class="rules-item-txt">এড দেখার পর <span>১০ সেকেন্ড</span> অপেক্ষা করতে হবে</div>
+        <div class="rules-item-txt">এড শেষ না হতেই<span>এড কাটবেন না।</span>অপেক্ষা না করে এড পেজ কাটলে পেমেন্ট রিজেক্ট হবে</div>
       </div>
       <div class="rules-tip">
         <span class="rules-tip-ic">💡</span>
-        <span>টাচ করুন → <b>এড দেখুন</b> থেকে এড দেখুন</span>
+        <span>এড দেখুন টাচ করুন → <b>এড দেখুন</b> বিকাশ নগদ রকেটে টাকা নিন</span>
       </div>
     </div>
 
