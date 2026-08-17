@@ -1228,6 +1228,12 @@ body { background:var(--bg-dark); color:var(--text-main); min-height:100vh; over
 .eic { font-size:36px; margin-bottom:8px; }
 .toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-80px); background:rgba(20,24,38,.97); border:1px solid rgba(124,111,253,.3); color:#fff; padding:12px 20px; border-radius:30px; font-size:13px; font-weight:500; z-index:9999; transition:transform .3s cubic-bezier(.34,1.4,.64,1); backdrop-filter:blur(20px); white-space:nowrap; font-family:'Poppins',sans-serif; }
 .toast.show { transform:translateX(-50%) translateY(0); }
+
+/* Hide Home Task Section */
+.task-header,
+#taskList {
+  display: none !important;
+}
 </style>
 </head>
 <body>
