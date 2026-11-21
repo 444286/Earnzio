@@ -1,78 +1,542 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" data-theme="dark">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0f0f14"><meta name="description" content="বাংলা সংবাদ পড়ুন, বিষয়ভিত্তিক খুঁজুন, সংরক্ষণ করুন এবং নিজের পাঠ-নোট রাখুন।"><title>ডেইলিরিড — বাংলা সংবাদ পাঠাগার</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script><script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0f0f14">
+<meta name="description" content="লাইভ বাংলা সংবাদ পড়ুন, কুইজ খেলুন, সংরক্ষণ করুন এবং নিজের পাঠ-নোট রাখুন।">
+<title>ডেইলিরিড — বাংলা সংবাদ পাঠাগার</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0} :root{--bg:#0f0f14;--s1:#16161f;--s2:#1e1e2a;--bd:#2c2c3e;--p:#a78bfa;--p2:#7c3aed;--g:#10b981;--tx:#e2e2f0;--mu:#8585a8}
-html,body{height:100%;overflow:hidden}body{font-family:"Noto Sans Bengali","Hind Siliguri",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column}
-button,input{font:inherit}button{cursor:pointer}
-.topbar{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:var(--s1);border-bottom:1px solid var(--bd)}
-.brand{font-size:20px;font-weight:900}.brand span{color:var(--p)}.top-actions{display:flex;gap:6px}.icon-btn,.tool-btn{background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:9px;padding:8px 10px;font-size:11px;font-weight:800}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f0f14;--s1:#16161f;--s2:#1e1e2a;--bd:#2c2c3e;--p:#a78bfa;--p2:#7c3aed;--g:#10b981;--r:#f87171;--tx:#e2e2f0;--mu:#8585a8;--fs:15px}
+[data-theme=light]{--bg:#f6f5fb;--s1:#ffffff;--s2:#efedf8;--bd:#d9d5ec;--p:#6d3fe0;--p2:#6d3fe0;--g:#0b8a63;--r:#c0392b;--tx:#1d1b2e;--mu:#625f80}
+html,body{height:100%;overflow:hidden}
+body{font-family:"Noto Sans Bengali","Hind Siliguri",system-ui,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column}
+button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+.topbar{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:12px 15px;background:var(--s1);border-bottom:1px solid var(--bd)}
+.brand{font-size:20px;font-weight:800}.brand span{color:var(--p)}
+.hello{font-size:10px;color:var(--mu);margin-top:1px}
+.top-actions{display:flex;gap:6px}
+.icon-btn,.tool-btn{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:8px 10px;font-size:11px;font-weight:600}
 .tabs{display:flex;overflow-x:auto;scrollbar-width:none;flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--bd)}.tabs::-webkit-scrollbar{display:none}
-.tab{white-space:nowrap;flex-shrink:0;padding:11px 13px;background:none;border:0;border-bottom:2px solid transparent;color:var(--mu);font-size:12px;font-weight:800}.tab.active{color:var(--p);border-bottom-color:var(--p)}
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}.page{display:none;padding-bottom:30px}.page.active{display:block}
-.tools{padding:13px 14px 0;display:flex;gap:8px}.search{flex:1;min-width:0;background:var(--s2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);padding:11px;font-size:13px;outline:none}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 14px}.stat{background:var(--s1);border:1px solid var(--bd);border-radius:10px;text-align:center;padding:9px}.stat b{display:block;color:var(--p);font-size:18px}.stat span{font-size:10px;color:var(--mu)}
-.goal{margin:0 14px 13px;background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:12px}.goalhead{display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:8px}.goalhead span:last-child{color:var(--p)}.bar{height:7px;background:var(--bd);border-radius:20px;overflow:hidden}.bar div{height:100%;width:0;background:linear-gradient(90deg,var(--p2),var(--p))}
-.featured{margin:14px;background:linear-gradient(145deg,#2d1b69,#1a1040 72%,#0f0f14);border:1px solid #49347d;border-radius:15px;padding:18px}.badge{display:inline-block;color:var(--p);background:#a78bfa20;border:1px solid #a78bfa44;border-radius:20px;padding:3px 9px;font-size:10px;font-weight:900;margin-bottom:8px}.featured h1{font-size:19px;line-height:1.4;color:white;margin-bottom:7px}.featured p{font-size:12px;line-height:1.7;color:#d4cbed}.slabel{padding:17px 14px 9px;color:var(--mu);font-size:11px;font-weight:900;letter-spacing:.4px}
-.list{padding:0 14px;display:flex;flex-direction:column;gap:9px}.card{display:flex;gap:10px;align-items:center;background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:12px}.body{flex:1;min-width:0}.cat{font-size:9px;font-weight:900;padding:2px 7px;border-radius:15px;background:#a78bfa20;color:var(--p)}.title{font-size:13px;font-weight:850;line-height:1.5;margin:6px 0}.meta{font-size:10px;color:var(--mu)}.actions{display:flex;gap:6px;margin-top:8px}.mini{background:transparent;border:1px solid var(--bd);color:var(--mu);border-radius:7px;padding:4px 7px;font-size:10px}.emoji{width:45px;height:45px;border-radius:9px;background:#29283a;display:grid;place-items:center;font-size:22px;flex-shrink:0}
-.empty{margin:14px;padding:22px;border:1px dashed var(--bd);border-radius:12px;text-align:center;color:var(--mu);font-size:13px}
+.tab{white-space:nowrap;flex-shrink:0;padding:11px 13px;background:none;border:0;border-bottom:2px solid transparent;color:var(--mu);font-size:12px;font-weight:600}
+.tab.active{color:var(--p);border-bottom-color:var(--p)}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.page{display:none;padding-bottom:30px}.page.active{display:block}
+.tools{padding:13px 14px 0;display:flex;gap:8px}
+.search{flex:1;min-width:0;background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:11px;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 14px}
+.stat{background:var(--s1);border:1px solid var(--bd);border-radius:10px;text-align:center;padding:9px}
+.stat b{display:block;color:var(--p);font-size:18px}.stat span{font-size:10px;color:var(--mu)}
+.goal{margin:0 14px 13px;background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:12px}
+.goalhead{display:flex;justify-content:space-between;font-size:11px;font-weight:600;margin-bottom:8px}
+.goalhead span:last-child{color:var(--p)}
+.bar{height:7px;background:var(--bd);border-radius:20px;overflow:hidden}.bar div{height:100%;width:0;background:linear-gradient(90deg,var(--p2),var(--p));transition:width .3s}
+.status{margin:10px 14px 0;padding:8px 11px;border-radius:9px;background:var(--s2);border:1px solid var(--bd);font-size:11px;color:var(--mu);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.status button{background:none;border:0;color:var(--p);font-weight:700;font-size:11px}
+.featured{margin:14px;background:linear-gradient(145deg,#2d1b69,#1a1040 72%,#0f0f14);border:1px solid #49347d;border-radius:15px;padding:18px;cursor:pointer;color:#fff}
+[data-theme=light] .featured{background:linear-gradient(145deg,#6d3fe0,#4b25a8);border-color:#6d3fe0}
+.badge{display:inline-block;color:#d8ccff;background:#ffffff1c;border-radius:20px;padding:3px 9px;font-size:10px;font-weight:700;margin-bottom:8px}
+.featured h1{font-size:19px;line-height:1.5;margin-bottom:7px}.featured p{font-size:12px;line-height:1.7;color:#e0d8f5}
+.slabel{padding:17px 14px 9px;color:var(--mu);font-size:11px;font-weight:700}
+.list{padding:0 14px;display:flex;flex-direction:column;gap:9px}
+.card{display:flex;gap:10px;align-items:center;background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:12px;cursor:pointer}
+.card.isread{opacity:.62}
+.body{flex:1;min-width:0}
+.cat{font-size:10px;font-weight:700;padding:2px 7px;border-radius:15px;background:color-mix(in srgb,var(--p) 16%,transparent);color:var(--p);display:inline-block}
+.title{font-size:13.5px;font-weight:600;line-height:1.55;margin:6px 0}
+.meta{font-size:10px;color:var(--mu)}
+.actions{display:flex;gap:6px;margin-top:8px}
+.mini{background:transparent;border:1px solid var(--bd);color:var(--mu);border-radius:7px;padding:4px 8px;font-size:10px}
+.thumb{width:62px;height:62px;border-radius:9px;background:var(--s1) center/cover no-repeat;flex-shrink:0}
+.empty{margin:14px;padding:22px;border:1px dashed var(--bd);border-radius:12px;text-align:center;color:var(--mu);font-size:13px;line-height:1.7}
 .note{margin:14px;color:var(--mu);font-size:10px;line-height:1.7}
-.reader{display:none;position:fixed;inset:0;z-index:50;background:var(--bg);flex-direction:column}.reader.open{display:flex}.rbar{display:flex;align-items:center;gap:10px;padding:12px;background:var(--s1);border-bottom:1px solid var(--bd)}.back{width:35px;height:35px;border-radius:50%;background:var(--s2);border:1px solid var(--bd);color:var(--tx);font-size:18px}.rtitle{font-size:12px;font-weight:800;flex:1}.rscroll{overflow-y:auto;flex:1}.rbody{padding:19px 16px 35px}.rbody h1{font-size:22px;line-height:1.45;color:#fff;margin:9px 0}.rmeta{font-size:10px;color:var(--mu);border-bottom:1px solid var(--bd);padding-bottom:14px;margin-bottom:15px}.rbody p{font-size:14px;line-height:1.9;margin-bottom:14px;color:#ddddec}.source{display:block;color:#c4b5fd;font-size:12px;margin:14px 0}.rbuttons{display:flex;gap:8px}.rbuttons button{flex:1;background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:10px;border-radius:9px;font-size:11px}.reader-tools{display:flex;align-items:center;gap:8px;margin:16px 0 12px;flex-wrap:wrap}.reader-tools button{background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:8px 11px;font-size:11px}.reader-tools .readmark{margin-left:auto;color:#6ee7b7}.note-box{margin:16px 0;padding:13px;background:var(--s1);border:1px solid var(--bd);border-radius:11px}.note-box label{display:block;font-size:12px;font-weight:900;margin-bottom:8px}.note-box textarea{width:100%;min-height:90px;resize:vertical;background:var(--s2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);padding:10px;font:inherit;font-size:13px;line-height:1.6;outline:none}.note-box small{display:block;color:var(--mu);font-size:10px;margin-top:6px}.about-card{margin:14px;padding:16px;background:var(--s1);border:1px solid var(--bd);border-radius:12px}.about-card h3{font-size:15px;margin-bottom:8px}.about-card p{font-size:12px;line-height:1.8;color:var(--mu);margin:7px 0}.filter-row{display:flex;gap:7px;overflow:auto;padding:10px 14px 4px;scrollbar-width:none}.filter-row button{white-space:nowrap;background:var(--s2);border:1px solid var(--bd);color:var(--mu);border-radius:20px;padding:7px 11px;font-size:10px}.filter-row button.active{color:var(--p);border-color:var(--p)}.adbox{margin-top:20px;padding:15px;background:var(--s2);border:1px solid var(--bd);border-radius:12px;text-align:center}.adbox p{font-size:11px;color:var(--mu)}.adbtn{background:var(--p2);color:white;border:0;border-radius:9px;padding:11px 15px;margin-top:10px;font-size:12px;font-weight:900;width:100%}
-.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,80px);background:#222235;border:1px solid #10b98166;color:#10b981;padding:10px 16px;border-radius:30px;font-size:12px;z-index:90;transition:.25s;white-space:nowrap}.toast.show{transform:translate(-50%,0)}.hidden{display:none!important}
-</style></head><body>
-<header class="topbar"><div class="brand">ডেইলি<span>রিড</span></div><div class="top-actions"><button class="icon-btn" onclick="page('saved')">♡ সংরক্ষিত</button><button class="icon-btn" onclick="page('history')">◷ ইতিহাস</button></div></header>
-<nav class="tabs">
-<button class="tab active" id="t-home" onclick="page('home')">🏠 হোম</button><button class="tab" id="t-national" onclick="page('national')">🇧🇩 জাতীয়</button><button class="tab" id="t-world" onclick="page('world')">🌍 আন্তর্জাতিক</button><button class="tab" id="t-economy" onclick="page('economy')">📈 অর্থনীতি</button><button class="tab" id="t-tech" onclick="page('tech')">💻 প্রযুক্তি</button><button class="tab" id="t-health" onclick="page('health')">🩺 স্বাস্থ্য</button><button class="tab" id="t-saved" onclick="page('saved')">♡ সংরক্ষিত</button><button class="tab" id="t-history" onclick="page('history')">◷ ইতিহাস</button><button class="tab" id="t-about" onclick="page('about')">ℹ️ পরিচিতি</button>
+.skel{height:92px;border-radius:12px;background:linear-gradient(90deg,var(--s2),var(--s1),var(--s2));background-size:200% 100%;animation:sk 1.2s infinite}
+@keyframes sk{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.skel{animation:none}.bar div,.toast{transition:none}}
+.filter-row{display:flex;gap:7px;overflow:auto;padding:10px 14px 4px;scrollbar-width:none}
+.filter-row button{white-space:nowrap;background:var(--s2);border:1px solid var(--bd);color:var(--mu);border-radius:20px;padding:7px 12px;font-size:11px}
+.filter-row button.active{color:var(--p);border-color:var(--p)}
+.reader{display:none;position:fixed;inset:0;z-index:50;background:var(--bg);flex-direction:column}.reader.open{display:flex}
+.rbar{display:flex;align-items:center;gap:10px;padding:12px;background:var(--s1);border-bottom:1px solid var(--bd)}
+.back{width:35px;height:35px;border-radius:50%;background:var(--s2);border:1px solid var(--bd);font-size:18px}
+.rtitle{font-size:12px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rscroll{overflow-y:auto;flex:1}.rbody{padding:19px 16px 35px}
+.rbody h1{font-size:22px;line-height:1.5;margin:9px 0}
+.rmeta{font-size:10px;color:var(--mu);border-bottom:1px solid var(--bd);padding-bottom:14px;margin-bottom:15px}
+.rbody p.txt{font-size:var(--fs);line-height:1.95;margin-bottom:14px}
+.rimg{width:100%;border-radius:11px;margin-bottom:14px;max-height:230px;object-fit:cover}
+.source{display:block;text-align:center;background:var(--p2);color:#fff;text-decoration:none;font-size:13px;font-weight:700;padding:12px;border-radius:10px;margin:16px 0}
+.reader-tools{display:flex;align-items:center;gap:8px;margin:14px 0;flex-wrap:wrap}
+.reader-tools button{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 11px;font-size:11px}
+.reader-tools .readmark{margin-left:auto;color:var(--g)}
+.note-box{margin:16px 0;padding:13px;background:var(--s1);border:1px solid var(--bd);border-radius:11px}
+.note-box label{display:block;font-size:12px;font-weight:700;margin-bottom:8px}
+.note-box textarea{width:100%;min-height:90px;resize:vertical;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px;font-size:13px;line-height:1.6}
+.note-box small{display:block;color:var(--mu);font-size:10px;margin-top:6px}
+.rbuttons{display:flex;gap:8px}
+.rbuttons button{flex:1;background:var(--s2);border:1px solid var(--bd);padding:10px;border-radius:9px;font-size:11px}
+.adbox{margin-top:20px;padding:15px;background:var(--s2);border:1px solid var(--bd);border-radius:12px;text-align:center}
+.adbox p{font-size:11px;color:var(--mu);line-height:1.7}
+.adbtn{background:transparent;color:var(--p);border:1px solid var(--p);border-radius:9px;padding:10px 15px;margin-top:10px;font-size:12px;font-weight:700;width:100%}
+.about-card{margin:14px;padding:16px;background:var(--s1);border:1px solid var(--bd);border-radius:12px}
+.about-card h3{font-size:15px;margin-bottom:8px}.about-card p{font-size:12px;line-height:1.8;color:var(--mu);margin:7px 0}
+.setrow{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.setrow button{flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px;font-size:12px}
+.qcard{margin:14px;background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:18px}
+.qcard h2{font-size:16px;line-height:1.6;margin:8px 0 14px}
+.qprog{font-size:11px;color:var(--mu)}
+.opt{display:block;width:100%;text-align:left;background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:8px;font-size:13px}
+.opt.ok{border-color:var(--g);color:var(--g)}.opt.bad{border-color:var(--r);color:var(--r)}
+.bigbtn{background:var(--p2);color:#fff;border:0;border-radius:10px;padding:12px;width:100%;font-size:13px;font-weight:700;margin-top:6px}
+.qscore{font-size:34px;font-weight:800;color:var(--p);text-align:center;margin:8px 0}
+.nitem{margin:0 14px 9px;background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:12px}
+.nitem h4{font-size:13px;line-height:1.55;margin-bottom:6px;cursor:pointer}
+.nitem p{font-size:12px;line-height:1.7;color:var(--mu);white-space:pre-wrap}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,80px);background:var(--s1);border:1px solid var(--g);color:var(--g);padding:10px 16px;border-radius:30px;font-size:12px;z-index:90;transition:.25s;max-width:90%;text-align:center}
+.toast.show{transform:translate(-50%,0)}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><div class="brand">ডেইলি<span>রিড</span></div><div class="hello" id="hello"></div></div>
+  <div class="top-actions">
+    <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" aria-label="থিম বদলান">☾ থিম</button>
+    <button class="icon-btn" onclick="page('saved')">♡ সংরক্ষিত</button>
+  </div>
+</header>
+<nav class="tabs" aria-label="প্রধান মেনু">
+  <button class="tab active" id="t-home" onclick="page('home')">🏠 হোম</button>
+  <button class="tab" id="t-feed" onclick="page('feed')">⭐ আমার ফিড</button>
+  <button class="tab" id="t-quiz" onclick="page('quiz')">🧠 কুইজ</button>
+  <button class="tab" id="t-saved" onclick="page('saved')">♡ সংরক্ষিত</button>
+  <button class="tab" id="t-notes" onclick="page('notes')">📝 আমার নোট</button>
+  <button class="tab" id="t-stats" onclick="page('stats')">📊 পরিসংখ্যান</button>
+  <button class="tab" id="t-history" onclick="page('history')">◷ ইতিহাস</button>
+  <button class="tab" id="t-about" onclick="page('about')">ℹ️ পরিচিতি</button>
 </nav>
+
 <main class="scroll" id="scroll">
 <section class="page active" id="p-home">
-<div class="tools"><input class="search" id="q" placeholder="খবর খুঁজুন..." oninput="searchNews()"><button class="tool-btn" onclick="clearSearch()">মুছুন</button></div>
-<div id="searchResults" class="hidden"></div><div id="homeBody"><div class="filter-row" id="homeFilters"><button class="active" onclick="filterHome('সব',this)">সব খবর</button><button onclick="filterHome('জাতীয়',this)">জাতীয়</button><button onclick="filterHome('আন্তর্জাতিক',this)">আন্তর্জাতিক</button><button onclick="filterHome('অর্থনীতি',this)">অর্থনীতি</button><button onclick="filterHome('প্রযুক্তি',this)">প্রযুক্তি</button><button onclick="filterHome('স্বাস্থ্য',this)">স্বাস্থ্য</button></div>
-<div class="stats"><div class="stat"><b id="readN">০</b><span>পড়া সংবাদ</span></div><div class="stat"><b id="saveN">০</b><span>সংরক্ষিত</span></div><div class="stat"><b id="streakN">০</b><span>দিনের ধারাবাহিকতা</span></div></div>
-<div class="goal"><div class="goalhead"><span>📖 দৈনিক পড়ার লক্ষ্য</span><span id="goalText">০ / ৫টি</span></div><div class="bar"><div id="goalBar"></div></div></div>
-<div class="featured"><span class="badge">আজকের নির্বাচিত খবর</span><h1 id="featuredTitle"></h1><p>দেশ ও বিশ্বের গুরুত্বপূর্ণ খবর এক জায়গায় পড়ুন। বিস্তারিত জানতে প্রতিটি সংবাদের মূল উৎসে যেতে পারবেন।</p></div>
-<div class="slabel">📰 সর্বশেষ সংবাদ · মোট ২৫টি</div><div class="list" id="homeList"></div>
-<p class="note">সংবাদ শিরোনাম ও সংক্ষিপ্তসার প্রকাশ্য সংবাদসূত্রের ভিত্তিতে সাজানো। পূর্ণ প্রতিবেদন, সংশোধন ও সর্বশেষ তথ্যের জন্য “মূল সংবাদ” লিংকে যান।</p>
-</div></section>
-<section class="page" id="p-national"><div class="slabel">🇧🇩 জাতীয় সংবাদ</div><div class="list" id="list-national"></div></section>
-<section class="page" id="p-world"><div class="slabel">🌍 আন্তর্জাতিক সংবাদ</div><div class="list" id="list-world"></div></section>
-<section class="page" id="p-economy"><div class="slabel">📈 অর্থনীতি, কৃষি ও শহর</div><div class="list" id="list-economy"></div></section>
-<section class="page" id="p-tech"><div class="slabel">💻 প্রযুক্তি ও পরিবেশ</div><div class="list" id="list-tech"></div></section>
-<section class="page" id="p-health"><div class="slabel">🩺 স্বাস্থ্য ও আবহাওয়া</div><div class="list" id="list-health"></div></section>
+  <div class="tools"><input class="search" id="q" placeholder="খবর খুঁজুন..." oninput="debSearch()" aria-label="খবর খুঁজুন"><button class="tool-btn" onclick="clearSearch()">মুছুন</button></div>
+  <div class="filter-row" id="homeFilters"></div>
+  <div class="status" id="status"><span id="statusText">খবর লোড হচ্ছে...</span><button onclick="loadNews(true)">↻ রিফ্রেশ</button></div>
+  <div class="stats">
+    <div class="stat"><b id="readN">০</b><span>পড়া সংবাদ</span></div>
+    <div class="stat"><b id="saveN">০</b><span>সংরক্ষিত</span></div>
+    <div class="stat"><b id="streakN">০</b><span>দিনের ধারাবাহিকতা</span></div>
+  </div>
+  <div class="goal"><div class="goalhead"><span>📖 দৈনিক পড়ার লক্ষ্য</span><span id="goalText">০ / ৫টি</span></div><div class="bar"><div id="goalBar"></div></div></div>
+  <div id="featuredBox"></div>
+  <div class="setrow" style="margin:0 14px"><button onclick="shareDigest()">📋 আজকের ৫ শিরোনাম শেয়ার করুন</button></div>
+  <div class="slabel" id="listLabel">📰 সর্বশেষ সংবাদ</div>
+  <div class="list" id="homeList"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
+  <div class="adbox" style="margin:14px"><p>ডেইলিরিডের সব ফিচার বিজ্ঞাপন ছাড়াই ব্যবহার করা যায়। চাইলে একটি ঐচ্ছিক বিজ্ঞাপন দেখে সহায়তা করতে পারেন।</p><button class="adbtn" onclick="optionalAd()">▶ ঐচ্ছিক বিজ্ঞাপন দেখুন</button></div>
+  <p class="note">শিরোনাম ও সংক্ষিপ্তসার প্রকাশকদের পাবলিক RSS ফিড থেকে স্বয়ংক্রিয়ভাবে আসে। পূর্ণ প্রতিবেদনের জন্য প্রতিটি খবরের “মূল সংবাদ” বোতামে প্রকাশকের সাইটে যান।</p>
+</section>
+
+<section class="page" id="p-feed">
+  <div class="slabel">⭐ আপনার পছন্দের বিষয়</div>
+  <div class="filter-row" id="followChips"></div>
+  <div class="tools"><input class="search" id="kw" maxlength="30" placeholder="নিজের বিষয় যোগ করুন (যেমন: ক্রিকেট)" aria-label="নিজের বিষয় যোগ করুন"><button class="tool-btn" onclick="addKw()">যোগ করুন</button></div>
+  <div class="slabel" id="feedLabel"></div>
+  <div class="list" id="list-feed"></div>
+</section>
+<section class="page" id="p-quiz"><div class="slabel">🧠 আজকের খবরের কুইজ</div><div id="quizBox"></div></section>
 <section class="page" id="p-saved"><div class="slabel">♡ আপনার সংরক্ষিত সংবাদ</div><div class="list" id="list-saved"></div></section>
-<section class="page" id="p-history"><div class="slabel">◷ পড়ার ইতিহাস</div><div class="list" id="list-history"></div><button class="tool-btn" style="margin:15px" onclick="clearHistory()">ইতিহাস মুছুন</button></section><section class="page" id="p-about"><div class="slabel">ℹ️ ডেইলিরিড সম্পর্কে</div><div class="about-card"><h3>সংবাদ পড়া, সংরক্ষণ ও নিজের মতো শেখা</h3><p>ডেইলিরিড একটি স্বতন্ত্র বাংলা সংবাদ-পাঠ অভিজ্ঞতা। এখানে বিষয়ভিত্তিক সংবাদ খোঁজা, মূল উৎসে যাওয়া, পছন্দের সংবাদ সংরক্ষণ, পড়ার ইতিহাস দেখা এবং প্রতিটি সংবাদের পাশে ব্যক্তিগত পাঠ-নোট রাখার সুবিধা রয়েছে।</p><p><b>সম্পাদনা নীতি:</b> এখানে দেখানো শিরোনাম ও সারাংশ সংক্ষিপ্ত পাঠ-সহায়ক হিসেবে দেওয়া। দ্রুত পরিবর্তনশীল তথ্য, সংখ্যা বা ঘটনার ক্ষেত্রে মূল সংবাদসূত্র খুলে সর্বশেষ তথ্য যাচাই করুন। মূল প্রকাশকের সংশোধনীকে অগ্রাধিকার দিন।</p><p><b>গোপনীয়তা:</b> সংরক্ষিত সংবাদ, পড়ার ইতিহাস ও ব্যক্তিগত নোট আপনার ব্যবহৃত ব্রাউজারের লোকাল স্টোরেজে থাকে। এগুলো বিজ্ঞাপন দেখার শর্ত নয়। ব্রাউজারের ডেটা মুছলে এই তথ্যও মুছে যেতে পারে।</p><p><b>বিজ্ঞাপন:</b> বিজ্ঞাপন সম্পূর্ণ ঐচ্ছিক। বিজ্ঞাপন না দেখেও সব সংবাদ পড়া, খোঁজা ও সংরক্ষণ করা যায়।</p></div></section>
+<section class="page" id="p-notes">
+  <div class="slabel">📝 আপনার পাঠ-নোট</div>
+  <div class="setrow" style="margin:0 14px 10px"><button onclick="exportNotes('copy')">📋 সব নোট কপি</button><button onclick="exportNotes('share')">↗ শেয়ার</button></div>
+  <div id="notesList"></div>
+</section>
+<section class="page" id="p-stats"><div class="slabel">📊 আপনার পড়ার পরিসংখ্যান</div><div id="statsBox"></div></section>
+<section class="page" id="p-history"><div class="slabel">◷ পড়ার ইতিহাস</div><div class="list" id="list-history"></div><button class="tool-btn" style="margin:15px" onclick="clearHistory()">ইতিহাস মুছুন</button></section>
+<section class="page" id="p-about">
+  <div class="slabel">ℹ️ ডেইলিরিড সম্পর্কে</div>
+  <div class="about-card">
+    <h3>সংবাদ পড়া, সংরক্ষণ ও নিজের মতো শেখা</h3>
+    <p>ডেইলিরিড বিভিন্ন বাংলা সংবাদমাধ্যমের পাবলিক RSS ফিড থেকে সর্বশেষ শিরোনাম এনে এক জায়গায় দেখায়। প্রতিটি খবরের পূর্ণ প্রতিবেদন প্রকাশকের নিজস্ব সাইটে পড়তে হয়।</p>
+    <p><b>যা যা করা যায়:</b> বিষয়ভিত্তিক খোঁজা, সংরক্ষণ, পড়ার ইতিহাস, প্রতিটি খবরের পাশে ব্যক্তিগত নোট, নোট কপি/শেয়ার, আজকের খবর থেকে কুইজ, লাইট/ডার্ক থিম ও লেখার আকার বদল।</p>
+    <p><b>সূত্র:</b> <span id="srcList"></span></p>
+    <p><b>সিঙ্ক ও গোপনীয়তা:</b> টেলিগ্রামের ভেতরে খুললে নোট, সংরক্ষিত খবর, স্ট্রিক ও সেটিংস আপনার টেলিগ্রাম অ্যাকাউন্টের ক্লাউড স্টোরেজে সিঙ্ক হয়, তাই ডিভাইস বদলালেও থাকে। ব্রাউজারে খুললে শুধু ওই ব্রাউজারেই থাকে।</p>
+    <p><b>বিজ্ঞাপন:</b> বিজ্ঞাপন সম্পূর্ণ ঐচ্ছিক। কোনো ফিচার বিজ্ঞাপন দেখার ওপর নির্ভর করে না। বিজ্ঞাপন শুধু দুটি জায়গায় আসে: (১) খবর পড়ার পেজের নিচের “ঐচ্ছিক বিজ্ঞাপন” বোতামে, (২) প্রতি ৩টি নতুন খবর পড়ে ফিরে আসার সময় একটি ইন্টারস্টিশিয়াল (প্রতি সেশনে সর্বোচ্চ ৪টি)। এটি নিচের বোতাম থেকে যেকোনো সময় বন্ধ করা যায়।</p>
+    <div class="setrow"><button onclick="changeFont(-1)">অ− ছোট লেখা</button><button onclick="changeFont(1)">অ+ বড় লেখা</button></div>
+    <div class="setrow"><button id="autoAdBtn" onclick="toggleAutoAd()"></button></div>
+    <p><b>কপিরাইট ও দায়:</b> খবরের শিরোনাম ও সংক্ষিপ্তসারের স্বত্ব সংশ্লিষ্ট প্রকাশকের। ডেইলিরিড কোনো প্রতিবেদন নিজের বলে দাবি করে না; প্রতিটি খবরে মূল সূত্রের লিংক দেওয়া থাকে।</p>
+  </div>
+</section>
 </main>
-<div class="reader" id="reader"><div class="rbar"><button class="back" onclick="closeReader()">←</button><div class="rtitle" id="rtitle"></div></div><div class="rscroll" id="rscroll"><div class="rbody" id="rbody"></div></div></div>
-<div class="toast" id="toast"></div>
+
+<div class="reader" id="reader" role="dialog" aria-modal="true">
+  <div class="rbar"><button class="back" onclick="closeReader()" aria-label="ফিরে যান">←</button><div class="rtitle" id="rtitle"></div></div>
+  <div class="rscroll" id="rscroll"><div class="rbody" id="rbody"></div></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
 <script>
-const NEWS=[["n1", "জাতীয়", "সশস্ত্র বাহিনী দিবস আজ", "২১ নভেম্বর ২০২৬", "বাসস", "সশস্ত্র বাহিনী দিবস উপলক্ষে দেশের বিভিন্ন কর্মসূচি ও শ্রদ্ধা নিবেদনের আয়োজন করা হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n2", "জাতীয়", "সশস্ত্র বাহিনীর শহীদদের প্রতি রাষ্ট্রপতি ও প্রধানমন্ত্রীর শ্রদ্ধা", "২১ নভেম্বর ২০২৬", "বাসস", "দিবসটি উপলক্ষে শিখা অনির্বাণে শহীদ সদস্যদের স্মরণে শ্রদ্ধা নিবেদন করা হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n3", "জাতীয়", "প্রধানমন্ত্রীর সঙ্গে তিন বাহিনীর প্রধানের সৌজন্য সাক্ষাৎ", "২১ নভেম্বর ২০২৬", "বাংলাদেশ বুলেটিন", "সশস্ত্র বাহিনী দিবসের কর্মসূচির অংশ হিসেবে তিন বাহিনীর প্রধান প্রধানমন্ত্রীর সঙ্গে সাক্ষাৎ করেন।", "https://bdb.orangebd.com/all-news/national"], ["n4", "জাতীয়", "আট জেলায় ৯০ প্লাটুন বিজিবি মোতায়েন", "২১ নভেম্বর ২০২৬", "বাংলাদেশ বুলেটিন", "আইনশৃঙ্খলা ও জননিরাপত্তা বজায় রাখতে কয়েকটি জেলায় বিজিবি মোতায়েনের খবর প্রকাশিত হয়েছে।", "https://bdb.orangebd.com/all-news/national"], ["n5", "জাতীয়", "গোপালগঞ্জে বাস-মোটরসাইকেল সংঘর্ষে নিহত ২", "২১ নভেম্বর ২০২৬", "বাংলাদেশ বুলেটিন", "গোপালগঞ্জে সড়ক দুর্ঘটনায় দুইজন নিহত হওয়ার খবর জানিয়েছে সংবাদমাধ্যমটি।", "https://bdb.orangebd.com/all-news/national"], ["n6", "জাতীয়", "পাগলা মসজিদের দানবাক্সে রেকর্ড পরিমাণ টাকা", "২১ নভেম্বর ২০২৬", "ইউএনবি", "কিশোরগঞ্জের পাগলা মসজিদের দানবাক্সে পাওয়া অর্থ গণনা নিয়ে প্রতিবেদন প্রকাশিত হয়েছে।", "https://unb.com.bd/author/17%2C%2021"], ["n7", "আবহাওয়া", "আকভানের প্রভাবে ভোলায় নদী-সমুদ্র উত্তাল", "২১ নভেম্বর ২০২৬", "বাসস", "ঘূর্ণিঝড় আকভানের প্রভাবে ভোলার নদী ও সমুদ্র এলাকায় বৈরী পরিস্থিতির খবর প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n8", "আবহাওয়া", "আট বিভাগে বৃষ্টি ও বজ্রবৃষ্টির সম্ভাবনা", "২১ নভেম্বর ২০২৬", "ইউএনবি", "দেশের আট বিভাগে বৃষ্টি বা বজ্রবৃষ্টির সম্ভাবনার কথা জানিয়েছে আবহাওয়া-সংক্রান্ত প্রতিবেদনে।", "https://unb.com.bd/author/17%2C%2021"], ["n9", "স্বাস্থ্য", "ডেঙ্গুতে ৩ জনের মৃত্যু, হাসপাতালে ভর্তি ১,৬৭৪", "২১ নভেম্বর ২০২৬", "বাসস", "ডেঙ্গু পরিস্থিতি নিয়ে প্রকাশিত প্রতিবেদনে নতুন মৃত্যু ও হাসপাতালে ভর্তি রোগীর তথ্য তুলে ধরা হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n10", "জাতীয়", "ট্রাফিক আইন লঙ্ঘনে দুই দিনে ডিএমপির ৯০০ মামলা", "২১ নভেম্বর ২০২৬", "বাসস", "রাজধানীতে ট্রাফিক আইন বাস্তবায়নে ডিএমপির অভিযানে মামলা দেওয়ার তথ্য প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n11", "জাতীয়", "ডিএমপির অভিযানে ২৪ ঘণ্টায় গ্রেফতার ২৯৯", "২১ নভেম্বর ২০২৬", "বাসস", "রাজধানীতে পুলিশের অভিযানে গ্রেফতার ও মামলার পরিসংখ্যান নিয়ে প্রতিবেদন প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n12", "শিক্ষা", "ষষ্ঠ থেকে দ্বাদশ শ্রেণির ছাত্রীরা পাবে উপবৃত্তি", "২১ নভেম্বর ২০২৬", "বাসস", "ছাত্রীদের উপবৃত্তি কার্যক্রম নিয়ে সরকারি নির্দেশনা প্রকাশের খবর জানিয়েছে বাসস।", "https://www.bssnews.net/bangla/national/"], ["n13", "শিক্ষা", "বিশ্বকে নেতৃত্ব দিতে যোগ্য শিক্ষার্থী তৈরির ওপর গুরুত্ব", "২০ নভেম্বর ২০২৬", "বাংলাদেশ বুলেটিন", "শিক্ষার্থীদের দক্ষতা ও নেতৃত্বের সক্ষমতা গড়ে তোলার বিষয়ে শিক্ষামন্ত্রীর বক্তব্য প্রকাশিত হয়েছে।", "https://www.bd-bulletin.com/latest-news/0"], ["n14", "অর্থনীতি", "বেগমগঞ্জ টেক্সটাইল কলেজের উন্নয়নে ৮৫ লাখ টাকা বরাদ্দ", "২০ নভেম্বর ২০২৬", "বাসস", "শিক্ষাপ্রতিষ্ঠানের অবকাঠামো ও উন্নয়ন কার্যক্রমে বরাদ্দের খবর প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n15", "কৃষি", "দিনাজপুরে কৃষকদের মধ্যে সরিষার বীজ ও সার বিতরণ", "২০ নভেম্বর ২০২৬", "বাসস", "সরিষা চাষে সহায়তার অংশ হিসেবে কৃষকদের মধ্যে বীজ ও সার বিতরণের খবর জানানো হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n16", "কৃষি", "সার ব্যবস্থাপনায় অনিয়ম হলে কঠোর ব্যবস্থা নেওয়া হবে", "২০ নভেম্বর ২০২৬", "বাসস", "সার বিতরণ ও ব্যবস্থাপনায় অনিয়মের বিরুদ্ধে ব্যবস্থা নেওয়ার বিষয়ে কৃষি সচিবের বক্তব্য প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n17", "প্রযুক্তি", "ফ্রিল্যান্সিং দক্ষতা পার্বত্য চট্টগ্রামের অর্থনীতিতে ভূমিকা রাখতে পারে", "২১ নভেম্বর ২০২৬", "বাসস", "দক্ষ জনবল গড়ে তোলার মাধ্যমে পার্বত্য অঞ্চলে ফ্রিল্যান্সিংয়ের সম্ভাবনা নিয়ে বক্তব্য প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n18", "পরিবেশ", "তিস্তায় সেতু নির্মাণের দাবিতে ঘোড়দৌড় প্রতিযোগিতা", "২১ নভেম্বর ২০২৬", "বাসস", "তিস্তা নদীতে সেতু নির্মাণের দাবিকে সামনে রেখে স্থানীয় ঐতিহ্যবাহী আয়োজনের খবর প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n19", "জাতীয়", "সুপ্রিম কোর্টে প্রবেশে পরিচয়পত্র বাধ্যতামূলক", "২১ নভেম্বর ২০২৬", "বাসস", "সুপ্রিম কোর্টে প্রবেশের নিরাপত্তা ব্যবস্থায় পরিচয়পত্র ও তল্লাশি জোরদারের খবর প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/national/"], ["n20", "জাতীয়", "সরকারি খরচে অস্বচ্ছল বিচারপ্রার্থীদের ২ লাখ ৪৫ হাজার মামলা নিষ্পত্তি", "২১ নভেম্বর ২০২৬", "বাসস", "আইনি সহায়তার আওতায় অস্বচ্ছল বিচারপ্রার্থীদের মামলা নিষ্পত্তির তথ্য প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n21", "আন্তর্জাতিক", "পেরুতে ৬.৭ মাত্রার শক্তিশালী ভূমিকম্প", "২১ নভেম্বর ২০২৬", "বাসস", "পেরুতে শক্তিশালী ভূমিকম্পের ঘটনা নিয়ে সংবাদ প্রকাশিত হয়েছে; ক্ষয়ক্ষতির হালনাগাদ জানতে মূল প্রতিবেদন দেখুন।", "https://www.bssnews.net/bangla/national/"], ["n22", "জাতীয়", "দিনাজপুরে সড়ক দুর্ঘটনায় ৭ যাত্রী আহত", "২১ নভেম্বর ২০২৬", "বাসস", "দিনাজপুরে সড়ক দুর্ঘটনায় আহত হওয়ার খবর জানিয়েছে সংবাদ সংস্থা বাসস।", "https://www.bssnews.net/bangla/national/"], ["n23", "জাতীয়", "গোপালগঞ্জের আইনশৃঙ্খলা পরিস্থিতি ভালো বলে জানিয়েছেন আইজিপি", "২১ নভেম্বর ২০২৬", "বাসস", "গোপালগঞ্জের সার্বিক আইনশৃঙ্খলা পরিস্থিতি নিয়ে আইজিপির বক্তব্য প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n24", "শহর", "চট্টগ্রামের উন্নয়ন কাজে কোনো এলাকাকে পিছিয়ে রাখা হবে না", "২১ নভেম্বর ২০২৬", "বাসস", "নগরীর উন্নয়ন কার্যক্রমে সব এলাকার জন্য সমান গুরুত্ব দেওয়ার কথা জানিয়েছেন চসিক প্রশাসক।", "https://www.bssnews.net/bangla/news"], ["n25", "জাতীয়", "বাংলাদেশে মালয়েশিয়ার প্রধানমন্ত্রী ও মালদ্বীপের প্রেসিডেন্টের সফরের প্রস্তুতি", "২১ নভেম্বর ২০২৬", "ইউএনবি", "আগামী মাসে দুই দেশের শীর্ষ নেতার বাংলাদেশ সফর আয়োজনের প্রস্তুতি নিয়ে প্রতিবেদন প্রকাশিত হয়েছে।", "https://unb.com.bd/author/17%2C%2021"]];
-const emoji={জাতীয়:"🇧🇩",আবহাওয়া:"🌦️",স্বাস্থ্য:"🩺",শিক্ষা:"🎓",অর্থনীতি:"📊",কৃষি:"🌾",প্রযুক্তি:"💻",পরিবেশ:"🌱",আন্তর্জাতিক:"🌍",শহর:"🏙️"};
-const groups={national:["জাতীয়","শিক্ষা"],world:["আন্তর্জাতিক"],economy:["অর্থনীতি","কৃষি","শহর"],tech:["প্রযুক্তি","পরিবেশ"],health:["স্বাস্থ্য","আবহাওয়া"]};
-const KEY="dailyread-bn-v1";let state;try{state=JSON.parse(localStorage.getItem(KEY))||{saved:[],history:[],reads:{},days:[],notes:{},readIds:[]}}catch(e){state={saved:[],history:[],reads:{},days:[],notes:{},readIds:[]}}
-const bn=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d]);const today=()=>new Date().toISOString().slice(0,10);
-function save(){state.notes=state.notes||{};state.readIds=state.readIds||[];localStorage.setItem(KEY,JSON.stringify(state));stats()}
-function stats(){document.getElementById("readN").textContent=bn(Object.keys(state.reads).length);document.getElementById("saveN").textContent=bn(state.saved.length);let days=[...new Set(state.days)].sort().reverse(),st=0,d=new Date();if(days.includes(today()))while(days.includes(d.toISOString().slice(0,10))){st++;d.setDate(d.getDate()-1)}document.getElementById("streakN").textContent=bn(st);let c=state.reads[today()]||0;document.getElementById("goalText").textContent=bn(Math.min(c,5))+" / ৫টি";document.getElementById("goalBar").style.width=Math.min(c/5*100,100)+"%"}
-function card(n){return `<article class="card" onclick="openNews('${n[0]}')"><div class="body"><span class="cat">${n[1]}</span><div class="title">${n[2]}</div><div class="meta">${n[3]} · ${n[4]}</div><div class="actions"><button class="mini" onclick="event.stopPropagation();toggleSave('${n[0]}')">${state.saved.includes(n[0])?"♥ সংরক্ষিত":"♡ সংরক্ষণ"}</button><button class="mini" onclick="event.stopPropagation();share('${n[0]}')">↗ শেয়ার</button></div></div><div class="emoji">${emoji[n[1]]||"📰"}</div></article>`}
-function fill(id,arr){document.getElementById(id).innerHTML=arr.length?arr.map(card).join(""):'<div class="empty">এখানে এখনো কোনো সংবাদ নেই।</div>'}
-function render(){fill("homeList",NEWS);Object.keys(groups).forEach(k=>fill("list-"+k,NEWS.filter(n=>groups[k].includes(n[1]))));fill("list-saved",NEWS.filter(n=>state.saved.includes(n[0])));fill("list-history",state.history.map(id=>NEWS.find(n=>n[0]===id)).filter(Boolean));document.getElementById("featuredTitle").textContent=NEWS[0][2];stats()}
-function page(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.getElementById("p-"+id).classList.add("active");document.getElementById("t-"+id)?.classList.add("active");document.getElementById("scroll").scrollTop=0;if(id==="saved"||id==="history")render()}
-function openNews(id){let n=NEWS.find(x=>x[0]===id);if(!n)return;state.history=[id,...state.history.filter(x=>x!==id)].slice(0,60);state.reads[today()]=(state.reads[today()]||0)+1;state.readIds=state.readIds||[];if(!state.readIds.includes(id))state.readIds.push(id);if(!state.days.includes(today()))state.days.push(today());save();render();document.getElementById("rtitle").textContent=n[2];document.getElementById("rbody").innerHTML=`<span class="cat">${n[1]}</span><h1>${n[2]}</h1><div class="rmeta">${n[3]} · সূত্র: ${n[4]}</div><div class="reader-tools"><button onclick="changeFont(-1)">অ− ছোট লেখা</button><button onclick="changeFont(1)">অ+ বড় লেখা</button><button class="readmark" onclick="markRead('${id}')">✓ পড়া হয়েছে</button></div><p>${n[5]}</p><p>এই সংক্ষিপ্ত সংবাদটি প্রাথমিক তথ্য জানার জন্য সাজানো হয়েছে। ঘটনার বিস্তারিত, সংশ্লিষ্ট কর্তৃপক্ষের বক্তব্য এবং পরবর্তী হালনাগাদ জানতে মূল সংবাদসূত্র দেখুন।</p><a class="source" href="${n[6]}" target="_blank" rel="noopener">মূল সংবাদসূত্রে বিস্তারিত পড়ুন ↗</a><div class="note-box"><label for="note-${id}">📝 এই সংবাদের জন্য আপনার ব্যক্তিগত নোট</label><textarea id="note-${id}" placeholder="গুরুত্বপূর্ণ তথ্য, প্রশ্ন বা নিজের মতামত লিখুন..." oninput="saveNote('${id}',this.value)">${(state.notes||{})[id]||""}</textarea><small>নোট শুধু এই ব্রাউজারেই সংরক্ষিত থাকবে; অন্য ব্যবহারকারী দেখতে পাবেন না।</small></div><div class="rbuttons"><button onclick="toggleSave('${id}')">${state.saved.includes(id)?"♥ সংরক্ষিত":"♡ সংরক্ষণ করুন"}</button><button onclick="share('${id}')">↗ শেয়ার করুন</button></div><div class="adbox"><p>এই অ্যাপের সব পাঠ-সুবিধা বিজ্ঞাপন ছাড়াই ব্যবহার করা যায়। চাইলে ঐচ্ছিক বিজ্ঞাপন দেখে প্রকাশনাটিকে সহায়তা করতে পারেন।</p><button class="adbtn" onclick="optionalAd()">▶ ঐচ্ছিক বিজ্ঞাপন দেখুন</button></div>`;document.getElementById("rscroll").scrollTop=0;document.getElementById("reader").classList.add("open")}
-function closeReader(){document.getElementById("reader").classList.remove("open")}
-function saveNote(id,value){state.notes=state.notes||{};state.notes[id]=value;clearTimeout(window.noteTimer);window.noteTimer=setTimeout(()=>{localStorage.setItem(KEY,JSON.stringify(state));toast("আপনার নোট সংরক্ষিত হয়েছে")},650)}
-function changeFont(delta){let p=document.querySelector("#rbody>p");if(!p)return;let current=parseFloat(getComputedStyle(p).fontSize)||14;p.style.fontSize=Math.max(12,Math.min(22,current+delta*2))+"px"}
-function markRead(id){state.readIds=state.readIds||[];if(!state.readIds.includes(id))state.readIds.push(id);save();toast("পড়া হিসেবে চিহ্নিত হয়েছে")}
-function toggleSave(id){state.saved=state.saved.includes(id)?state.saved.filter(x=>x!==id):[id,...state.saved];save();render();toast(state.saved.includes(id)?"সংবাদ সংরক্ষণ করা হয়েছে":"সংরক্ষণ থেকে সরানো হয়েছে")}
-async function share(id){let n=NEWS.find(x=>x[0]===id),url=location.href.split("#")[0]+"#news="+id;try{if(navigator.share)await navigator.share({title:n[2],text:"ডেইলিরিডে পড়ুন",url});else{await navigator.clipboard.writeText(url);toast("লিংক কপি হয়েছে")}}catch(e){}}
-function filterHome(cat,btn){document.querySelectorAll("#homeFilters button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");fill("homeList",cat==="সব"?NEWS:NEWS.filter(n=>n[1]===cat));}
-function searchNews(){let q=document.getElementById("q").value.trim().toLowerCase(),box=document.getElementById("searchResults"),home=document.getElementById("homeBody");if(!q){box.classList.add("hidden");home.classList.remove("hidden");return}home.classList.add("hidden");box.classList.remove("hidden");let found=NEWS.filter(n=>n.join(" ").toLowerCase().includes(q));box.innerHTML='<div class="slabel">খোঁজের ফলাফল: '+bn(found.length)+'</div><div class="list">'+(found.length?found.map(card).join(""):'<div class="empty">মিল পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজুন।</div>')+'</div>'}
-function clearSearch(){document.getElementById("q").value="";searchNews()}
-function clearHistory(){state.history=[];save();render();toast("পড়ার ইতিহাস মুছে ফেলা হয়েছে")}
-function toast(t){let x=document.getElementById("toast");x.textContent=t;x.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>x.classList.remove("show"),2200)}
-let ad=null;try{if(window.Adsgram)ad=window.Adsgram.init({blockId:"int-43506",debug:false})}catch(e){}
-async function optionalAd(){if(!ad){toast("এ মুহূর্তে বিজ্ঞাপন পাওয়া যাচ্ছে না");return}try{await ad.show();toast("DailyRead-কে সহায়তা করার জন্য ধন্যবাদ")}catch(e){toast("বিজ্ঞাপন সম্পন্ন হয়নি; আপনি পড়া চালিয়ে যেতে পারেন")}}
-const tg=window.Telegram?.WebApp;if(tg){try{tg.ready();tg.expand();tg.setHeaderColor?.("#0f0f14");tg.setBackgroundColor?.("#0f0f14")}catch(e){}}
-render();let h=location.hash.match(/news=([^&]+)/);if(h)openNews(h[1]);
-</script></body></html>
+/* ============ কনফিগারেশন ============ */
+// RSS ফিড (rss2json CORS-সেফ প্রক্সি দিয়ে লোড হয়). নতুন ফিড যোগ করতে এখানে লাইন বাড়ান।
+const FEEDS=[
+  {name:"বিবিসি বাংলা",url:"https://feeds.bbci.co.uk/bengali/rss.xml"},
+  {name:"প্রথম আলো",url:"https://www.prothomalo.com/feed"},
+  {name:"ডিডব্লিউ বাংলা",url:"https://rss.dw.com/xml/rss-bn-all"}
+];
+const PROXY="https://api.rss2json.com/v1/api.json?rss_url=";
+const BLOCK_ID="int-43506";            // Adsgram block id
+const BOT_URL="";                      // যেমন: "https://t.me/YourBot" (শেয়ার লিংকে ব্যবহৃত হবে)
+const CACHE_KEY="dailyread-cache-v2", STATE_KEY="dailyread-state-v2";
+const CATS=["জাতীয়","আন্তর্জাতিক","অর্থনীতি","প্রযুক্তি","স্বাস্থ্য","খেলা"];
+const KW={
+  "অর্থনীতি":["অর্থনীত","ব্যাংক","টাকা","বাজেট","শেয়ার","রপ্তানি","আমদানি","মূল্যস্ফীতি","বিনিয়োগ","ডলার","বাণিজ্য","শুল্ক"],
+  "প্রযুক্তি":["প্রযুক্তি","এআই","কৃত্রিম বুদ্ধিমত্তা","ইন্টারনেট","স্মার্টফোন","অ্যাপ","সাইবার","মহাকাশ","গুগল","মাইক্রোসফট","টেক"],
+  "স্বাস্থ্য":["স্বাস্থ্য","ডেঙ্গু","হাসপাতাল","চিকিৎস","রোগ","ভাইরাস","টিকা","ডাক্তার","ক্যানসার","করোনা"],
+  "খেলা":["ক্রিকেট","ফুটবল","বিশ্বকাপ","টেস্ট","ওয়ানডে","টি-টোয়েন্টি","খেলা","ম্যাচ","গোল","টুর্নামেন্ট","বিপিএল","বিসিবি"],
+  "আন্তর্জাতিক":["যুক্তরাষ্ট্র","ভারত","চীন","রাশিয়া","ইসরায়েল","গাজা","ইউক্রেন","ইরান","পাকিস্তান","ট্রাম্প","জাতিসংঘ","ইউরোপ","মার্কিন","লন্ডন","দিল্লি","আফগানিস্তান","মিয়ানমার"],
+  "জাতীয়":["বাংলাদেশ","ঢাকা","সরকার","প্রধানমন্ত্রী","নির্বাচন","পুলিশ","আদালত","সংসদ","চট্টগ্রাম","সচিব","মন্ত্রী","ডিএমপি","বিজিবি"]
+};
+
+/* ============ ইউটিল ============ */
+const $=id=>document.getElementById(id);
+const bn=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d]);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const dstr=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const today=()=>dstr();
+function hash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h.toString(36)}
+function plain(html){try{return (new DOMParser().parseFromString(html||"","text/html").body.textContent||"").replace(/\s+/g," ").trim()}catch(e){return ""}}
+function ago(ms){const m=Math.max(0,Math.round((Date.now()-ms)/60000));if(m<1)return "এইমাত্র";if(m<60)return bn(m)+" মিনিট আগে";const h=Math.round(m/60);if(h<24)return bn(h)+" ঘণ্টা আগে";return bn(Math.round(h/24))+" দিন আগে"}
+function classify(t){for(const c of ["খেলা","স্বাস্থ্য","প্রযুক্তি","অর্থনীতি","আন্তর্জাতিক","জাতীয়"]){if(KW[c].some(k=>t.includes(k)))return c}return "সাধারণ"}
+function toast(t){const x=$("toast");x.textContent=t;x.classList.add("show");clearTimeout(window._tt);window._tt=setTimeout(()=>x.classList.remove("show"),2200)}
+
+/* ============ টেলিগ্রাম ও ক্লাউড স্টোরেজ ============ */
+const tg=window.Telegram&&window.Telegram.WebApp;
+const tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;
+const CS=(tg&&tg.CloudStorage&&tg.initData)?tg.CloudStorage:null;
+const cloud={
+  set(k,v){if(!CS)return;try{CS.setItem(k,String(v).slice(0,1000),()=>{})}catch(e){}},
+  del(k){if(!CS)return;try{CS.removeItem(k,()=>{})}catch(e){}},
+  all(cb){if(!CS)return cb({});try{CS.getKeys((e,keys)=>{if(e||!keys||!keys.length)return cb({});CS.getItems(keys.slice(0,200),(e2,vals)=>cb(e2?{}:vals))})}catch(e){cb({})}}
+};
+if(tg){try{tg.ready();tg.expand();tg.setHeaderColor&&tg.setHeaderColor("#0f0f14");tg.setBackgroundColor&&tg.setBackgroundColor("#0f0f14")}catch(e){}}
+
+/* ============ স্টেট ============ */
+const blank=()=>({saved:{},history:[],meta:{},reads:{},days:[],notes:{},readIds:[],prefs:{theme:"dark",font:15,goal:5,autoAd:true},follow:[],catReads:{},quiz:{played:0,score:0,best:0,total:0}});
+let state;try{state=Object.assign(blank(),JSON.parse(localStorage.getItem(STATE_KEY)||"{}"))}catch(e){state=blank()}
+state.prefs=Object.assign(blank().prefs,state.prefs||{});state.quiz=Object.assign(blank().quiz,state.quiz||{});state.follow=state.follow||[];state.catReads=state.catReads||{};
+let adsShown=0,ARTS=[],AMAP={},catFilter="সব",sessionReads=0,pendingAd=false,openId=null;
+
+function persist(){try{localStorage.setItem(STATE_KEY,JSON.stringify(state))}catch(e){}stats()}
+function cloudPrefs(){cloud.set("p",JSON.stringify({p:state.prefs,q:state.quiz,f:state.follow}));cloud.set("d",JSON.stringify(state.days.slice(-30)));cloud.set("r",JSON.stringify(state.reads))}
+function cloudSaved(id){const m=state.saved[id];if(m)cloud.set("s_"+id,JSON.stringify({t:m.t.slice(0,150),s:m.s,u:m.u.slice(0,300),d:m.d,c:m.c}));else cloud.del("s_"+id)}
+function cloudNote(id){const v=state.notes[id];if(v){const m=state.meta[id]||{};cloud.set("n_"+id,JSON.stringify({n:v.slice(0,520),t:(m.t||"").slice(0,110),u:(m.u||"").slice(0,220),s:m.s||""}).slice(0,1000))}else cloud.del("n_"+id)}
+function pullCloud(){
+  cloud.all(v=>{
+    let changed=false;
+    Object.keys(v||{}).forEach(k=>{
+      try{
+        const j=JSON.parse(v[k]);
+        if(k==="p"){state.prefs=Object.assign(state.prefs,j.p||{});if(j.f)state.follow=[...new Set([...state.follow,...j.f])];if(j.q&&j.q.played>=state.quiz.played)state.quiz=j.q;changed=true}
+        else if(k==="d"){state.days=[...new Set([...state.days,...j])].sort();changed=true}
+        else if(k==="r"){Object.keys(j).forEach(d=>{state.reads[d]=Math.max(state.reads[d]||0,j[d])});changed=true}
+        else if(k.startsWith("s_")){const id=k.slice(2);if(!state.saved[id]){state.saved[id]=j;changed=true}}
+        else if(k.startsWith("n_")){const id=k.slice(2);if(!state.notes[id]){state.notes[id]=j.n;state.meta[id]={t:j.t,u:j.u,s:j.s};changed=true}}
+      }catch(e){}
+    });
+    if(changed){applyPrefs();persist();renderAll()}
+  });
+}
+
+/* ============ থিম ও ফন্ট ============ */
+function applyPrefs(){
+  document.documentElement.setAttribute("data-theme",state.prefs.theme);
+  document.documentElement.style.setProperty("--fs",state.prefs.font+"px");
+  $("autoAdBtn").textContent="ইন্টারস্টিশিয়াল বিজ্ঞাপন: "+(state.prefs.autoAd!==false?"চালু (বন্ধ করুন)":"বন্ধ (চালু করুন)");
+  $("themeBtn").textContent=state.prefs.theme==="dark"?"☀ লাইট":"☾ ডার্ক";
+  const c=state.prefs.theme==="dark"?"#0f0f14":"#f6f5fb";
+  document.querySelector('meta[name=theme-color]').setAttribute("content",c);
+  if(tg){try{tg.setHeaderColor&&tg.setHeaderColor(c);tg.setBackgroundColor&&tg.setBackgroundColor(c)}catch(e){}}
+}
+function toggleTheme(){state.prefs.theme=state.prefs.theme==="dark"?"light":"dark";applyPrefs();persist();cloudPrefs()}
+function changeFont(d){state.prefs.font=Math.max(12,Math.min(24,state.prefs.font+d*2));applyPrefs();persist();cloudPrefs();toast("লেখার আকার: "+bn(state.prefs.font))}
+
+/* ============ খবর লোড (লাইভ RSS + ক্যাশ) ============ */
+async function tfetch(url,ms){
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),ms||9000);
+  try{return await fetch(url,{signal:c.signal})}finally{clearTimeout(t)}
+}
+function mk(f,title,link,pub,desc,img){
+  title=plain(title);const sum=plain(desc).slice(0,420);
+  return {id:hash(link||title),t:title,s:f.name,u:link,d:pub||Date.now(),x:sum,img:/^https?:/.test(img||"")?img:"",c:classify(title+" "+sum)};
+}
+async function viaJson(f){
+  const r=await tfetch(PROXY+encodeURIComponent(f.url));
+  if(!r.ok)throw new Error("http "+r.status);
+  const j=await r.json();
+  if(j.status!=="ok")throw new Error("feed");
+  return (j.items||[]).map(it=>mk(f,it.title,it.link,Date.parse((it.pubDate||"").replace(" ","T")+"Z")||Date.parse(it.pubDate),it.description||it.content,it.thumbnail||(it.enclosure&&it.enclosure.link)));
+}
+async function viaXml(f){
+  const r=await tfetch("https://api.allorigins.win/raw?url="+encodeURIComponent(f.url));
+  if(!r.ok)throw new Error("http "+r.status);
+  const x=new DOMParser().parseFromString(await r.text(),"text/xml");
+  const its=[...x.querySelectorAll("item")];
+  if(!its.length)throw new Error("empty");
+  return its.map(it=>{
+    const g=n=>{const e=it.getElementsByTagName(n)[0];return e?e.textContent:""};
+    const enc=it.getElementsByTagName("enclosure")[0],th=it.getElementsByTagName("media:thumbnail")[0];
+    return mk(f,g("title"),g("link").trim(),Date.parse(g("pubDate")),g("description"),(th&&th.getAttribute("url"))||(enc&&enc.getAttribute("url")));
+  });
+}
+async function fetchFeed(f){
+  try{const r=await viaJson(f);if(r.length)return r}catch(e){}
+  return (await viaXml(f)).filter(a=>a.t&&/^https?:/.test(a.u));
+}
+function setArts(list,note){
+  ARTS=list;AMAP={};list.forEach(a=>AMAP[a.id]=a);
+  $("statusText").textContent=note;
+  renderAll();
+  const m=location.hash.match(/news=([^&]+)/);if(m&&AMAP[m[1]]){openNews(m[1]);history.replaceState(null,"",location.pathname)}
+}
+async function loadNews(manual){
+  $("statusText").textContent="খবর লোড হচ্ছে...";
+  let cached=null;try{cached=JSON.parse(localStorage.getItem(CACHE_KEY)||"null")}catch(e){}
+  if(!manual&&cached&&cached.items&&cached.items.length&&Date.now()-cached.t<10*60000){setArts(cached.items,"সর্বশেষ হালনাগাদ: "+ago(cached.t));return}
+  const res=await Promise.allSettled(FEEDS.map(fetchFeed));
+  const ok=res.filter(r=>r.status==="fulfilled").flatMap(r=>r.value);
+  const seen=new Set(),items=[];
+  ok.sort((a,b)=>b.d-a.d).forEach(a=>{if(!seen.has(a.id)){seen.add(a.id);items.push(a)}});
+  if(items.length){
+    const list=items.slice(0,60);
+    try{localStorage.setItem(CACHE_KEY,JSON.stringify({t:Date.now(),items:list}))}catch(e){}
+    setArts(list,"লাইভ · "+bn(list.length)+"টি খবর · "+ago(Date.now()));
+    if(manual)toast("খবর হালনাগাদ হয়েছে");
+  }else if(cached&&cached.items&&cached.items.length){
+    setArts(cached.items,"অফলাইন · সংরক্ষিত খবর দেখাচ্ছে ("+ago(cached.t)+")");
+    toast("ইন্টারনেট নেই, আগের খবর দেখানো হচ্ছে");
+  }else{
+    ARTS=[];AMAP={};
+    $("statusText").textContent="খবর লোড করা যায়নি";
+    $("homeList").innerHTML='<div class="empty">ইন্টারনেট সংযোগ পরীক্ষা করে “রিফ্রেশ” চাপুন।</div>';
+    $("featuredBox").innerHTML="";
+  }
+}
+
+/* ============ রেন্ডার ============ */
+const getArt=id=>AMAP[id]||state.saved[id]||state.meta[id]||null;
+function card(a){
+  const saved=!!state.saved[a.id],isr=state.readIds.includes(a.id);
+  return `<article class="card ${isr?"isread":""}" onclick="openNews('${a.id}')"><div class="body"><span class="cat">${esc(a.c||"সাধারণ")}</span><div class="title">${esc(a.t)}</div><div class="meta">${esc(a.s)} · ${a.d?ago(a.d):""}</div><div class="actions"><button class="mini" onclick="event.stopPropagation();toggleSave('${a.id}')">${saved?"♥ সংরক্ষিত":"♡ সংরক্ষণ"}</button><button class="mini" onclick="event.stopPropagation();share('${a.id}')">↗ শেয়ার</button></div></div>${a.img?`<div class="thumb" style="background-image:url('${esc(a.img)}')"></div>`:""}</article>`;
+}
+function fill(id,arr,emptyMsg){$(id).innerHTML=arr.length?arr.map(card).join(""):`<div class="empty">${emptyMsg}</div>`}
+function renderFilters(){
+  const all=["সব",...CATS];
+  $("homeFilters").innerHTML=all.map(c=>`<button class="${c===catFilter?"active":""}" onclick="setCat('${c}')">${c==="সব"?"সব খবর":c}</button>`).join("");
+}
+function setCat(c){catFilter=c;renderHome()}
+function renderHome(){
+  renderFilters();
+  const q=$("q").value.trim().toLowerCase();
+  let arr=ARTS;
+  if(catFilter!=="সব")arr=arr.filter(a=>a.c===catFilter);
+  if(q)arr=arr.filter(a=>(a.t+" "+a.x+" "+a.s).toLowerCase().includes(q));
+  $("listLabel").textContent=q?`🔎 খোঁজের ফলাফল: ${bn(arr.length)}`:`📰 ${catFilter==="সব"?"সর্বশেষ সংবাদ":catFilter} · ${bn(arr.length)}টি`;
+  const f=ARTS[0];
+  $("featuredBox").innerHTML=(!q&&catFilter==="সব"&&f)?`<div class="featured" onclick="openNews('${f.id}')"><span class="badge">সবচেয়ে নতুন খবর</span><h1>${esc(f.t)}</h1><p>${esc(f.s)} · ${ago(f.d)}</p></div>`:"";
+  if(!ARTS.length&&!q)return;
+  fill("homeList",arr,"মিল পাওয়া যায়নি। অন্য শব্দ বা বিভাগ চেষ্টা করুন।");
+}
+function renderSaved(){fill("list-saved",Object.values(state.saved).sort((a,b)=>(b.at||0)-(a.at||0)),"এখনো কিছু সংরক্ষণ করেননি। যেকোনো খবরের নিচে “♡ সংরক্ষণ” চাপুন।")}
+function renderHistory(){fill("list-history",state.history.map(getArt).filter(Boolean),"এখনো কোনো খবর পড়েননি। হোম থেকে একটি খবর খুলুন।")}
+function renderNotes(){
+  const ids=Object.keys(state.notes).filter(id=>state.notes[id]&&state.notes[id].trim());
+  $("notesList").innerHTML=ids.length?ids.map(id=>{const m=getArt(id)||{};return `<div class="nitem"><h4 onclick="openNews('${id}')">${esc(m.t||"সংবাদ")}</h4><p>${esc(state.notes[id])}</p></div>`}).join(""):'<div class="empty">কোনো নোট নেই। খবর খুলে নিচের “ব্যক্তিগত নোট” ঘরে লিখুন, এখানে জমা হবে।</div>';
+}
+function renderAll(){renderHome();renderSaved();renderHistory();renderNotes();renderFeed();renderStats();stats();$("srcList").textContent=FEEDS.map(f=>f.name).join(", ")}
+
+function stats(){
+  $("readN").textContent=bn(state.readIds.length);
+  $("saveN").textContent=bn(Object.keys(state.saved).length);
+  const days=new Set(state.days);let st=0,d=new Date();
+  if(!days.has(dstr(d)))d.setDate(d.getDate()-1);
+  while(days.has(dstr(d))){st++;d.setDate(d.getDate()-1)}
+  $("streakN").textContent=bn(st);
+  const c=state.reads[today()]||0;
+  const G=state.prefs.goal||5;
+  $("goalText").textContent=bn(Math.min(c,G))+" / "+bn(G)+"টি";
+  $("goalBar").style.width=Math.min(c/G*100,100)+"%";
+}
+function markDay(){if(!state.days.includes(today()))state.days.push(today())}
+
+/* ============ নেভিগেশন ============ */
+function page(id){
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  $("p-"+id).classList.add("active");const t=$("t-"+id);if(t)t.classList.add("active");
+  $("scroll").scrollTop=0;
+  if(id==="feed")renderFeed();if(id==="stats")renderStats();if(id==="saved")renderSaved();if(id==="history")renderHistory();if(id==="notes")renderNotes();if(id==="quiz")quizHome();
+}
+function clearSearch(){$("q").value="";renderHome()}
+
+/* ============ রিডার ============ */
+function openNews(id){
+  const a=getArt(id);if(!a)return;
+  openId=id;
+  state.meta[id]={t:a.t,s:a.s,u:a.u,d:a.d,c:a.c};
+  state.history=[id,...state.history.filter(x=>x!==id)].slice(0,60);
+  if(!state.readIds.includes(id)){state.readIds.push(id);state.reads[today()]=(state.reads[today()]||0)+1;const cc=a.c||"সাধারণ";state.catReads[cc]=(state.catReads[cc]||0)+1;sessionReads++;if(sessionReads%3===0)pendingAd=true}
+  markDay();persist();cloudPrefs();renderAll();
+  const saved=!!state.saved[id];
+  $("rtitle").textContent=a.t;
+  $("rbody").innerHTML=`<span class="cat">${esc(a.c||"সাধারণ")}</span><h1>${esc(a.t)}</h1><div class="rmeta">${a.d?ago(a.d)+" · ":""}সূত্র: ${esc(a.s)}</div>
+  ${a.img?`<img class="rimg" src="${esc(a.img)}" alt="" loading="lazy" onerror="this.remove()">`:""}
+  ${a.x?`<p class="txt">${esc(a.x)}${a.x.length>=419?"…":""}</p>`:""}
+  <a class="source" href="${esc(a.u)}" target="_blank" rel="noopener" onclick="openSource(event,'${id}')">${esc(a.s)}-এ পূর্ণ প্রতিবেদন পড়ুন ↗</a>
+  <div class="reader-tools"><button onclick="changeFont(-1)">অ− ছোট</button><button onclick="changeFont(1)">অ+ বড়</button><button class="readmark" onclick="markRead('${id}')">✓ পড়া হয়েছে</button></div>
+  <div class="note-box"><label for="note-${id}">📝 এই খবরের জন্য আপনার ব্যক্তিগত নোট</label><textarea id="note-${id}" placeholder="গুরুত্বপূর্ণ তথ্য, প্রশ্ন বা নিজের মতামত লিখুন..." oninput="saveNote('${id}',this.value)">${esc(state.notes[id]||"")}</textarea><small>টেলিগ্রামে খুললে নোট আপনার অ্যাকাউন্টে সিঙ্ক হয়; অন্য কেউ দেখতে পায় না।</small></div>
+  <div class="rbuttons"><button id="saveBtn" onclick="toggleSave('${id}')">${saved?"♥ সংরক্ষিত":"♡ সংরক্ষণ করুন"}</button><button onclick="share('${id}')">↗ শেয়ার করুন</button></div>
+  <div class="adbox"><p>সব ফিচার বিজ্ঞাপন ছাড়াই ব্যবহার করা যায়। চাইলে একটি ঐচ্ছিক বিজ্ঞাপন দেখে ডেইলিরিডকে সহায়তা করতে পারেন।</p><button class="adbtn" onclick="optionalAd()">▶ ঐচ্ছিক বিজ্ঞাপন দেখুন</button></div>`;
+  $("rscroll").scrollTop=0;$("reader").classList.add("open");
+}
+function openSource(e,id){if(tg&&tg.openLink){e.preventDefault();try{tg.openLink(AMAP[id]?AMAP[id].u:(getArt(id)||{}).u)}catch(x){window.open((getArt(id)||{}).u,"_blank")}}}
+function closeReader(){
+  $("reader").classList.remove("open");openId=null;
+  if(pendingAd){pendingAd=false;if(state.prefs.autoAd!==false&&adsShown<4)setTimeout(interstitial,400)}
+}
+function saveNote(id,v){
+  state.notes[id]=v;clearTimeout(window._nt);
+  window._nt=setTimeout(()=>{persist();cloudNote(id);toast("নোট সংরক্ষিত হয়েছে")},700);
+}
+function markRead(id){if(!state.readIds.includes(id))state.readIds.push(id);persist();toast("পড়া হিসেবে চিহ্নিত হয়েছে")}
+function toggleSave(id){
+  const a=getArt(id);if(!a)return;
+  if(state.saved[id])delete state.saved[id];else state.saved[id]={id,t:a.t,s:a.s,u:a.u,d:a.d,c:a.c,at:Date.now()};
+  persist();cloudSaved(id);renderAll();
+  const sb=$("saveBtn");if(sb&&openId===id)sb.textContent=state.saved[id]?"♥ সংরক্ষিত":"♡ সংরক্ষণ করুন";
+  toast(state.saved[id]?"খবর সংরক্ষণ করা হয়েছে":"সংরক্ষণ থেকে সরানো হয়েছে");
+}
+function clearHistory(){state.history=[];persist();renderAll();toast("পড়ার ইতিহাস মুছে ফেলা হয়েছে")}
+
+/* ============ শেয়ার ও নোট এক্সপোর্ট ============ */
+async function copyText(t){try{await navigator.clipboard.writeText(t);return true}catch(e){const x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();let ok=false;try{ok=document.execCommand("copy")}catch(_){}x.remove();return ok}}
+function tgShare(url,text){const l="https://t.me/share/url?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text||"");if(tg&&tg.openTelegramLink)tg.openTelegramLink(l);else window.open(l,"_blank")}
+async function share(id){
+  const a=getArt(id);if(!a)return;
+  if(tg&&tg.openTelegramLink){tgShare(a.u,a.t+" — "+a.s);return}
+  try{if(navigator.share){await navigator.share({title:a.t,text:a.t,url:a.u});return}}catch(e){return}
+  toast((await copyText(a.t+"\n"+a.u))?"লিংক কপি হয়েছে":"কপি করা যায়নি");
+}
+function notesText(){
+  const ids=Object.keys(state.notes).filter(id=>state.notes[id]&&state.notes[id].trim());
+  return ids.map(id=>{const m=getArt(id)||{};return "• "+(m.t||"সংবাদ")+(m.s?" ("+m.s+")":"")+"\n"+state.notes[id]+(m.u?"\n"+m.u:"")}).join("\n\n");
+}
+async function exportNotes(mode){
+  const t=notesText();if(!t){toast("এখনো কোনো নোট নেই");return}
+  if(mode==="share"){
+    if(tg&&tg.openTelegramLink){tgShare(BOT_URL||"https://t.me/",t.slice(0,3500));return}
+    try{if(navigator.share){await navigator.share({title:"আমার পাঠ-নোট",text:t});return}}catch(e){return}
+  }
+  toast((await copyText(t))?"সব নোট কপি হয়েছে":"কপি করা যায়নি");
+}
+
+/* ============ আমার ফিড, পরিসংখ্যান, ডাইজেস্ট ============ */
+function debSearch(){clearTimeout(window._sd);window._sd=setTimeout(renderHome,200)}
+const ek=k=>encodeURIComponent(k).replace(/'/g,"%27");
+function toggleFollow(k){const i=state.follow.indexOf(k);if(i>=0)state.follow.splice(i,1);else state.follow.push(k);persist();cloudPrefs();renderFeed()}
+function addKw(){const v=$("kw").value.trim();if(!v)return;if(!state.follow.includes(v))state.follow.push(v);$("kw").value="";persist();cloudPrefs();renderFeed();toast("“"+v+"” যোগ হয়েছে")}
+function renderFeed(){
+  const chips=[...CATS,...state.follow.filter(k=>!CATS.includes(k))];
+  $("followChips").innerHTML=chips.map(k=>`<button class="${state.follow.includes(k)?"active":""}" onclick="toggleFollow(decodeURIComponent('${ek(k)}'))">${state.follow.includes(k)?"✓ ":"+ "}${esc(k)}</button>`).join("");
+  if(!state.follow.length){$("feedLabel").textContent="";$("list-feed").innerHTML='<div class="empty">উপরের বিষয়গুলো ট্যাপ করে অনুসরণ করুন, বা নিজের শব্দ যোগ করুন। আপনার পছন্দের খবর এখানে আলাদা করে দেখাবে।</div>';return}
+  const arr=ARTS.filter(a=>state.follow.some(k=>a.c===k||(a.t+" "+a.x).includes(k)));
+  $("feedLabel").textContent="⭐ আপনার ফিড · "+bn(arr.length)+"টি খবর";
+  fill("list-feed",arr,"এই মুহূর্তে আপনার পছন্দের বিষয়ে নতুন খবর নেই। পরে রিফ্রেশ করে দেখুন।");
+}
+function setGoal(n){state.prefs.goal=n;persist();cloudPrefs();renderStats();toast("দৈনিক লক্ষ্য: "+bn(n)+"টি")}
+function renderStats(){
+  const names=["রবি","সোম","মঙ্গল","বুধ","বৃহ","শুক্র","শনি"],days=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push({n:state.reads[dstr(d)]||0,w:names[d.getDay()]})}
+  const mx=Math.max(1,...days.map(d=>d.n));
+  const cats=Object.entries(state.catReads).sort((a,b)=>b[1]-a[1]);const cm=cats.length?cats[0][1]:1;
+  const q=state.quiz,acc=q.total?Math.round(q.score/q.total*100):0,G=state.prefs.goal||5;
+  $("statsBox").innerHTML=`
+  <div class="about-card"><h3>গত ৭ দিনে পড়া খবর</h3>
+    <div style="display:flex;align-items:flex-end;gap:6px;height:100px;margin-top:10px">${days.map(d=>`<div style="flex:1;text-align:center;font-size:10px;color:var(--mu)"><div style="height:${Math.round(d.n/mx*70)}px;min-height:2px;background:var(--p);border-radius:4px 4px 0 0"></div>${bn(d.n)}<br>${d.w}</div>`).join("")}</div></div>
+  <div class="about-card"><h3>কোন বিষয়ে বেশি পড়ছেন</h3>${cats.length?cats.map(([k,v])=>`<div style="margin:9px 0"><div style="display:flex;justify-content:space-between;font-size:12px"><span>${esc(k)}</span><span style="color:var(--mu)">${bn(v)}</span></div><div class="bar"><div style="width:${Math.round(v/cm*100)}%"></div></div></div>`).join(""):'<p>এখনো কোনো খবর পড়েননি। কয়েকটি খবর পড়লে এখানে হিসাব দেখাবে।</p>'}</div>
+  <div class="about-card"><h3>কুইজ</h3><p>খেলেছেন ${bn(q.played)} বার · সঠিক উত্তরের হার ${bn(acc)}% · সর্বোচ্চ স্কোর ${bn(q.best)}/৩</p></div>
+  <div class="about-card"><h3>দৈনিক পড়ার লক্ষ্য</h3><p>প্রতিদিন কয়টি খবর পড়তে চান?</p><div class="setrow">${[3,5,10].map(n=>`<button style="${n===G?"border-color:var(--p);color:var(--p)":""}" onclick="setGoal(${n})">${bn(n)}টি</button>`).join("")}</div></div>`;
+}
+function toggleAutoAd(){state.prefs.autoAd=state.prefs.autoAd===false;persist();cloudPrefs();applyPrefs();toast(state.prefs.autoAd!==false?"ইন্টারস্টিশিয়াল চালু হয়েছে":"ইন্টারস্টিশিয়াল বিজ্ঞাপন বন্ধ হয়েছে")}
+async function shareDigest(){
+  if(!ARTS.length){toast("আগে খবর লোড হোক");return}
+  const t="📰 আজকের ৫ শিরোনাম\n\n"+ARTS.slice(0,5).map((a,i)=>bn(i+1)+". "+a.t+" ("+a.s+")\n"+a.u).join("\n\n");
+  if(tg&&tg.openTelegramLink){tgShare(BOT_URL||ARTS[0].u,t.slice(0,3500));return}
+  try{if(navigator.share){await navigator.share({title:"আজকের ৫ শিরোনাম",text:t});return}}catch(e){return}
+  toast((await copyText(t))?"শিরোনাম কপি হয়েছে":"কপি করা যায়নি");
+}
+
+/* ============ কুইজ ============ */
+let QZ=null;
+function pick(arr,n){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,n)}
+function buildQuiz(){
+  const sources=[...new Set(ARTS.map(a=>a.s))];
+  const qs=[];
+  pick(ARTS,Math.min(ARTS.length,9)).forEach((a,i)=>{
+    if(qs.length>=3)return;
+    const catOk=a.c&&a.c!=="সাধারণ";
+    if(catOk&&i%2===1){
+      const wrong=pick(CATS.filter(c=>c!==a.c),2);
+      qs.push({q:"এই খবরটি কোন বিভাগের?",h:a.t,opts:pick([a.c,...wrong],3),ans:a.c});
+    }else if(sources.length>=2){
+      qs.push({q:"এই শিরোনামটি কোন সংবাদমাধ্যমের?",h:a.t,opts:pick(sources,Math.min(3,sources.length)),ans:a.s});
+    }
+  });
+  return qs.slice(0,3);
+}
+function quizHome(){
+  const q=state.quiz;
+  $("quizBox").innerHTML=`<div class="qcard"><h2>আজকের খবর থেকে ৩টি প্রশ্ন</h2><p class="qprog">খেলেছেন: ${bn(q.played)} বার · সর্বোচ্চ স্কোর: ${bn(q.best)}/৩</p><div style="height:14px"></div>${ARTS.length>=3?'<button class="bigbtn" onclick="startQuiz()">কুইজ শুরু করুন</button>':'<div class="empty" style="margin:0">কুইজের জন্য আগে খবর লোড হতে হবে। হোম পেজে গিয়ে রিফ্রেশ করুন।</div>'}</div>`;
+}
+function startQuiz(){
+  const qs=buildQuiz();
+  if(qs.length<1){toast("কুইজ বানানোর মতো খবর নেই");return}
+  QZ={qs,i:0,score:0};showQ();
+}
+function showQ(){
+  const q=QZ.qs[QZ.i];
+  $("quizBox").innerHTML=`<div class="qcard"><div class="qprog">প্রশ্ন ${bn(QZ.i+1)} / ${bn(QZ.qs.length)}</div><h2>${esc(q.q)}</h2><p style="font-size:14px;line-height:1.7;margin-bottom:14px">“${esc(q.h)}”</p><div id="qopts">${q.opts.map((o,k)=>`<button class="opt" data-k="${k}" onclick="answerQ(${k})">${esc(o)}</button>`).join("")}</div><div id="qnext"></div></div>`;
+}
+function answerQ(k){
+  const q=QZ.qs[QZ.i];if(QZ.done)return;QZ.done=true;
+  const right=q.opts[k]===q.ans;if(right)QZ.score++;
+  document.querySelectorAll("#qopts .opt").forEach((b,i)=>{b.disabled=true;if(q.opts[i]===q.ans)b.classList.add("ok");else if(i===k)b.classList.add("bad")});
+  const last=QZ.i===QZ.qs.length-1;
+  $("qnext").innerHTML=`<p style="font-size:12px;margin:8px 0;color:var(--${right?"g":"r"})">${right?"সঠিক!":"ভুল। সঠিক উত্তর: "+esc(q.ans)}</p><button class="bigbtn" onclick="${last?"endQuiz()":"nextQ()"}">${last?"ফলাফল দেখুন":"পরের প্রশ্ন"}</button>`;
+}
+function nextQ(){QZ.i++;QZ.done=false;showQ()}
+function endQuiz(){
+  const n=QZ.qs.length,s=QZ.score;
+  state.quiz.played++;state.quiz.best=Math.max(state.quiz.best,s);state.quiz.score+=s;state.quiz.total+=n;
+  markDay();persist();cloudPrefs();
+  $("quizBox").innerHTML=`<div class="qcard"><div class="qprog">আপনার ফলাফল</div><div class="qscore">${bn(s)} / ${bn(n)}</div><p style="text-align:center;font-size:13px;color:var(--mu);margin-bottom:14px">${s===n?"চমৎকার! সবগুলো ঠিক।":s>0?"ভালো হয়েছে। আবার চেষ্টা করুন।":"আজকের খবর আরেকটু পড়ে আবার চেষ্টা করুন।"}</p><button class="bigbtn" onclick="startQuiz()">আবার খেলুন</button><button class="opt" style="margin-top:8px;text-align:center" onclick="page('home')">খবর পড়তে ফিরে যান</button><button class="adbtn" onclick="optionalAd()">▶ ঐচ্ছিক বিজ্ঞাপন দেখুন</button></div>`;
+  QZ=null;
+}
+
+/* ============ ঐচ্ছিক বিজ্ঞাপন (Adsgram) ============ */
+let ad=null;try{if(window.Adsgram)ad=window.Adsgram.init({blockId:BLOCK_ID,debug:false})}catch(e){}
+async function optionalAd(){
+  if(!ad){toast("এই মুহূর্তে বিজ্ঞাপন পাওয়া যাচ্ছে না");return}
+  try{await ad.show();toast("ডেইলিরিডকে সহায়তা করার জন্য ধন্যবাদ")}catch(e){toast("বিজ্ঞাপন সম্পন্ন হয়নি; আপনি পড়া চালিয়ে যেতে পারেন")}
+}
+async function interstitial(){ if(!ad)return; adsShown++; try{await ad.show()}catch(e){} }
+
+/* ============ শুরু ============ */
+$("hello").textContent=tgUser&&tgUser.first_name?"স্বাগতম, "+tgUser.first_name:"বাংলা সংবাদ পাঠাগার";
+applyPrefs();renderAll();pullCloud();loadNews(false);
+setInterval(()=>{if(!document.hidden)loadNews(false)},10*60000);
+</script>
+</body>
+</html>
