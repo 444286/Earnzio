@@ -1,762 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-<title>DailyRead – News & Articles</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0f0f14">
+<title>DailyRead — Independent Reading Hub</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0f0f14;
-  --s1:#16161f;
-  --s2:#1e1e2a;
-  --bd:#2c2c3e;
-  --p:#a78bfa;
-  --p2:#7c3aed;
-  --acc:#f59e0b;
-  --g:#10b981;
-  --tx:#e2e2f0;
-  --mu:#7070a0;
-  --ra:12px;
-}
+:root{--bg:#0f0f14;--s1:#16161f;--s2:#1e1e2a;--bd:#2c2c3e;--p:#a78bfa;--p2:#7c3aed;--acc:#f59e0b;--g:#10b981;--tx:#e2e2f0;--mu:#8585a8;--ra:13px}
 html,body{height:100%;overflow:hidden}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  background:var(--bg);color:var(--tx);
-  display:flex;flex-direction:column;
-}
-
-/* ── TOPBAR ── */
-.topbar{
-  flex-shrink:0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 16px 12px;
-  background:var(--s1);
-  border-bottom:1px solid var(--bd);
-}
-.brand{
-  font-size:18px;font-weight:900;letter-spacing:-0.5px;
-  color:var(--tx);
-}
-.brand span{color:var(--p)}
-.topbar-tag{
-  font-size:10px;font-weight:700;letter-spacing:1px;
-  text-transform:uppercase;color:var(--mu);
-  background:var(--s2);border:1px solid var(--bd);
-  padding:4px 10px;border-radius:20px;
-}
-
-/* ── TABS ── */
-.tabs{
-  flex-shrink:0;display:flex;
-  background:var(--s1);border-bottom:1px solid var(--bd);
-  overflow-x:auto;
-  scrollbar-width:none;
-}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column}
+button,input{font:inherit}
+button{cursor:pointer}
+.topbar{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:var(--s1);border-bottom:1px solid var(--bd)}
+.brand{font-size:19px;font-weight:900;letter-spacing:-.5px}.brand span{color:var(--p)}
+.top-actions{display:flex;gap:8px}
+.icon-btn{background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:8px 11px;font-size:12px;font-weight:700}
+.tabs{flex-shrink:0;display:flex;background:var(--s1);border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{
-  flex-shrink:0;padding:11px 16px;
-  font-size:12px;font-weight:700;letter-spacing:0.4px;
-  color:var(--mu);cursor:pointer;
-  border-bottom:2px solid transparent;
-  transition:color .15s,border-color .15s;
-  white-space:nowrap;
-  -webkit-tap-highlight-color:transparent;
-}
+.tab{flex-shrink:0;padding:11px 15px;font-size:12px;font-weight:800;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap}
 .tab.active{color:var(--p);border-bottom-color:var(--p)}
-
-/* ── SCROLL ── */
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.scroll::-webkit-scrollbar{display:none}
-
-/* ── PAGES ── */
-.page{display:none}
-.page.active{display:block;padding-bottom:28px}
-
-/* ── FEATURED CARD ── */
-.featured{
-  margin:14px 14px 0;
-  background:linear-gradient(150deg,#2d1b69 0%,#1a1040 70%,#0f0f14 100%);
-  border:1px solid rgba(167,139,250,.2);
-  border-radius:16px;overflow:hidden;padding:20px 18px 18px;
-  position:relative;
-}
-.featured::after{
-  content:'';position:absolute;
-  width:180px;height:180px;border-radius:50%;
-  background:radial-gradient(circle,rgba(167,139,250,.15),transparent 70%);
-  right:-30px;top:-30px;pointer-events:none;
-}
-.feat-cat{
-  display:inline-block;
-  font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
-  color:var(--p);background:rgba(167,139,250,.12);
-  border:1px solid rgba(167,139,250,.25);
-  padding:3px 10px;border-radius:20px;margin-bottom:10px;
-}
-.feat-title{
-  font-size:19px;font-weight:900;line-height:1.3;
-  color:#fff;margin-bottom:8px;letter-spacing:-0.3px;
-}
-.feat-desc{font-size:13px;color:rgba(226,226,240,.6);line-height:1.6;margin-bottom:14px}
-.feat-meta{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--mu)}
-.feat-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--mu);flex-shrink:0}
-.btn-read-feat{
-  margin-top:14px;
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--p2);color:#fff;
-  font-size:13px;font-weight:800;
-  padding:10px 18px;border-radius:10px;border:none;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:opacity .15s;
-}
-.btn-read-feat:active{opacity:.8}
-
-/* ── SECTION LABEL ── */
-.slabel{
-  font-size:10px;font-weight:800;text-transform:uppercase;
-  letter-spacing:1.1px;color:var(--mu);
-  padding:18px 14px 10px;
-}
-
-/* ── ARTICLE CARD (vertical list) ── */
-.art-list{padding:0 14px;display:flex;flex-direction:column;gap:10px}
-.art-card{
-  background:var(--s2);border:1px solid var(--bd);
-  border-radius:var(--ra);padding:14px;
-  display:flex;gap:12px;align-items:flex-start;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:border-color .15s;
-}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}.scroll::-webkit-scrollbar{display:none}
+.page{display:none;padding-bottom:30px}.page.active{display:block}
+.tools{padding:13px 14px 0;display:grid;grid-template-columns:1fr auto;gap:8px}
+.search-wrap{display:flex;align-items:center;background:var(--s2);border:1px solid var(--bd);border-radius:11px;padding:0 11px}
+.search-wrap span{font-size:15px;margin-right:8px}.search-wrap input{width:100%;min-width:0;background:none;border:0;outline:0;color:var(--tx);padding:11px 0;font-size:13px}
+.search-wrap input::placeholder{color:var(--mu)}
+.tool-btn{background:var(--s2);border:1px solid var(--bd);border-radius:11px;color:var(--tx);padding:0 12px;font-size:12px;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 14px 0}
+.stat{background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:10px;text-align:center}
+.stat strong{display:block;color:var(--p);font-size:18px}.stat span{font-size:10px;color:var(--mu);font-weight:700}
+.featured{margin:14px 14px 0;background:linear-gradient(150deg,#2d1b69,#1a1040 70%,#0f0f14);border:1px solid rgba(167,139,250,.2);border-radius:16px;padding:19px 17px;position:relative;overflow:hidden}
+.feat-cat,.pill{display:inline-block;font-size:9px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--p);background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.25);padding:3px 9px;border-radius:20px;margin-bottom:9px}
+.feat-title{font-size:19px;font-weight:900;line-height:1.3;color:#fff;margin-bottom:8px}
+.feat-desc{font-size:12px;color:rgba(226,226,240,.7);line-height:1.6;margin-bottom:12px}
+.meta{font-size:10px;color:var(--mu)}
+.primary{background:var(--p2);color:#fff;border:0;border-radius:10px;padding:10px 15px;font-size:12px;font-weight:900;margin-top:13px}
+.slabel{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px;color:var(--mu);padding:18px 14px 10px}
+.art-list{padding:0 14px;display:flex;flex-direction:column;gap:9px}
+.art-card{background:var(--s2);border:1px solid var(--bd);border-radius:var(--ra);padding:13px;display:flex;gap:11px;align-items:center;cursor:pointer}
 .art-card:active{border-color:var(--p)}
 .art-card-body{flex:1;min-width:0}
-.art-cat-pill{
-  display:inline-block;
-  font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
-  padding:2px 8px;border-radius:20px;margin-bottom:6px;
-}
-.cat-tech{background:rgba(167,139,250,.12);color:var(--p)}
-.cat-world{background:rgba(16,185,129,.1);color:var(--g)}
-.cat-biz{background:rgba(245,158,11,.1);color:var(--acc)}
-.cat-sci{background:rgba(99,179,237,.1);color:#63b3ed}
-.art-title{font-size:14px;font-weight:800;line-height:1.35;margin-bottom:5px;color:var(--tx)}
-.art-meta{font-size:11px;color:var(--mu)}
-.art-thumb{
-  width:62px;height:62px;border-radius:10px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:26px;
-}
-
-/* ── MORE ARTICLES (locked) ── */
-.more-section{margin:20px 14px 0}
-.more-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:12px;
-}
-.more-header h3{font-size:14px;font-weight:800}
-.unlock-status{
-  font-size:11px;font-weight:700;color:var(--mu);
-  background:var(--s2);border:1px solid var(--bd);
-  padding:3px 10px;border-radius:20px;
-}
-.unlock-status.open{color:var(--g);border-color:rgba(16,185,129,.3)}
-
-/* Watch-ad CTA card */
-.watch-cta{
-  background:var(--s2);border:1.5px dashed rgba(167,139,250,.35);
-  border-radius:14px;padding:20px 18px;text-align:center;
-  margin-bottom:12px;
-}
-.watch-cta .wc-icon{font-size:34px;margin-bottom:10px;display:block}
-.watch-cta h4{font-size:15px;font-weight:900;color:#fff;margin-bottom:6px}
-.watch-cta p{font-size:12px;color:var(--mu);line-height:1.6;margin-bottom:16px}
-.watch-cta p strong{color:var(--tx)}
-.btn-watch-ad{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;padding:14px;border-radius:12px;border:none;
-  background:linear-gradient(135deg,var(--p2),#5b21b6);
-  color:#fff;font-size:14px;font-weight:800;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:transform .1s,opacity .15s;
-  box-shadow:0 4px 18px rgba(124,58,237,.35);
-}
-.btn-watch-ad:active{transform:scale(.97);opacity:.88}
-.btn-watch-ad:disabled{background:var(--bd);color:var(--mu);cursor:not-allowed;box-shadow:none}
-.btn-skip{
-  margin-top:10px;
-  display:block;width:100%;
-  background:none;border:none;
-  font-size:12px;color:var(--mu);cursor:pointer;
-  padding:6px;-webkit-tap-highlight-color:transparent;
-}
-
-/* Locked preview card */
-.locked-card{
-  background:var(--s2);border:1px solid var(--bd);
-  border-radius:var(--ra);padding:14px;
-  display:flex;gap:12px;align-items:center;
-  opacity:.45;pointer-events:none;margin-bottom:10px;
-  user-select:none;
-}
-.locked-card .lk-thumb{
-  width:48px;height:48px;border-radius:8px;
-  background:var(--bd);display:flex;align-items:center;justify-content:center;
-  font-size:20px;flex-shrink:0;
-}
-.locked-card .lk-lines{flex:1}
-.lk-bar{height:10px;border-radius:4px;background:var(--bd);margin-bottom:7px}
-.lk-bar.short{width:55%}
-.lock-icon{font-size:18px;flex-shrink:0;color:var(--mu)}
-
-/* ── ARTICLE READER ── */
-.reader{display:none;position:fixed;inset:0;z-index:50;
-  background:var(--bg);flex-direction:column;overflow:hidden}
+.art-cat-pill{display:inline-block;font-size:9px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-bottom:6px}
+.cat-tech{background:rgba(167,139,250,.12);color:var(--p)}.cat-world{background:rgba(16,185,129,.1);color:var(--g)}.cat-biz{background:rgba(245,158,11,.1);color:var(--acc)}.cat-sci{background:rgba(99,179,237,.1);color:#63b3ed}
+.art-title{font-size:13px;font-weight:850;line-height:1.35;margin-bottom:5px;color:var(--tx)}
+.art-meta{font-size:10px;color:var(--mu)}
+.art-thumb{width:52px;height:52px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;background:#29283a}
+.card-actions{display:flex;gap:6px;margin-top:8px}
+.small-action{background:transparent;border:1px solid var(--bd);border-radius:7px;color:var(--mu);font-size:10px;padding:5px 8px}
+.empty{margin:14px;padding:24px;text-align:center;border:1px dashed var(--bd);border-radius:12px;color:var(--mu);font-size:13px;line-height:1.6}
+.reader{display:none;position:fixed;inset:0;z-index:50;background:var(--bg);flex-direction:column}
 .reader.open{display:flex}
-.reader-topbar{
-  display:flex;align-items:center;gap:10px;
-  padding:12px 14px;background:var(--s1);
-  border-bottom:1px solid var(--bd);flex-shrink:0;
-}
-.reader-back{
-  width:36px;height:36px;border-radius:50%;
-  background:var(--s2);border:1px solid var(--bd);
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;cursor:pointer;flex-shrink:0;
-  -webkit-tap-highlight-color:transparent;
-}
-.reader-title-small{
-  flex:1;font-size:13px;font-weight:700;
-  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--tx);
-}
-.reader-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.reader-scroll::-webkit-scrollbar{display:none}
-.reader-body{padding:20px 16px 32px}
-.reader-cat{
-  display:inline-block;
-  font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
-  padding:3px 10px;border-radius:20px;margin-bottom:12px;
-}
-.reader-h1{
-  font-size:22px;font-weight:900;line-height:1.3;
-  color:#fff;margin-bottom:10px;letter-spacing:-0.4px;
-}
-.reader-meta{
-  display:flex;align-items:center;gap:8px;
-  font-size:11px;color:var(--mu);margin-bottom:18px;
-  padding-bottom:16px;border-bottom:1px solid var(--bd);
-}
-.reader-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--mu)}
-.reader-content p{
-  font-size:15px;line-height:1.75;color:rgba(226,226,240,.85);
-  margin-bottom:16px;
-}
-.reader-content h3{
-  font-size:17px;font-weight:800;color:#fff;
-  margin:22px 0 10px;
-}
-.reader-content .pull-quote{
-  border-left:3px solid var(--p);
-  padding:10px 14px;margin:18px 0;
-  background:rgba(167,139,250,.06);border-radius:0 8px 8px 0;
-  font-size:14px;font-style:italic;color:rgba(226,226,240,.75);line-height:1.6;
-}
-
-/* ── IN-READER AD CTA (at bottom of article) ── */
-.reader-ad-cta{
-  margin:24px 0 0;
-  background:var(--s2);border:1px solid rgba(167,139,250,.25);
-  border-radius:14px;padding:18px 16px;text-align:center;
-}
-.reader-ad-cta p{font-size:12px;color:var(--mu);line-height:1.6;margin-bottom:12px}
-.reader-ad-cta p strong{color:var(--tx)}
-.btn-reader-ad{
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  width:100%;padding:13px;border-radius:10px;border:none;
-  background:linear-gradient(135deg,var(--p2),#5b21b6);
-  color:#fff;font-size:13px;font-weight:800;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:opacity .15s;
-}
-.btn-reader-ad:active{opacity:.8}
-
-/* ── TOAST ── */
-.toast{
-  position:fixed;bottom:24px;left:50%;
-  transform:translateX(-50%) translateY(80px);
-  background:#1e1e2a;border:1px solid rgba(16,185,129,.4);
-  color:var(--g);font-size:13px;font-weight:800;
-  padding:11px 20px;border-radius:30px;
-  box-shadow:0 6px 28px rgba(0,0,0,.6);
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-  z-index:999;pointer-events:none;white-space:nowrap;
-}
-.toast.show{transform:translateX(-50%) translateY(0)}
+.reader-topbar{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--s1);border-bottom:1px solid var(--bd);flex-shrink:0}
+.reader-back{width:35px;height:35px;border-radius:50%;background:var(--s2);border:1px solid var(--bd);color:var(--tx);font-size:18px}
+.reader-title-small{flex:1;font-size:12px;font-weight:800;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.reader-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}.reader-body{padding:20px 16px 35px}
+.reader-h1{font-size:23px;font-weight:900;line-height:1.3;color:#fff;margin-bottom:10px}
+.reader-meta{font-size:10px;color:var(--mu);padding-bottom:15px;border-bottom:1px solid var(--bd);margin-bottom:18px}
+.reader-content p{font-size:14px;line-height:1.8;color:rgba(226,226,240,.88);margin-bottom:15px}
+.reader-content h3{font-size:17px;color:#fff;margin:22px 0 9px}
+.reader-content .pull-quote{border-left:3px solid var(--p);padding:10px 13px;margin:17px 0;background:rgba(167,139,250,.06);font-size:13px;font-style:italic;line-height:1.6}
+.reader-actions{display:flex;gap:8px;margin:20px 0}
+.reader-actions button{flex:1;background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:11px 8px;border-radius:10px;font-size:11px;font-weight:800}
+.reaction-row{display:flex;align-items:center;gap:9px;background:var(--s1);border:1px solid var(--bd);padding:12px;border-radius:11px;margin-top:15px}
+.reaction-row span{font-size:12px;color:var(--mu);flex:1}.reaction-row button{background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:7px 12px}
+.reader-ad-cta{margin:22px 0 0;background:var(--s2);border:1px solid rgba(167,139,250,.25);border-radius:13px;padding:16px;text-align:center}
+.reader-ad-cta p{font-size:11px;color:var(--mu);line-height:1.6;margin-bottom:10px}
+.ad-btn{width:100%;padding:12px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--p2),#5b21b6);color:#fff;font-size:12px;font-weight:900}
+.goal{margin:14px;background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:14px}
+.goal-head{display:flex;justify-content:space-between;font-size:12px;font-weight:800;margin-bottom:9px}.goal-head span:last-child{color:var(--p)}
+.progress{height:7px;background:var(--bd);border-radius:20px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,var(--p2),var(--p));width:0;transition:width .2s}
+.note{margin:12px 14px;color:var(--mu);font-size:10px;line-height:1.5}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,80px);background:#202032;border:1px solid rgba(16,185,129,.4);color:var(--g);font-size:12px;font-weight:800;padding:10px 17px;border-radius:30px;transition:transform .25s;z-index:99;white-space:nowrap}
+.toast.show{transform:translate(-50%,0)}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
-
-<!-- TOPBAR -->
-<div class="topbar">
+<header class="topbar">
   <div class="brand">Daily<span>Read</span></div>
-  <div class="topbar-tag">News &amp; Articles</div>
-</div>
-
-<!-- TABS -->
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('home')" id="tab-home">🏠 Home</div>
-  <div class="tab" onclick="switchTab('tech')" id="tab-tech">💻 Tech</div>
-  <div class="tab" onclick="switchTab('world')" id="tab-world">🌍 World</div>
-  <div class="tab" onclick="switchTab('biz')" id="tab-biz">📈 Business</div>
-  <div class="tab" onclick="switchTab('sci')" id="tab-sci">🔬 Science</div>
-</div>
-
-<div class="scroll">
-
-<!-- ══════ HOME PAGE ══════ -->
-<div class="page active" id="page-home">
-
-  <!-- Featured -->
-  <div class="featured">
-    <div class="feat-cat">🔥 Featured</div>
-    <div class="feat-title">AI is Now Writing Code Better Than Most Junior Developers</div>
-    <div class="feat-desc">New benchmarks show large language models outperforming entry-level engineers in 73% of real-world tasks — and the gap is widening fast.</div>
-    <div class="feat-meta">
-      <span>Tech Insider</span><div class="dot"></div>
-      <span>5 min read</span><div class="dot"></div>
-      <span>Today</span>
-    </div>
-    <button class="btn-read-feat" onclick="openArticle('ai-code')">Read Article →</button>
+  <div class="top-actions">
+    <button class="icon-btn" onclick="showPage('saved')">♡ Saved</button>
+    <button class="icon-btn" onclick="showPage('history')">◷ History</button>
   </div>
-
-  <div class="slabel">📰 Latest Articles</div>
-
-  <div class="art-list">
-    <div class="art-card" onclick="openArticle('climate')">
-      <div class="art-card-body">
-        <div class="art-cat-pill cat-world">World</div>
-        <div class="art-title">Record Ocean Temperatures Alarm Scientists Ahead of Hurricane Season</div>
-        <div class="art-meta">Reuters · 4 min read · Today</div>
-      </div>
-      <div class="art-thumb">🌊</div>
-    </div>
-    <div class="art-card" onclick="openArticle('crypto')">
-      <div class="art-card-body">
-        <div class="art-cat-pill cat-biz">Business</div>
-        <div class="art-title">Bitcoin Surges Past $85,000 as Institutional Demand Returns</div>
-        <div class="art-meta">Bloomberg · 3 min read · Today</div>
-      </div>
-      <div class="art-thumb">📈</div>
-    </div>
-    <div class="art-card" onclick="openArticle('space')">
-      <div class="art-card-body">
-        <div class="art-cat-pill cat-sci">Science</div>
-        <div class="art-title">NASA's Artemis Crew Completes First Lunar Surface Drill</div>
-        <div class="art-meta">Space.com · 6 min read · Yesterday</div>
-      </div>
-      <div class="art-thumb">🚀</div>
-    </div>
-    <div class="art-card" onclick="openArticle('health')">
-      <div class="art-card-body">
-        <div class="art-cat-pill cat-sci">Science</div>
-        <div class="art-title">New mRNA Vaccine Shows 94% Efficacy Against Aggressive Brain Tumors</div>
-        <div class="art-meta">Nature · 5 min read · Yesterday</div>
-      </div>
-      <div class="art-thumb">🧬</div>
-    </div>
+</header>
+<nav class="tabs">
+  <button class="tab active" id="tab-home" onclick="showPage('home')">🏠 Home</button>
+  <button class="tab" id="tab-tech" onclick="showPage('tech')">💻 Tech</button>
+  <button class="tab" id="tab-world" onclick="showPage('world')">🌍 World</button>
+  <button class="tab" id="tab-biz" onclick="showPage('biz')">📈 Business</button>
+  <button class="tab" id="tab-sci" onclick="showPage('sci')">🔬 Science</button>
+  <button class="tab" id="tab-saved" onclick="showPage('saved')">♡ Saved</button>
+  <button class="tab" id="tab-history" onclick="showPage('history')">◷ History</button>
+</nav>
+<main class="scroll" id="mainScroll">
+<section class="page active" id="page-home">
+  <div class="tools">
+    <label class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Search articles..." oninput="renderSearch()"></label>
+    <button class="tool-btn" onclick="clearSearch()">Clear</button>
   </div>
-
-  <!-- More articles section -->
-  <div class="more-section">
-    <div class="more-header">
-      <h3>More Articles</h3>
-      <div class="unlock-status" id="moreStatus">Optional</div>
+  <div id="searchResults" class="hidden"></div>
+  <div id="homeContent">
+    <div class="stats">
+      <div class="stat"><strong id="readCount">0</strong><span>READ</span></div>
+      <div class="stat"><strong id="savedCount">0</strong><span>SAVED</span></div>
+      <div class="stat"><strong id="streakCount">0</strong><span>DAY STREAK</span></div>
     </div>
-
-    <!-- Watch ad CTA -->
-    <div class="watch-cta" id="watchCtaBlock">
-      <span class="wc-icon">📺</span>
-      <h4>Watch a Short Ad for More</h4>
-      <p>
-        The articles above are <strong>completely free</strong>.<br/>
-        Watch an optional short ad to load extra articles below.
-      </p>
-      <button class="btn-watch-ad" id="watchAdBtn" onclick="watchAd()">
-        ▶ &nbsp;Watch Ad &amp; See More Articles
-      </button>
-      <button class="btn-skip" onclick="skipUnlock()">No thanks, I'm good with the articles above</button>
+    <div class="goal">
+      <div class="goal-head"><span>📖 Daily reading goal</span><span id="goalLabel">0 / 3 articles</span></div>
+      <div class="progress"><div id="goalBar"></div></div>
     </div>
-
-    <!-- Locked placeholders (shown before unlock) -->
-    <div id="lockedCards">
-      <div class="locked-card"><div class="lk-thumb">📰</div><div class="lk-lines"><div class="lk-bar"></div><div class="lk-bar short"></div></div><div class="lock-icon">🔒</div></div>
-      <div class="locked-card"><div class="lk-thumb">📰</div><div class="lk-lines"><div class="lk-bar"></div><div class="lk-bar short"></div></div><div class="lock-icon">🔒</div></div>
-      <div class="locked-card"><div class="lk-thumb">📰</div><div class="lk-lines"><div class="lk-bar"></div><div class="lk-bar short"></div></div><div class="lock-icon">🔒</div></div>
+    <div class="featured">
+      <div class="feat-cat">Editor's pick</div>
+      <div class="feat-title">AI is Now Writing Code Better Than Most Junior Developers</div>
+      <div class="feat-desc">Explore how AI coding assistants are changing software development, the skills developers need, and the questions facing the industry.</div>
+      <div class="meta">Technology · 5 min read</div>
+      <button class="primary" onclick="openArticle('ai-code')">Read article →</button>
     </div>
-
-    <!-- Unlocked extra articles (hidden until ad watched) -->
-    <div id="unlockedCards" style="display:none">
-      <div class="art-list" style="padding:0;gap:10px">
-        <div class="art-card" onclick="openArticle('energy')">
-          <div class="art-card-body">
-            <div class="art-cat-pill cat-tech">Tech</div>
-            <div class="art-title">Europe's New Fusion Reactor Achieves Record 12-Second Plasma Hold</div>
-            <div class="art-meta">Science Daily · 5 min read · 2 days ago</div>
-          </div>
-          <div class="art-thumb">⚡</div>
-        </div>
-        <div class="art-card" onclick="openArticle('economy')">
-          <div class="art-card-body">
-            <div class="art-cat-pill cat-biz">Business</div>
-            <div class="art-title">IMF Raises Global Growth Forecast to 3.4% — Fastest in 3 Years</div>
-            <div class="art-meta">FT · 4 min read · 2 days ago</div>
-          </div>
-          <div class="art-thumb">🌐</div>
-        </div>
-        <div class="art-card" onclick="openArticle('phones')">
-          <div class="art-card-body">
-            <div class="art-cat-pill cat-tech">Tech</div>
-            <div class="art-title">The 5 Smartphones That Actually Changed How We Live in 2026</div>
-            <div class="art-meta">The Verge · 7 min read · 3 days ago</div>
-          </div>
-          <div class="art-thumb">📱</div>
-        </div>
-      </div>
-    </div>
+    <div class="slabel">📰 Latest articles</div>
+    <div class="art-list" id="homeArticles"></div>
+    <div class="slabel">More to explore</div>
+    <div class="art-list" id="moreArticles"></div>
+    <p class="note">Reading is always free. Ads are optional and are not required to access articles or use app features.</p>
   </div>
-
-</div><!-- /page-home -->
-
-<!-- ══════ TECH PAGE ══════ -->
-<div class="page" id="page-tech">
-  <div class="slabel">💻 Technology</div>
-  <div class="art-list">
-    <div class="art-card" onclick="openArticle('ai-code')">
-      <div class="art-card-body"><div class="art-cat-pill cat-tech">Tech</div><div class="art-title">AI is Now Writing Code Better Than Most Junior Developers</div><div class="art-meta">Tech Insider · 5 min · Today</div></div>
-      <div class="art-thumb">🤖</div>
-    </div>
-    <div class="art-card" onclick="openArticle('energy')">
-      <div class="art-card-body"><div class="art-cat-pill cat-tech">Tech</div><div class="art-title">Europe's New Fusion Reactor Achieves Record 12-Second Plasma Hold</div><div class="art-meta">Science Daily · 5 min · 2 days ago</div></div>
-      <div class="art-thumb">⚡</div>
-    </div>
-    <div class="art-card" onclick="openArticle('phones')">
-      <div class="art-card-body"><div class="art-cat-pill cat-tech">Tech</div><div class="art-title">The 5 Smartphones That Actually Changed How We Live in 2026</div><div class="art-meta">The Verge · 7 min · 3 days ago</div></div>
-      <div class="art-thumb">📱</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════ WORLD PAGE ══════ -->
-<div class="page" id="page-world">
-  <div class="slabel">🌍 World News</div>
-  <div class="art-list">
-    <div class="art-card" onclick="openArticle('climate')">
-      <div class="art-card-body"><div class="art-cat-pill cat-world">World</div><div class="art-title">Record Ocean Temperatures Alarm Scientists Ahead of Hurricane Season</div><div class="art-meta">Reuters · 4 min · Today</div></div>
-      <div class="art-thumb">🌊</div>
-    </div>
-    <div class="art-card" onclick="openArticle('un')">
-      <div class="art-card-body"><div class="art-cat-pill cat-world">World</div><div class="art-title">UN Summit on AI Governance Ends With Historic 142-Nation Agreement</div><div class="art-meta">AP News · 6 min · Yesterday</div></div>
-      <div class="art-thumb">🌏</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════ BUSINESS PAGE ══════ -->
-<div class="page" id="page-biz">
-  <div class="slabel">📈 Business</div>
-  <div class="art-list">
-    <div class="art-card" onclick="openArticle('crypto')">
-      <div class="art-card-body"><div class="art-cat-pill cat-biz">Business</div><div class="art-title">Bitcoin Surges Past $85,000 as Institutional Demand Returns</div><div class="art-meta">Bloomberg · 3 min · Today</div></div>
-      <div class="art-thumb">📈</div>
-    </div>
-    <div class="art-card" onclick="openArticle('economy')">
-      <div class="art-card-body"><div class="art-cat-pill cat-biz">Business</div><div class="art-title">IMF Raises Global Growth Forecast to 3.4% — Fastest in 3 Years</div><div class="art-meta">FT · 4 min · 2 days ago</div></div>
-      <div class="art-thumb">🌐</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════ SCIENCE PAGE ══════ -->
-<div class="page" id="page-sci">
-  <div class="slabel">🔬 Science</div>
-  <div class="art-list">
-    <div class="art-card" onclick="openArticle('space')">
-      <div class="art-card-body"><div class="art-cat-pill cat-sci">Science</div><div class="art-title">NASA's Artemis Crew Completes First Lunar Surface Drill</div><div class="art-meta">Space.com · 6 min · Yesterday</div></div>
-      <div class="art-thumb">🚀</div>
-    </div>
-    <div class="art-card" onclick="openArticle('health')">
-      <div class="art-card-body"><div class="art-cat-pill cat-sci">Science</div><div class="art-title">New mRNA Vaccine Shows 94% Efficacy Against Aggressive Brain Tumors</div><div class="art-meta">Nature · 5 min · Yesterday</div></div>
-      <div class="art-thumb">🧬</div>
-    </div>
-  </div>
-</div>
-
-</div><!-- /scroll -->
-
-<!-- ══════ ARTICLE READER ══════ -->
+</section>
+<section class="page" id="page-tech"><div class="slabel">💻 Technology</div><div class="art-list" id="list-tech"></div></section>
+<section class="page" id="page-world"><div class="slabel">🌍 World</div><div class="art-list" id="list-world"></div></section>
+<section class="page" id="page-biz"><div class="slabel">📈 Business</div><div class="art-list" id="list-biz"></div></section>
+<section class="page" id="page-sci"><div class="slabel">🔬 Science</div><div class="art-list" id="list-sci"></div></section>
+<section class="page" id="page-saved"><div class="slabel">♡ Your saved articles</div><div class="art-list" id="list-saved"></div></section>
+<section class="page" id="page-history"><div class="slabel">◷ Recently read</div><div class="art-list" id="list-history"></div><button class="tool-btn" style="margin:15px" onclick="clearHistory()">Clear reading history</button></section>
+</main>
 <div class="reader" id="reader">
-  <div class="reader-topbar">
-    <div class="reader-back" onclick="closeReader()">←</div>
-    <div class="reader-title-small" id="readerTitleSmall"></div>
-  </div>
-  <div class="reader-scroll">
-    <div class="reader-body" id="readerBody"></div>
-  </div>
+  <div class="reader-topbar"><button class="reader-back" onclick="closeReader()">←</button><div class="reader-title-small" id="readerTitleSmall"></div></div>
+  <div class="reader-scroll" id="readerScroll"><div class="reader-body" id="readerBody"></div></div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
-// ── Telegram Init ──
-const tg = window.Telegram?.WebApp;
-if(tg){ try{tg.ready()}catch(e){} try{tg.expand()}catch(e){} }
+const tg=window.Telegram?.WebApp;
+if(tg){try{tg.ready();tg.expand();tg.setHeaderColor?.('#0f0f14');tg.setBackgroundColor?.('#0f0f14')}catch(e){}}
 
-// ── Adsgram ──
-let adController = null;
-function initAdsgram(){
-  try{
-    if(window.Adsgram){
-      adController = window.Adsgram.init({blockId:'int-43506', debug:false});
-    }
-  }catch(e){}
-}
-
-// ── Articles data ──
-const ARTICLES = {
-  'ai-code':{
-    cat:'Tech', catClass:'cat-tech',
-    title:'AI is Now Writing Code Better Than Most Junior Developers',
-    meta:'Tech Insider · 5 min read · Today',
-    body:`
-      <p>In a series of blind tests conducted across five major technology companies, AI coding assistants outperformed entry-level engineers in 73% of real-world programming tasks — and the lead is growing.</p>
-      <h3>What the benchmarks show</h3>
-      <p>The tests covered bug fixing, feature implementation, API integration, and code review. AI systems completed tasks on average 4.2× faster, with error rates comparable to engineers with two years of experience.</p>
-      <div class="pull-quote">"This isn't about replacing developers. It's about changing what a developer's day looks like." — Lead researcher, MIT CSAIL</div>
-      <p>Companies like Stripe and Shopify have already restructured their junior engineering pipelines. New hires are now expected to spend the majority of their time reviewing and directing AI output rather than writing code from scratch.</p>
-      <h3>What this means for the industry</h3>
-      <p>Hiring patterns at top tech firms show a 40% drop in entry-level coding job postings over the past 18 months, while senior engineering roles — which require architecture and judgment — have grown by 22%.</p>
-      <p>Experts caution that the transition will be uneven across the industry. Startups are adopting AI tools fastest; legacy enterprises are slower due to compliance constraints and internal politics.</p>
-    `
-  },
-  'climate':{
-    cat:'World', catClass:'cat-world',
-    title:'Record Ocean Temperatures Alarm Scientists Ahead of Hurricane Season',
-    meta:'Reuters · 4 min read · Today',
-    body:`
-      <p>Sea surface temperatures in the Atlantic have broken records for the third consecutive year, with scientists warning that this year's hurricane season could be the most destructive since 2005.</p>
-      <h3>Unprecedented heat in the ocean</h3>
-      <p>NOAA data shows average sea surface temperatures running 1.8°C above the 20th-century baseline — the highest anomaly ever recorded at this point in the calendar year.</p>
-      <div class="pull-quote">"Warm water is hurricane fuel. This is the most concerning pre-season data we've ever seen." — Dr. Sarah Malone, NOAA</div>
-      <p>Forecasters predict 18 to 24 named storms this season, with six to eight reaching major hurricane status. Coastal authorities from Texas to Florida are already reviewing evacuation plans.</p>
-      <h3>Long-term outlook</h3>
-      <p>Climate models suggest this heating trend will continue through the decade unless significant emissions reductions are achieved. Several island nations have called for emergency funding at the upcoming UN Climate Council.</p>
-    `
-  },
-  'crypto':{
-    cat:'Business', catClass:'cat-biz',
-    title:'Bitcoin Surges Past $85,000 as Institutional Demand Returns',
-    meta:'Bloomberg · 3 min read · Today',
-    body:`
-      <p>Bitcoin broke above the $85,000 mark on Wednesday as a wave of institutional buying reversed a three-month correction, reigniting optimism about the asset's long-term trajectory.</p>
-      <h3>Who's buying</h3>
-      <p>On-chain data points to large wallet accumulation by entities consistent with hedge funds and sovereign wealth funds. MicroStrategy alone added another 4,200 BTC to its holdings last week.</p>
-      <div class="pull-quote">"The macro environment is forcing diversification. Bitcoin is increasingly seen as a hedge against currency debasement." — Analyst, Galaxy Digital</div>
-      <p>ETF inflows have also rebounded sharply, with BlackRock's IBIT recording its largest single-day inflow in six months on Tuesday — over $620 million.</p>
-      <h3>Risks remain</h3>
-      <p>Regulatory uncertainty in the EU and potential Fed rate decisions in September could introduce volatility. Technical analysts note significant resistance at the $88,000 level.</p>
-    `
-  },
-  'space':{
-    cat:'Science', catClass:'cat-sci',
-    title:"NASA's Artemis Crew Completes First Lunar Surface Drill",
-    meta:'Space.com · 6 min read · Yesterday',
-    body:`
-      <p>Astronauts aboard the Artemis IV mission completed humanity's first lunar core sample extraction on Tuesday, drilling 1.2 meters into the Moon's south pole region and retrieving material that could contain ancient water ice.</p>
-      <h3>What they found</h3>
-      <p>Initial onsite analysis suggests the regolith samples contain higher hydrogen concentrations than predicted by orbital surveys — a promising indicator of accessible water ice deposits that could support future permanent habitation.</p>
-      <div class="pull-quote">"Every centimeter we pull up is a page of the Moon's four-billion-year history." — Mission Specialist Dr. Amara Osei</div>
-      <p>The drill operation took 14 hours across two EVAs, complicated by unexpected hardened subsurface layers at 0.8 meters depth. Engineers at JSC guided the crew through a modified protocol in real time.</p>
-      <h3>What comes next</h3>
-      <p>Samples will be returned to Earth for laboratory analysis. If water ice is confirmed in extractable quantities, the finding will significantly advance plans for a permanent lunar outpost by the 2030s.</p>
-    `
-  },
-  'health':{
-    cat:'Science', catClass:'cat-sci',
-    title:'New mRNA Vaccine Shows 94% Efficacy Against Aggressive Brain Tumors',
-    meta:'Nature · 5 min read · Yesterday',
-    body:`
-      <p>A Phase III clinical trial published in Nature Medicine reports that a personalized mRNA vaccine produced a 94% reduction in tumor recurrence for patients with glioblastoma — one of the deadliest forms of brain cancer.</p>
-      <h3>How it works</h3>
-      <p>The vaccine is individualized for each patient: tumor tissue is sequenced to identify unique mutations, and an mRNA sequence is synthesized to train the immune system to recognize and attack those specific cancer cells.</p>
-      <div class="pull-quote">"We are not talking about extending life by a few months. We are talking about functional cures." — Principal Investigator, BioNTech</div>
-      <p>The trial enrolled 212 patients across 14 countries. Median survival in the vaccine group was 31 months, compared to 14.6 months for the control group receiving standard chemotherapy.</p>
-      <h3>Path to approval</h3>
-      <p>BioNTech and Moderna, both involved in the trial, have submitted preliminary data to the FDA for breakthrough therapy designation. Regulatory approval could come as early as 2027.</p>
-    `
-  },
-  'energy':{
-    cat:'Tech', catClass:'cat-tech',
-    title:"Europe's New Fusion Reactor Achieves Record 12-Second Plasma Hold",
-    meta:'Science Daily · 5 min read · 2 days ago',
-    body:`
-      <p>The ITER-derived EuroFusion experimental reactor in Cadarache, France, has held a stable plasma state for 12 consecutive seconds — nearly double the previous world record — marking a significant milestone on the path to practical fusion energy.</p>
-      <h3>Why 12 seconds matters</h3>
-      <p>Fusion reactors must sustain plasma long enough to produce more energy than the ignition process consumes. The 12-second mark crosses a key engineering threshold that scientists call "scientific breakeven sustained."</p>
-      <div class="pull-quote">"Each second of stable plasma is a year of engineering lessons compressed. This is transformative." — Dr. Hans Weber, EUROfusion</div>
-      <p>The reaction generated 280 megajoules of energy — enough to power approximately 30 homes for a full day from a single 12-second burst.</p>
-      <h3>Commercial timeline</h3>
-      <p>European energy officials now project that a commercial-scale demonstration plant could be operational by 2038, five years ahead of previous estimates, if funding levels are maintained.</p>
-    `
-  },
-  'economy':{
-    cat:'Business', catClass:'cat-biz',
-    title:'IMF Raises Global Growth Forecast to 3.4% — Fastest in 3 Years',
-    meta:'Financial Times · 4 min read · 2 days ago',
-    body:`
-      <p>The International Monetary Fund has revised its 2026 global growth forecast upward to 3.4%, citing stronger-than-expected performance in emerging markets, easing inflation, and resilient consumer spending in the United States.</p>
-      <h3>Regional breakdown</h3>
-      <p>India leads major economies with a projected 7.1% growth rate. The US is forecast at 2.8%, revised up from 2.3% in April. The eurozone lags at 1.6%, constrained by weak German industrial output.</p>
-      <div class="pull-quote">"The global economy has shown remarkable resilience. The feared hard landing did not materialize." — IMF Chief Economist Gita Gopinath</div>
-      <p>Sub-Saharan Africa is forecast to grow at 4.8%, driven by infrastructure investment and a commodity price recovery. Latin America improved to 2.4% on the back of Brazil's agricultural export boom.</p>
-      <h3>Risks to the outlook</h3>
-      <p>The IMF flagged geopolitical fragmentation, persistent services inflation, and elevated debt levels in advanced economies as the primary downside risks to the forecast.</p>
-    `
-  },
-  'phones':{
-    cat:'Tech', catClass:'cat-tech',
-    title:'The 5 Smartphones That Actually Changed How We Live in 2026',
-    meta:'The Verge · 7 min read · 3 days ago',
-    body:`
-      <p>2026 was a year of genuine leaps rather than incremental updates. Five devices stood out as phones that didn't just improve on their predecessors — they genuinely changed what people do with a phone.</p>
-      <h3>1. Samsung Galaxy S26 Ultra</h3>
-      <p>The first mainstream phone to run a 10B-parameter on-device AI model natively. Translations, document analysis, and real-time meeting summaries happen locally — no cloud, no subscription, no privacy tradeoff.</p>
-      <h3>2. Apple iPhone 17 Pro</h3>
-      <p>Apple's first phone with a rollable display prototype mode. Still officially a fixed-screen phone, but the hardware seeds are planted. More practically, the new Neural Engine enables real-time spoken language learning through the Camera app.</p>
-      <div class="pull-quote">"This is the first phone that actually helps me think, not just communicate." — Senior Editor, The Verge</div>
-      <h3>3. Google Pixel 10</h3>
-      <p>Best camera system ever put in a consumer device, full stop. The computational photography pipeline now runs four models simultaneously, producing images that professional photographers consistently mistake for DSLR shots in blind tests.</p>
-    `
-  },
-  'un':{
-    cat:'World', catClass:'cat-world',
-    title:'UN Summit on AI Governance Ends With Historic 142-Nation Agreement',
-    meta:'AP News · 6 min read · Yesterday',
-    body:`
-      <p>After nine days of intense negotiations in Geneva, 142 nations signed the Framework Convention on Artificial Intelligence — the most comprehensive international agreement on technology governance since the Nuclear Non-Proliferation Treaty.</p>
-      <h3>What the agreement covers</h3>
-      <p>The treaty establishes binding minimum safety standards for AI systems above a defined capability threshold, creates an international inspection regime similar to the IAEA, and prohibits autonomous lethal decision-making in warfare without human authorization.</p>
-      <div class="pull-quote">"We have drawn a line that separates ambition from recklessness. Now the work begins." — UN Secretary-General</div>
-      <p>Notably, the United States, China, and the European Union all signed — a diplomatic achievement given the deep divergence in their domestic AI regulations. Russia and North Korea declined to participate.</p>
-      <h3>Enforcement questions</h3>
-      <p>Critics note that the treaty lacks strong enforcement mechanisms. Sanctions for non-compliance require a two-thirds Security Council vote, which analysts say makes meaningful penalties unlikely for major powers.</p>
-    `
-  }
+const ARTICLES={
+'ai-code':{cat:'Tech',key:'tech',emoji:'🤖',title:'AI is Now Writing Code Better Than Most Junior Developers',meta:'DailyRead · 5 min read',body:`<p>AI coding assistants are changing how software is planned, written, tested and maintained. Their strongest use today is helping people move through routine development work more quickly.</p><h3>Where AI tools can help</h3><p>Modern assistants can explain unfamiliar code, suggest fixes, generate test cases and help developers explore different implementation approaches. The quality of the result still depends on clear instructions and careful review.</p><div class="pull-quote">AI is most useful when it supports human judgment rather than replacing it.</div><h3>Skills that matter</h3><p>Problem solving, system design, security awareness and the ability to verify generated code remain important. Developers also need to understand the limits of tools and check outputs before using them in production.</p><h3>What comes next</h3><p>As these tools improve, teams will continue experimenting with new workflows. The long-term impact will depend on reliability, cost, privacy and how organizations train their people.</p>`},
+'climate':{cat:'World',key:'world',emoji:'🌊',title:'Record Ocean Temperatures Alarm Scientists Ahead of Hurricane Season',meta:'DailyRead · 4 min read',body:`<p>Ocean temperature is an important factor in tropical cyclone development. Warm surface water can provide energy to storms, while atmospheric conditions determine whether a storm can organize and intensify.</p><h3>Why ocean heat matters</h3><p>Scientists monitor sea-surface temperatures alongside wind shear, humidity and broader climate patterns. No single measurement can predict the exact path or strength of a future storm.</p><div class="pull-quote">Preparedness works best when communities use forecasts from trusted meteorological agencies.</div><h3>Preparing communities</h3><p>Early warnings, evacuation planning, resilient infrastructure and clear public communication can reduce risks. Residents in vulnerable areas should follow local emergency guidance.</p>`},
+'crypto':{cat:'Business',key:'biz',emoji:'📈',title:'Bitcoin Surges Past $85,000 as Institutional Demand Returns',meta:'DailyRead · 3 min read',body:`<p>Bitcoin is a highly volatile digital asset whose price can move sharply in response to market sentiment, regulation, liquidity and macroeconomic news. Institutional participation is one factor investors watch.</p><h3>What drives demand</h3><p>Market participants monitor fund flows, trading volume, custody activity and changes in risk appetite. These indicators can provide context, but none reliably predicts future prices.</p><div class="pull-quote">Past performance does not guarantee future results. Digital assets can lose value rapidly.</div><h3>Risks to consider</h3><p>Regulatory changes, cybersecurity incidents, leverage and market concentration can all affect prices. Readers should research independently and avoid investing money they cannot afford to lose.</p>`},
+'space':{cat:'Science',key:'sci',emoji:'🚀',title:"NASA's Artemis Program: Preparing for Future Lunar Exploration",meta:'DailyRead · 6 min read',body:`<p>The Artemis program is designed to support a sustained human presence on and around the Moon and to develop experience useful for future exploration. The work involves spacecraft, spacesuits, surface systems and international partners.</p><h3>Why the lunar south pole?</h3><p>The region is scientifically interesting because permanently shadowed areas may preserve water ice. Mapping resources and understanding the terrain are important steps before crews can work there safely.</p><div class="pull-quote">Exploration advances through careful testing, engineering and scientific collaboration.</div><h3>What comes next</h3><p>Future missions will build on earlier tests and refine systems for longer stays. Mission schedules and objectives can change as hardware and safety reviews progress.</p>`},
+'health':{cat:'Science',key:'sci',emoji:'🧬',title:'How mRNA Research Is Expanding the Possibilities of Medicine',meta:'DailyRead · 5 min read',body:`<p>Messenger RNA technology became widely known through vaccines, but researchers are also studying ways to use it in other areas of medicine, including personalized cancer treatments.</p><h3>How the approach works</h3><p>In broad terms, mRNA provides cells with temporary instructions to make a selected protein. In cancer research, some experimental approaches aim to help the immune system recognize features associated with a patient's tumor.</p><div class="pull-quote">Promising early research is not the same as an approved or proven treatment.</div><h3>Clinical research</h3><p>Potential treatments must pass carefully designed clinical trials to evaluate safety and effectiveness. Patients should discuss treatment decisions with qualified medical professionals.</p>`},
+'energy':{cat:'Tech',key:'tech',emoji:'⚡',title:'Fusion Energy: The Engineering Challenges Behind a Star on Earth',meta:'DailyRead · 5 min read',body:`<p>Nuclear fusion aims to combine light atomic nuclei and release energy. Reproducing the process on Earth requires extremely hot plasma and sophisticated systems to control it.</p><h3>Why confinement matters</h3><p>Researchers use magnetic fields or other methods to keep plasma away from reactor walls. Maintaining stable conditions for long periods is a major engineering challenge.</p><div class="pull-quote">A laboratory milestone is an important step, but it is not the same as a commercial power plant.</div><h3>The road ahead</h3><p>Scientists continue working on materials, heat removal, fuel cycles and reliable operation. Commercial fusion remains a long-term development goal.</p>`},
+'economy':{cat:'Business',key:'biz',emoji:'🌐',title:'Understanding Global Growth Forecasts and What They Mean',meta:'DailyRead · 4 min read',body:`<p>Economic growth forecasts estimate how quickly the value of goods and services produced in an economy may increase. Institutions revise forecasts as new information about prices, trade, jobs and investment becomes available.</p><h3>Why forecasts change</h3><p>Consumer demand, interest rates, government spending, commodity prices and geopolitical events can all influence the outlook. Forecasts are scenarios based on assumptions, not guarantees.</p><div class="pull-quote">A headline growth figure rarely tells the whole story of an economy.</div><h3>Reading the data</h3><p>It is useful to compare growth with employment, inflation, productivity and household income to understand whether economic gains are broadly shared.</p>`},
+'phones':{cat:'Tech',key:'tech',emoji:'📱',title:'What Makes a Smartphone Useful Beyond Its Specifications?',meta:'DailyRead · 7 min read',body:`<p>Smartphone launches often focus on processor speed, camera resolution and display brightness. In everyday use, software support, battery life, accessibility and repairability can matter just as much.</p><h3>Look beyond headline numbers</h3><p>Camera quality depends on sensors, lenses and image processing. Battery experience depends on both capacity and software efficiency. A fast chip is useful only when apps and workflows can take advantage of it.</p><div class="pull-quote">The best phone is the one that reliably supports the way its owner actually uses it.</div><h3>Buying thoughtfully</h3><p>Compare update commitments, warranty coverage, storage, repair options and total cost. Reviews based on real-world testing are more useful than specifications alone.</p>`},
+'un':{cat:'World',key:'world',emoji:'🌏',title:'Why International Cooperation Matters for AI Governance',meta:'DailyRead · 6 min read',body:`<p>Artificial intelligence systems are developed and used across borders, raising questions about safety, privacy, accountability and economic impact. Governments and researchers are exploring ways to coordinate their approaches.</p><h3>Areas for cooperation</h3><p>Common terminology, incident reporting, technical research and information sharing can help organizations understand risks. International discussions also consider how to protect rights while supporting beneficial innovation.</p><div class="pull-quote">Effective governance needs practical standards, transparency and ongoing review.</div><h3>Challenges</h3><p>Countries may differ in legal systems, priorities and views about acceptable risk. Agreements therefore need clear goals and realistic ways to measure progress.</p>`}
 };
 
-// ── Reader ──
+const STORE='dailyread-v2';
+function loadState(){try{return JSON.parse(localStorage.getItem(STORE))||{saved:[],history:[],reads:{},reactions:{},days:[]}}catch(e){return{saved:[],history:[],reads:{},reactions:{},days:[]}}}
+let state=loadState();
+function persist(){localStorage.setItem(STORE,JSON.stringify(state));updateStats()}
+function today(){return new Date().toISOString().slice(0,10)}
+function updateStats(){
+ document.getElementById('readCount').textContent=Object.keys(state.reads).length;
+ document.getElementById('savedCount').textContent=state.saved.length;
+ const days=[...new Set(state.days)].sort().reverse();let streak=0,d=new Date();
+ if(days.includes(today())){while(days.includes(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1)}}
+ document.getElementById('streakCount').textContent=streak;
+ const count=state.reads[today()]||0;document.getElementById('goalLabel').textContent=Math.min(count,3)+' / 3 articles';
+ document.getElementById('goalBar').style.width=Math.min(count/3*100,100)+'%';
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function card(id){const a=ARTICLES[id],saved=state.saved.includes(id);return `<article class="art-card" onclick="openArticle('${id}')"><div class="art-card-body"><span class="art-cat-pill cat-${a.key}">${a.cat}</span><div class="art-title">${esc(a.title)}</div><div class="art-meta">${a.meta}</div><div class="card-actions"><button class="small-action" onclick="event.stopPropagation();toggleSave('${id}')">${saved?'♥ Saved':'♡ Save'}</button><button class="small-action" onclick="event.stopPropagation();shareArticle('${id}')">↗ Share</button></div></div><div class="art-thumb">${a.emoji}</div></article>`}
+function fill(id,ids){document.getElementById(id).innerHTML=ids.length?ids.map(card).join(''):'<div class="empty">Nothing here yet.<br>Save or read an article to see it here.</div>'}
+function renderAll(){
+ const ids=Object.keys(ARTICLES);
+ fill('homeArticles',['climate','crypto','space','health']);
+ fill('moreArticles',['energy','economy','phones','un']);
+ ['tech','world','biz','sci'].forEach(k=>fill('list-'+k,ids.filter(id=>ARTICLES[id].key===k)));
+ fill('list-saved',state.saved.filter(id=>ARTICLES[id]));
+ fill('list-history',state.history.filter(id=>ARTICLES[id]));
+ updateStats();
+}
+function showPage(id){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+ document.getElementById('page-'+id).classList.add('active');
+ document.getElementById('tab-'+id)?.classList.add('active');
+ document.getElementById('mainScroll').scrollTop=0;
+ if(id==='saved'||id==='history')renderAll();
+}
 function openArticle(id){
-  const art = ARTICLES[id];
-  if(!art) return;
-  const rb = document.getElementById('readerBody');
-  const rs = document.getElementById('readerTitleSmall');
-  rs.textContent = art.title;
-  rb.innerHTML = `
-    <div class="reader-cat ${art.catClass}">${art.cat}</div>
-    <div class="reader-h1">${art.title}</div>
-    <div class="reader-meta">
-      <span>${art.meta}</span>
-    </div>
-    <div class="reader-content">${art.body}</div>
-    <div class="reader-ad-cta">
-      <p>Enjoying DailyRead? <strong>Watch a short optional ad</strong> to support free journalism and unlock more articles on the home page.</p>
-      <button class="btn-reader-ad" onclick="watchAd(true)">▶ &nbsp;Watch Optional Ad</button>
-    </div>
-  `;
-  document.getElementById('readerBody').parentElement.scrollTop = 0;
-  document.getElementById('reader').classList.add('open');
+ const a=ARTICLES[id];if(!a)return;
+ state.history=[id,...state.history.filter(x=>x!==id)].slice(0,50);
+ state.reads[today()]=(state.reads[today()]||0)+1;
+ if(!state.days.includes(today()))state.days.push(today());
+ persist();renderAll();
+ const liked=!!state.reactions[id];
+ document.getElementById('readerTitleSmall').textContent=a.title;
+ document.getElementById('readerBody').innerHTML=`<span class="art-cat-pill cat-${a.key}">${a.cat}</span><h1 class="reader-h1">${esc(a.title)}</h1><div class="reader-meta">${a.meta} · Added to your reading history</div><div class="reader-content">${a.body}</div><div class="reader-actions"><button onclick="toggleSave('${id}');renderReaderActions('${id}')">${state.saved.includes(id)?'♥ Saved':'♡ Save article'}</button><button onclick="shareArticle('${id}')">↗ Share article</button></div><div class="reaction-row"><span>Was this article useful?</span><button id="likeBtn" onclick="react('${id}')">${liked?'👍 Helpful':'👍 Helpful'}</button></div><div class="reader-ad-cta"><p>Support free reading by choosing to watch an optional ad. You can continue reading without watching.</p><button class="ad-btn" onclick="watchOptionalAd()">▶ Watch optional ad</button></div>`;
+ document.getElementById('readerScroll').scrollTop=0;
+ document.getElementById('reader').classList.add('open');
 }
-function closeReader(){
-  document.getElementById('reader').classList.remove('open');
+function renderReaderActions(id){const a=ARTICLES[id];document.querySelector('.reader-actions').innerHTML=`<button onclick="toggleSave('${id}');renderReaderActions('${id}')">${state.saved.includes(id)?'♥ Saved':'♡ Save article'}</button><button onclick="shareArticle('${id}')">↗ Share article</button>`}
+function closeReader(){document.getElementById('reader').classList.remove('open')}
+function toggleSave(id){state.saved=state.saved.includes(id)?state.saved.filter(x=>x!==id):[id,...state.saved];persist();renderAll();toast(state.saved.includes(id)?'Article saved':'Removed from saved articles')}
+function react(id){state.reactions[id]=!state.reactions[id];persist();document.getElementById('likeBtn').textContent=state.reactions[id]?'👍 Helpful ✓':'👍 Helpful';toast('Thanks for your feedback')}
+async function shareArticle(id){const a=ARTICLES[id],url=location.href.split('#')[0]+'#article='+encodeURIComponent(id);try{if(navigator.share)await navigator.share({title:a.title,text:'Read on DailyRead',url});else if(navigator.clipboard){await navigator.clipboard.writeText(url);toast('Article link copied')}}catch(e){}}
+function renderSearch(){const q=document.getElementById('searchInput').value.trim().toLowerCase(),box=document.getElementById('searchResults'),home=document.getElementById('homeContent');if(!q){box.classList.add('hidden');home.classList.remove('hidden');return}home.classList.add('hidden');box.classList.remove('hidden');const ids=Object.keys(ARTICLES).filter(id=>(ARTICLES[id].title+' '+ARTICLES[id].cat+' '+ARTICLES[id].body.replace(/<[^>]*>/g,'')).toLowerCase().includes(q));box.innerHTML='<div class="slabel">Search results ('+ids.length+')</div><div class="art-list">'+(ids.length?ids.map(card).join(''):'<div class="empty">No matching articles found. Try another keyword.</div>')+'</div>'}
+function clearSearch(){document.getElementById('searchInput').value='';renderSearch()}
+function clearHistory(){state.history=[];persist();renderAll();toast('Reading history cleared')}
+function toast(s){const el=document.getElementById('toast');el.textContent=s;el.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove('show'),2300)}
+let adController=null;
+function initAdsgram(){try{if(window.Adsgram)adController=window.Adsgram.init({blockId:'int-43506',debug:false})}catch(e){adController=null}}
+async function watchOptionalAd(){
+ if(!adController){toast('No ad is available right now. You can keep reading.');return}
+ try{await adController.show();toast('Thank you for supporting DailyRead!')}catch(e){toast('Ad was not completed. No changes were made.')}
 }
-
-// ── Tab switch ──
-function switchTab(id){
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  document.getElementById('page-'+id).classList.add('active');
-}
-
-// ── Ad state ──
-let adUnlocked = false;
-let adPlaying  = false;
-
-function watchAd(fromReader){
-  if(adPlaying) return;
-  adPlaying = true;
-  const btn = document.getElementById('watchAdBtn');
-  if(btn) { btn.disabled = true; btn.textContent = 'Loading ad…'; }
-
-  function onDone(){
-    adPlaying  = false;
-    adUnlocked = true;
-    if(!fromReader) revealMoreArticles();
-    showToast('Extra articles unlocked! ✓');
-    // reset reader button too
-    const rb = document.querySelector('.btn-reader-ad');
-    if(rb){ rb.textContent = '✓ Thanks for watching!'; rb.disabled = true; }
-  }
-  function onFail(){
-    adPlaying = false;
-    if(btn){ btn.disabled = false; btn.textContent = '▶ Watch Ad & See More Articles'; }
-    showToast('Ad skipped — no problem!');
-  }
-
-  if(adController){
-    adController.show().then(onDone).catch(onFail);
-  } else {
-    // Simulate for dev/preview
-    let t = 5;
-    if(btn) btn.textContent = `Simulating ad… (${t}s)`;
-    const iv = setInterval(()=>{
-      t--;
-      if(t <= 0){ clearInterval(iv); onDone(); }
-      else if(btn) btn.textContent = `Simulating ad… (${t}s)`;
-    },1000);
-  }
-}
-
-function revealMoreArticles(){
-  document.getElementById('watchCtaBlock').style.display   = 'none';
-  document.getElementById('lockedCards').style.display     = 'none';
-  document.getElementById('unlockedCards').style.display   = 'block';
-  const st = document.getElementById('moreStatus');
-  st.textContent = 'Unlocked ✓';
-  st.classList.add('open');
-}
-
-function skipUnlock(){
-  document.getElementById('watchCtaBlock').style.display = 'none';
-  document.getElementById('lockedCards').style.display   = 'none';
-}
-
-// ── Toast ──
-let toastT = null;
-function showToast(msg){
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastT);
-  toastT = setTimeout(()=> el.classList.remove('show'), 2800);
-}
-
-// ── Boot ──
-(function(){
-  const tg = window.Telegram?.WebApp;
-  if(tg){ try{tg.setHeaderColor?.('#0f0f14')}catch(e){} try{tg.setBackgroundColor?.('#0f0f14')}catch(e){} }
-  initAdsgram();
-})();
+renderAll();initAdsgram();
+const initial=location.hash.match(/article=([^&]+)/);if(initial&&ARTICLES[decodeURIComponent(initial[1])])openArticle(decodeURIComponent(initial[1]));
 </script>
 </body>
 </html>
