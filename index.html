@@ -1,222 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0f0f14">
-<title>DailyRead — Independent Reading Hub</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0f0f14"><title>ডেইলিরিড — বাংলা সংবাদ</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script><script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0f0f14;--s1:#16161f;--s2:#1e1e2a;--bd:#2c2c3e;--p:#a78bfa;--p2:#7c3aed;--acc:#f59e0b;--g:#10b981;--tx:#e2e2f0;--mu:#8585a8;--ra:13px}
-html,body{height:100%;overflow:hidden}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column}
-button,input{font:inherit}
-button{cursor:pointer}
-.topbar{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:var(--s1);border-bottom:1px solid var(--bd)}
-.brand{font-size:19px;font-weight:900;letter-spacing:-.5px}.brand span{color:var(--p)}
-.top-actions{display:flex;gap:8px}
-.icon-btn{background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:8px 11px;font-size:12px;font-weight:700}
-.tabs{flex-shrink:0;display:flex;background:var(--s1);border-bottom:1px solid var(--bd);overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex-shrink:0;padding:11px 15px;font-size:12px;font-weight:800;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap}
-.tab.active{color:var(--p);border-bottom-color:var(--p)}
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}.scroll::-webkit-scrollbar{display:none}
-.page{display:none;padding-bottom:30px}.page.active{display:block}
-.tools{padding:13px 14px 0;display:grid;grid-template-columns:1fr auto;gap:8px}
-.search-wrap{display:flex;align-items:center;background:var(--s2);border:1px solid var(--bd);border-radius:11px;padding:0 11px}
-.search-wrap span{font-size:15px;margin-right:8px}.search-wrap input{width:100%;min-width:0;background:none;border:0;outline:0;color:var(--tx);padding:11px 0;font-size:13px}
-.search-wrap input::placeholder{color:var(--mu)}
-.tool-btn{background:var(--s2);border:1px solid var(--bd);border-radius:11px;color:var(--tx);padding:0 12px;font-size:12px;font-weight:800}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 14px 0}
-.stat{background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:10px;text-align:center}
-.stat strong{display:block;color:var(--p);font-size:18px}.stat span{font-size:10px;color:var(--mu);font-weight:700}
-.featured{margin:14px 14px 0;background:linear-gradient(150deg,#2d1b69,#1a1040 70%,#0f0f14);border:1px solid rgba(167,139,250,.2);border-radius:16px;padding:19px 17px;position:relative;overflow:hidden}
-.feat-cat,.pill{display:inline-block;font-size:9px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--p);background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.25);padding:3px 9px;border-radius:20px;margin-bottom:9px}
-.feat-title{font-size:19px;font-weight:900;line-height:1.3;color:#fff;margin-bottom:8px}
-.feat-desc{font-size:12px;color:rgba(226,226,240,.7);line-height:1.6;margin-bottom:12px}
-.meta{font-size:10px;color:var(--mu)}
-.primary{background:var(--p2);color:#fff;border:0;border-radius:10px;padding:10px 15px;font-size:12px;font-weight:900;margin-top:13px}
-.slabel{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px;color:var(--mu);padding:18px 14px 10px}
-.art-list{padding:0 14px;display:flex;flex-direction:column;gap:9px}
-.art-card{background:var(--s2);border:1px solid var(--bd);border-radius:var(--ra);padding:13px;display:flex;gap:11px;align-items:center;cursor:pointer}
-.art-card:active{border-color:var(--p)}
-.art-card-body{flex:1;min-width:0}
-.art-cat-pill{display:inline-block;font-size:9px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;padding:2px 8px;border-radius:20px;margin-bottom:6px}
-.cat-tech{background:rgba(167,139,250,.12);color:var(--p)}.cat-world{background:rgba(16,185,129,.1);color:var(--g)}.cat-biz{background:rgba(245,158,11,.1);color:var(--acc)}.cat-sci{background:rgba(99,179,237,.1);color:#63b3ed}
-.art-title{font-size:13px;font-weight:850;line-height:1.35;margin-bottom:5px;color:var(--tx)}
-.art-meta{font-size:10px;color:var(--mu)}
-.art-thumb{width:52px;height:52px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;background:#29283a}
-.card-actions{display:flex;gap:6px;margin-top:8px}
-.small-action{background:transparent;border:1px solid var(--bd);border-radius:7px;color:var(--mu);font-size:10px;padding:5px 8px}
-.empty{margin:14px;padding:24px;text-align:center;border:1px dashed var(--bd);border-radius:12px;color:var(--mu);font-size:13px;line-height:1.6}
-.reader{display:none;position:fixed;inset:0;z-index:50;background:var(--bg);flex-direction:column}
-.reader.open{display:flex}
-.reader-topbar{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--s1);border-bottom:1px solid var(--bd);flex-shrink:0}
-.reader-back{width:35px;height:35px;border-radius:50%;background:var(--s2);border:1px solid var(--bd);color:var(--tx);font-size:18px}
-.reader-title-small{flex:1;font-size:12px;font-weight:800;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.reader-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}.reader-body{padding:20px 16px 35px}
-.reader-h1{font-size:23px;font-weight:900;line-height:1.3;color:#fff;margin-bottom:10px}
-.reader-meta{font-size:10px;color:var(--mu);padding-bottom:15px;border-bottom:1px solid var(--bd);margin-bottom:18px}
-.reader-content p{font-size:14px;line-height:1.8;color:rgba(226,226,240,.88);margin-bottom:15px}
-.reader-content h3{font-size:17px;color:#fff;margin:22px 0 9px}
-.reader-content .pull-quote{border-left:3px solid var(--p);padding:10px 13px;margin:17px 0;background:rgba(167,139,250,.06);font-size:13px;font-style:italic;line-height:1.6}
-.reader-actions{display:flex;gap:8px;margin:20px 0}
-.reader-actions button{flex:1;background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:11px 8px;border-radius:10px;font-size:11px;font-weight:800}
-.reaction-row{display:flex;align-items:center;gap:9px;background:var(--s1);border:1px solid var(--bd);padding:12px;border-radius:11px;margin-top:15px}
-.reaction-row span{font-size:12px;color:var(--mu);flex:1}.reaction-row button{background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:7px 12px}
-.reader-ad-cta{margin:22px 0 0;background:var(--s2);border:1px solid rgba(167,139,250,.25);border-radius:13px;padding:16px;text-align:center}
-.reader-ad-cta p{font-size:11px;color:var(--mu);line-height:1.6;margin-bottom:10px}
-.ad-btn{width:100%;padding:12px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--p2),#5b21b6);color:#fff;font-size:12px;font-weight:900}
-.goal{margin:14px;background:var(--s1);border:1px solid var(--bd);border-radius:13px;padding:14px}
-.goal-head{display:flex;justify-content:space-between;font-size:12px;font-weight:800;margin-bottom:9px}.goal-head span:last-child{color:var(--p)}
-.progress{height:7px;background:var(--bd);border-radius:20px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,var(--p2),var(--p));width:0;transition:width .2s}
-.note{margin:12px 14px;color:var(--mu);font-size:10px;line-height:1.5}
-.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,80px);background:#202032;border:1px solid rgba(16,185,129,.4);color:var(--g);font-size:12px;font-weight:800;padding:10px 17px;border-radius:30px;transition:transform .25s;z-index:99;white-space:nowrap}
-.toast.show{transform:translate(-50%,0)}
-.hidden{display:none!important}
-</style>
-</head>
-<body>
-<header class="topbar">
-  <div class="brand">Daily<span>Read</span></div>
-  <div class="top-actions">
-    <button class="icon-btn" onclick="showPage('saved')">♡ Saved</button>
-    <button class="icon-btn" onclick="showPage('history')">◷ History</button>
-  </div>
-</header>
+*{box-sizing:border-box;margin:0;padding:0} :root{--bg:#0f0f14;--s1:#16161f;--s2:#1e1e2a;--bd:#2c2c3e;--p:#a78bfa;--p2:#7c3aed;--g:#10b981;--tx:#e2e2f0;--mu:#8585a8}
+html,body{height:100%;overflow:hidden}body{font-family:"Noto Sans Bengali","Hind Siliguri",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column}
+button,input{font:inherit}button{cursor:pointer}
+.topbar{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:var(--s1);border-bottom:1px solid var(--bd)}
+.brand{font-size:20px;font-weight:900}.brand span{color:var(--p)}.top-actions{display:flex;gap:6px}.icon-btn,.tool-btn{background:var(--s2);border:1px solid var(--bd);color:var(--tx);border-radius:9px;padding:8px 10px;font-size:11px;font-weight:800}
+.tabs{display:flex;overflow-x:auto;scrollbar-width:none;flex-shrink:0;background:var(--s1);border-bottom:1px solid var(--bd)}.tabs::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;flex-shrink:0;padding:11px 13px;background:none;border:0;border-bottom:2px solid transparent;color:var(--mu);font-size:12px;font-weight:800}.tab.active{color:var(--p);border-bottom-color:var(--p)}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}.page{display:none;padding-bottom:30px}.page.active{display:block}
+.tools{padding:13px 14px 0;display:flex;gap:8px}.search{flex:1;min-width:0;background:var(--s2);border:1px solid var(--bd);border-radius:10px;color:var(--tx);padding:11px;font-size:13px;outline:none}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 14px}.stat{background:var(--s1);border:1px solid var(--bd);border-radius:10px;text-align:center;padding:9px}.stat b{display:block;color:var(--p);font-size:18px}.stat span{font-size:10px;color:var(--mu)}
+.goal{margin:0 14px 13px;background:var(--s1);border:1px solid var(--bd);border-radius:11px;padding:12px}.goalhead{display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:8px}.goalhead span:last-child{color:var(--p)}.bar{height:7px;background:var(--bd);border-radius:20px;overflow:hidden}.bar div{height:100%;width:0;background:linear-gradient(90deg,var(--p2),var(--p))}
+.featured{margin:14px;background:linear-gradient(145deg,#2d1b69,#1a1040 72%,#0f0f14);border:1px solid #49347d;border-radius:15px;padding:18px}.badge{display:inline-block;color:var(--p);background:#a78bfa20;border:1px solid #a78bfa44;border-radius:20px;padding:3px 9px;font-size:10px;font-weight:900;margin-bottom:8px}.featured h1{font-size:19px;line-height:1.4;color:white;margin-bottom:7px}.featured p{font-size:12px;line-height:1.7;color:#d4cbed}.slabel{padding:17px 14px 9px;color:var(--mu);font-size:11px;font-weight:900;letter-spacing:.4px}
+.list{padding:0 14px;display:flex;flex-direction:column;gap:9px}.card{display:flex;gap:10px;align-items:center;background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:12px}.body{flex:1;min-width:0}.cat{font-size:9px;font-weight:900;padding:2px 7px;border-radius:15px;background:#a78bfa20;color:var(--p)}.title{font-size:13px;font-weight:850;line-height:1.5;margin:6px 0}.meta{font-size:10px;color:var(--mu)}.actions{display:flex;gap:6px;margin-top:8px}.mini{background:transparent;border:1px solid var(--bd);color:var(--mu);border-radius:7px;padding:4px 7px;font-size:10px}.emoji{width:45px;height:45px;border-radius:9px;background:#29283a;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.empty{margin:14px;padding:22px;border:1px dashed var(--bd);border-radius:12px;text-align:center;color:var(--mu);font-size:13px}
+.note{margin:14px;color:var(--mu);font-size:10px;line-height:1.7}
+.reader{display:none;position:fixed;inset:0;z-index:50;background:var(--bg);flex-direction:column}.reader.open{display:flex}.rbar{display:flex;align-items:center;gap:10px;padding:12px;background:var(--s1);border-bottom:1px solid var(--bd)}.back{width:35px;height:35px;border-radius:50%;background:var(--s2);border:1px solid var(--bd);color:var(--tx);font-size:18px}.rtitle{font-size:12px;font-weight:800;flex:1}.rscroll{overflow-y:auto;flex:1}.rbody{padding:19px 16px 35px}.rbody h1{font-size:22px;line-height:1.45;color:#fff;margin:9px 0}.rmeta{font-size:10px;color:var(--mu);border-bottom:1px solid var(--bd);padding-bottom:14px;margin-bottom:15px}.rbody p{font-size:14px;line-height:1.9;margin-bottom:14px;color:#ddddec}.source{display:block;color:#c4b5fd;font-size:12px;margin:14px 0}.rbuttons{display:flex;gap:8px}.rbuttons button{flex:1;background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:10px;border-radius:9px;font-size:11px}.adbox{margin-top:20px;padding:15px;background:var(--s2);border:1px solid var(--bd);border-radius:12px;text-align:center}.adbox p{font-size:11px;color:var(--mu)}.adbtn{background:var(--p2);color:white;border:0;border-radius:9px;padding:11px 15px;margin-top:10px;font-size:12px;font-weight:900;width:100%}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,80px);background:#222235;border:1px solid #10b98166;color:#10b981;padding:10px 16px;border-radius:30px;font-size:12px;z-index:90;transition:.25s;white-space:nowrap}.toast.show{transform:translate(-50%,0)}.hidden{display:none!important}
+</style></head><body>
+<header class="topbar"><div class="brand">ডেইলি<span>রিড</span></div><div class="top-actions"><button class="icon-btn" onclick="page('saved')">♡ সংরক্ষিত</button><button class="icon-btn" onclick="page('history')">◷ ইতিহাস</button></div></header>
 <nav class="tabs">
-  <button class="tab active" id="tab-home" onclick="showPage('home')">🏠 Home</button>
-  <button class="tab" id="tab-tech" onclick="showPage('tech')">💻 Tech</button>
-  <button class="tab" id="tab-world" onclick="showPage('world')">🌍 World</button>
-  <button class="tab" id="tab-biz" onclick="showPage('biz')">📈 Business</button>
-  <button class="tab" id="tab-sci" onclick="showPage('sci')">🔬 Science</button>
-  <button class="tab" id="tab-saved" onclick="showPage('saved')">♡ Saved</button>
-  <button class="tab" id="tab-history" onclick="showPage('history')">◷ History</button>
+<button class="tab active" id="t-home" onclick="page('home')">🏠 হোম</button><button class="tab" id="t-national" onclick="page('national')">🇧🇩 জাতীয়</button><button class="tab" id="t-world" onclick="page('world')">🌍 আন্তর্জাতিক</button><button class="tab" id="t-economy" onclick="page('economy')">📈 অর্থনীতি</button><button class="tab" id="t-tech" onclick="page('tech')">💻 প্রযুক্তি</button><button class="tab" id="t-health" onclick="page('health')">🩺 স্বাস্থ্য</button><button class="tab" id="t-saved" onclick="page('saved')">♡ সংরক্ষিত</button><button class="tab" id="t-history" onclick="page('history')">◷ ইতিহাস</button>
 </nav>
-<main class="scroll" id="mainScroll">
-<section class="page active" id="page-home">
-  <div class="tools">
-    <label class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Search articles..." oninput="renderSearch()"></label>
-    <button class="tool-btn" onclick="clearSearch()">Clear</button>
-  </div>
-  <div id="searchResults" class="hidden"></div>
-  <div id="homeContent">
-    <div class="stats">
-      <div class="stat"><strong id="readCount">0</strong><span>READ</span></div>
-      <div class="stat"><strong id="savedCount">0</strong><span>SAVED</span></div>
-      <div class="stat"><strong id="streakCount">0</strong><span>DAY STREAK</span></div>
-    </div>
-    <div class="goal">
-      <div class="goal-head"><span>📖 Daily reading goal</span><span id="goalLabel">0 / 3 articles</span></div>
-      <div class="progress"><div id="goalBar"></div></div>
-    </div>
-    <div class="featured">
-      <div class="feat-cat">Editor's pick</div>
-      <div class="feat-title">AI is Now Writing Code Better Than Most Junior Developers</div>
-      <div class="feat-desc">Explore how AI coding assistants are changing software development, the skills developers need, and the questions facing the industry.</div>
-      <div class="meta">Technology · 5 min read</div>
-      <button class="primary" onclick="openArticle('ai-code')">Read article →</button>
-    </div>
-    <div class="slabel">📰 Latest articles</div>
-    <div class="art-list" id="homeArticles"></div>
-    <div class="slabel">More to explore</div>
-    <div class="art-list" id="moreArticles"></div>
-    <p class="note">Reading is always free. Ads are optional and are not required to access articles or use app features.</p>
-  </div>
-</section>
-<section class="page" id="page-tech"><div class="slabel">💻 Technology</div><div class="art-list" id="list-tech"></div></section>
-<section class="page" id="page-world"><div class="slabel">🌍 World</div><div class="art-list" id="list-world"></div></section>
-<section class="page" id="page-biz"><div class="slabel">📈 Business</div><div class="art-list" id="list-biz"></div></section>
-<section class="page" id="page-sci"><div class="slabel">🔬 Science</div><div class="art-list" id="list-sci"></div></section>
-<section class="page" id="page-saved"><div class="slabel">♡ Your saved articles</div><div class="art-list" id="list-saved"></div></section>
-<section class="page" id="page-history"><div class="slabel">◷ Recently read</div><div class="art-list" id="list-history"></div><button class="tool-btn" style="margin:15px" onclick="clearHistory()">Clear reading history</button></section>
+<main class="scroll" id="scroll">
+<section class="page active" id="p-home">
+<div class="tools"><input class="search" id="q" placeholder="খবর খুঁজুন..." oninput="searchNews()"><button class="tool-btn" onclick="clearSearch()">মুছুন</button></div>
+<div id="searchResults" class="hidden"></div><div id="homeBody">
+<div class="stats"><div class="stat"><b id="readN">০</b><span>পড়া সংবাদ</span></div><div class="stat"><b id="saveN">০</b><span>সংরক্ষিত</span></div><div class="stat"><b id="streakN">০</b><span>দিনের ধারাবাহিকতা</span></div></div>
+<div class="goal"><div class="goalhead"><span>📖 দৈনিক পড়ার লক্ষ্য</span><span id="goalText">০ / ৫টি</span></div><div class="bar"><div id="goalBar"></div></div></div>
+<div class="featured"><span class="badge">আজকের নির্বাচিত খবর</span><h1 id="featuredTitle"></h1><p>দেশ ও বিশ্বের গুরুত্বপূর্ণ খবর এক জায়গায় পড়ুন। বিস্তারিত জানতে প্রতিটি সংবাদের মূল উৎসে যেতে পারবেন।</p></div>
+<div class="slabel">📰 সর্বশেষ সংবাদ · মোট ২৫টি</div><div class="list" id="homeList"></div>
+<p class="note">সংবাদ শিরোনাম ও সংক্ষিপ্তসার প্রকাশ্য সংবাদসূত্রের ভিত্তিতে সাজানো। পূর্ণ প্রতিবেদন, সংশোধন ও সর্বশেষ তথ্যের জন্য “মূল সংবাদ” লিংকে যান।</p>
+</div></section>
+<section class="page" id="p-national"><div class="slabel">🇧🇩 জাতীয় সংবাদ</div><div class="list" id="list-national"></div></section>
+<section class="page" id="p-world"><div class="slabel">🌍 আন্তর্জাতিক সংবাদ</div><div class="list" id="list-world"></div></section>
+<section class="page" id="p-economy"><div class="slabel">📈 অর্থনীতি, কৃষি ও শহর</div><div class="list" id="list-economy"></div></section>
+<section class="page" id="p-tech"><div class="slabel">💻 প্রযুক্তি ও পরিবেশ</div><div class="list" id="list-tech"></div></section>
+<section class="page" id="p-health"><div class="slabel">🩺 স্বাস্থ্য ও আবহাওয়া</div><div class="list" id="list-health"></div></section>
+<section class="page" id="p-saved"><div class="slabel">♡ আপনার সংরক্ষিত সংবাদ</div><div class="list" id="list-saved"></div></section>
+<section class="page" id="p-history"><div class="slabel">◷ পড়ার ইতিহাস</div><div class="list" id="list-history"></div><button class="tool-btn" style="margin:15px" onclick="clearHistory()">ইতিহাস মুছুন</button></section>
 </main>
-<div class="reader" id="reader">
-  <div class="reader-topbar"><button class="reader-back" onclick="closeReader()">←</button><div class="reader-title-small" id="readerTitleSmall"></div></div>
-  <div class="reader-scroll" id="readerScroll"><div class="reader-body" id="readerBody"></div></div>
-</div>
+<div class="reader" id="reader"><div class="rbar"><button class="back" onclick="closeReader()">←</button><div class="rtitle" id="rtitle"></div></div><div class="rscroll" id="rscroll"><div class="rbody" id="rbody"></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
-const tg=window.Telegram?.WebApp;
-if(tg){try{tg.ready();tg.expand();tg.setHeaderColor?.('#0f0f14');tg.setBackgroundColor?.('#0f0f14')}catch(e){}}
-
-const ARTICLES={
-'ai-code':{cat:'Tech',key:'tech',emoji:'🤖',title:'AI is Now Writing Code Better Than Most Junior Developers',meta:'DailyRead · 5 min read',body:`<p>AI coding assistants are changing how software is planned, written, tested and maintained. Their strongest use today is helping people move through routine development work more quickly.</p><h3>Where AI tools can help</h3><p>Modern assistants can explain unfamiliar code, suggest fixes, generate test cases and help developers explore different implementation approaches. The quality of the result still depends on clear instructions and careful review.</p><div class="pull-quote">AI is most useful when it supports human judgment rather than replacing it.</div><h3>Skills that matter</h3><p>Problem solving, system design, security awareness and the ability to verify generated code remain important. Developers also need to understand the limits of tools and check outputs before using them in production.</p><h3>What comes next</h3><p>As these tools improve, teams will continue experimenting with new workflows. The long-term impact will depend on reliability, cost, privacy and how organizations train their people.</p>`},
-'climate':{cat:'World',key:'world',emoji:'🌊',title:'Record Ocean Temperatures Alarm Scientists Ahead of Hurricane Season',meta:'DailyRead · 4 min read',body:`<p>Ocean temperature is an important factor in tropical cyclone development. Warm surface water can provide energy to storms, while atmospheric conditions determine whether a storm can organize and intensify.</p><h3>Why ocean heat matters</h3><p>Scientists monitor sea-surface temperatures alongside wind shear, humidity and broader climate patterns. No single measurement can predict the exact path or strength of a future storm.</p><div class="pull-quote">Preparedness works best when communities use forecasts from trusted meteorological agencies.</div><h3>Preparing communities</h3><p>Early warnings, evacuation planning, resilient infrastructure and clear public communication can reduce risks. Residents in vulnerable areas should follow local emergency guidance.</p>`},
-'crypto':{cat:'Business',key:'biz',emoji:'📈',title:'Bitcoin Surges Past $85,000 as Institutional Demand Returns',meta:'DailyRead · 3 min read',body:`<p>Bitcoin is a highly volatile digital asset whose price can move sharply in response to market sentiment, regulation, liquidity and macroeconomic news. Institutional participation is one factor investors watch.</p><h3>What drives demand</h3><p>Market participants monitor fund flows, trading volume, custody activity and changes in risk appetite. These indicators can provide context, but none reliably predicts future prices.</p><div class="pull-quote">Past performance does not guarantee future results. Digital assets can lose value rapidly.</div><h3>Risks to consider</h3><p>Regulatory changes, cybersecurity incidents, leverage and market concentration can all affect prices. Readers should research independently and avoid investing money they cannot afford to lose.</p>`},
-'space':{cat:'Science',key:'sci',emoji:'🚀',title:"NASA's Artemis Program: Preparing for Future Lunar Exploration",meta:'DailyRead · 6 min read',body:`<p>The Artemis program is designed to support a sustained human presence on and around the Moon and to develop experience useful for future exploration. The work involves spacecraft, spacesuits, surface systems and international partners.</p><h3>Why the lunar south pole?</h3><p>The region is scientifically interesting because permanently shadowed areas may preserve water ice. Mapping resources and understanding the terrain are important steps before crews can work there safely.</p><div class="pull-quote">Exploration advances through careful testing, engineering and scientific collaboration.</div><h3>What comes next</h3><p>Future missions will build on earlier tests and refine systems for longer stays. Mission schedules and objectives can change as hardware and safety reviews progress.</p>`},
-'health':{cat:'Science',key:'sci',emoji:'🧬',title:'How mRNA Research Is Expanding the Possibilities of Medicine',meta:'DailyRead · 5 min read',body:`<p>Messenger RNA technology became widely known through vaccines, but researchers are also studying ways to use it in other areas of medicine, including personalized cancer treatments.</p><h3>How the approach works</h3><p>In broad terms, mRNA provides cells with temporary instructions to make a selected protein. In cancer research, some experimental approaches aim to help the immune system recognize features associated with a patient's tumor.</p><div class="pull-quote">Promising early research is not the same as an approved or proven treatment.</div><h3>Clinical research</h3><p>Potential treatments must pass carefully designed clinical trials to evaluate safety and effectiveness. Patients should discuss treatment decisions with qualified medical professionals.</p>`},
-'energy':{cat:'Tech',key:'tech',emoji:'⚡',title:'Fusion Energy: The Engineering Challenges Behind a Star on Earth',meta:'DailyRead · 5 min read',body:`<p>Nuclear fusion aims to combine light atomic nuclei and release energy. Reproducing the process on Earth requires extremely hot plasma and sophisticated systems to control it.</p><h3>Why confinement matters</h3><p>Researchers use magnetic fields or other methods to keep plasma away from reactor walls. Maintaining stable conditions for long periods is a major engineering challenge.</p><div class="pull-quote">A laboratory milestone is an important step, but it is not the same as a commercial power plant.</div><h3>The road ahead</h3><p>Scientists continue working on materials, heat removal, fuel cycles and reliable operation. Commercial fusion remains a long-term development goal.</p>`},
-'economy':{cat:'Business',key:'biz',emoji:'🌐',title:'Understanding Global Growth Forecasts and What They Mean',meta:'DailyRead · 4 min read',body:`<p>Economic growth forecasts estimate how quickly the value of goods and services produced in an economy may increase. Institutions revise forecasts as new information about prices, trade, jobs and investment becomes available.</p><h3>Why forecasts change</h3><p>Consumer demand, interest rates, government spending, commodity prices and geopolitical events can all influence the outlook. Forecasts are scenarios based on assumptions, not guarantees.</p><div class="pull-quote">A headline growth figure rarely tells the whole story of an economy.</div><h3>Reading the data</h3><p>It is useful to compare growth with employment, inflation, productivity and household income to understand whether economic gains are broadly shared.</p>`},
-'phones':{cat:'Tech',key:'tech',emoji:'📱',title:'What Makes a Smartphone Useful Beyond Its Specifications?',meta:'DailyRead · 7 min read',body:`<p>Smartphone launches often focus on processor speed, camera resolution and display brightness. In everyday use, software support, battery life, accessibility and repairability can matter just as much.</p><h3>Look beyond headline numbers</h3><p>Camera quality depends on sensors, lenses and image processing. Battery experience depends on both capacity and software efficiency. A fast chip is useful only when apps and workflows can take advantage of it.</p><div class="pull-quote">The best phone is the one that reliably supports the way its owner actually uses it.</div><h3>Buying thoughtfully</h3><p>Compare update commitments, warranty coverage, storage, repair options and total cost. Reviews based on real-world testing are more useful than specifications alone.</p>`},
-'un':{cat:'World',key:'world',emoji:'🌏',title:'Why International Cooperation Matters for AI Governance',meta:'DailyRead · 6 min read',body:`<p>Artificial intelligence systems are developed and used across borders, raising questions about safety, privacy, accountability and economic impact. Governments and researchers are exploring ways to coordinate their approaches.</p><h3>Areas for cooperation</h3><p>Common terminology, incident reporting, technical research and information sharing can help organizations understand risks. International discussions also consider how to protect rights while supporting beneficial innovation.</p><div class="pull-quote">Effective governance needs practical standards, transparency and ongoing review.</div><h3>Challenges</h3><p>Countries may differ in legal systems, priorities and views about acceptable risk. Agreements therefore need clear goals and realistic ways to measure progress.</p>`}
-};
-
-const STORE='dailyread-v2';
-function loadState(){try{return JSON.parse(localStorage.getItem(STORE))||{saved:[],history:[],reads:{},reactions:{},days:[]}}catch(e){return{saved:[],history:[],reads:{},reactions:{},days:[]}}}
-let state=loadState();
-function persist(){localStorage.setItem(STORE,JSON.stringify(state));updateStats()}
-function today(){return new Date().toISOString().slice(0,10)}
-function updateStats(){
- document.getElementById('readCount').textContent=Object.keys(state.reads).length;
- document.getElementById('savedCount').textContent=state.saved.length;
- const days=[...new Set(state.days)].sort().reverse();let streak=0,d=new Date();
- if(days.includes(today())){while(days.includes(d.toISOString().slice(0,10))){streak++;d.setDate(d.getDate()-1)}}
- document.getElementById('streakCount').textContent=streak;
- const count=state.reads[today()]||0;document.getElementById('goalLabel').textContent=Math.min(count,3)+' / 3 articles';
- document.getElementById('goalBar').style.width=Math.min(count/3*100,100)+'%';
-}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function card(id){const a=ARTICLES[id],saved=state.saved.includes(id);return `<article class="art-card" onclick="openArticle('${id}')"><div class="art-card-body"><span class="art-cat-pill cat-${a.key}">${a.cat}</span><div class="art-title">${esc(a.title)}</div><div class="art-meta">${a.meta}</div><div class="card-actions"><button class="small-action" onclick="event.stopPropagation();toggleSave('${id}')">${saved?'♥ Saved':'♡ Save'}</button><button class="small-action" onclick="event.stopPropagation();shareArticle('${id}')">↗ Share</button></div></div><div class="art-thumb">${a.emoji}</div></article>`}
-function fill(id,ids){document.getElementById(id).innerHTML=ids.length?ids.map(card).join(''):'<div class="empty">Nothing here yet.<br>Save or read an article to see it here.</div>'}
-function renderAll(){
- const ids=Object.keys(ARTICLES);
- fill('homeArticles',['climate','crypto','space','health']);
- fill('moreArticles',['energy','economy','phones','un']);
- ['tech','world','biz','sci'].forEach(k=>fill('list-'+k,ids.filter(id=>ARTICLES[id].key===k)));
- fill('list-saved',state.saved.filter(id=>ARTICLES[id]));
- fill('list-history',state.history.filter(id=>ARTICLES[id]));
- updateStats();
-}
-function showPage(id){
- document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
- document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
- document.getElementById('page-'+id).classList.add('active');
- document.getElementById('tab-'+id)?.classList.add('active');
- document.getElementById('mainScroll').scrollTop=0;
- if(id==='saved'||id==='history')renderAll();
-}
-function openArticle(id){
- const a=ARTICLES[id];if(!a)return;
- state.history=[id,...state.history.filter(x=>x!==id)].slice(0,50);
- state.reads[today()]=(state.reads[today()]||0)+1;
- if(!state.days.includes(today()))state.days.push(today());
- persist();renderAll();
- const liked=!!state.reactions[id];
- document.getElementById('readerTitleSmall').textContent=a.title;
- document.getElementById('readerBody').innerHTML=`<span class="art-cat-pill cat-${a.key}">${a.cat}</span><h1 class="reader-h1">${esc(a.title)}</h1><div class="reader-meta">${a.meta} · Added to your reading history</div><div class="reader-content">${a.body}</div><div class="reader-actions"><button onclick="toggleSave('${id}');renderReaderActions('${id}')">${state.saved.includes(id)?'♥ Saved':'♡ Save article'}</button><button onclick="shareArticle('${id}')">↗ Share article</button></div><div class="reaction-row"><span>Was this article useful?</span><button id="likeBtn" onclick="react('${id}')">${liked?'👍 Helpful':'👍 Helpful'}</button></div><div class="reader-ad-cta"><p>Support free reading by choosing to watch an optional ad. You can continue reading without watching.</p><button class="ad-btn" onclick="watchOptionalAd()">▶ Watch optional ad</button></div>`;
- document.getElementById('readerScroll').scrollTop=0;
- document.getElementById('reader').classList.add('open');
-}
-function renderReaderActions(id){const a=ARTICLES[id];document.querySelector('.reader-actions').innerHTML=`<button onclick="toggleSave('${id}');renderReaderActions('${id}')">${state.saved.includes(id)?'♥ Saved':'♡ Save article'}</button><button onclick="shareArticle('${id}')">↗ Share article</button>`}
-function closeReader(){document.getElementById('reader').classList.remove('open')}
-function toggleSave(id){state.saved=state.saved.includes(id)?state.saved.filter(x=>x!==id):[id,...state.saved];persist();renderAll();toast(state.saved.includes(id)?'Article saved':'Removed from saved articles')}
-function react(id){state.reactions[id]=!state.reactions[id];persist();document.getElementById('likeBtn').textContent=state.reactions[id]?'👍 Helpful ✓':'👍 Helpful';toast('Thanks for your feedback')}
-async function shareArticle(id){const a=ARTICLES[id],url=location.href.split('#')[0]+'#article='+encodeURIComponent(id);try{if(navigator.share)await navigator.share({title:a.title,text:'Read on DailyRead',url});else if(navigator.clipboard){await navigator.clipboard.writeText(url);toast('Article link copied')}}catch(e){}}
-function renderSearch(){const q=document.getElementById('searchInput').value.trim().toLowerCase(),box=document.getElementById('searchResults'),home=document.getElementById('homeContent');if(!q){box.classList.add('hidden');home.classList.remove('hidden');return}home.classList.add('hidden');box.classList.remove('hidden');const ids=Object.keys(ARTICLES).filter(id=>(ARTICLES[id].title+' '+ARTICLES[id].cat+' '+ARTICLES[id].body.replace(/<[^>]*>/g,'')).toLowerCase().includes(q));box.innerHTML='<div class="slabel">Search results ('+ids.length+')</div><div class="art-list">'+(ids.length?ids.map(card).join(''):'<div class="empty">No matching articles found. Try another keyword.</div>')+'</div>'}
-function clearSearch(){document.getElementById('searchInput').value='';renderSearch()}
-function clearHistory(){state.history=[];persist();renderAll();toast('Reading history cleared')}
-function toast(s){const el=document.getElementById('toast');el.textContent=s;el.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.classList.remove('show'),2300)}
-let adController=null;
-function initAdsgram(){try{if(window.Adsgram)adController=window.Adsgram.init({blockId:'int-43506',debug:false})}catch(e){adController=null}}
-async function watchOptionalAd(){
- if(!adController){toast('No ad is available right now. You can keep reading.');return}
- try{await adController.show();toast('Thank you for supporting DailyRead!')}catch(e){toast('Ad was not completed. No changes were made.')}
-}
-renderAll();initAdsgram();
-const initial=location.hash.match(/article=([^&]+)/);if(initial&&ARTICLES[decodeURIComponent(initial[1])])openArticle(decodeURIComponent(initial[1]));
-</script>
-</body>
-</html>
+const NEWS=[["n1", "জাতীয়", "সশস্ত্র বাহিনী দিবস আজ", "২১ নভেম্বর ২০২৬", "বাসস", "সশস্ত্র বাহিনী দিবস উপলক্ষে দেশের বিভিন্ন কর্মসূচি ও শ্রদ্ধা নিবেদনের আয়োজন করা হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n2", "জাতীয়", "সশস্ত্র বাহিনীর শহীদদের প্রতি রাষ্ট্রপতি ও প্রধানমন্ত্রীর শ্রদ্ধা", "২১ নভেম্বর ২০২৬", "বাসস", "দিবসটি উপলক্ষে শিখা অনির্বাণে শহীদ সদস্যদের স্মরণে শ্রদ্ধা নিবেদন করা হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n3", "জাতীয়", "প্রধানমন্ত্রীর সঙ্গে তিন বাহিনীর প্রধানের সৌজন্য সাক্ষাৎ", "২১ নভেম্বর ২০২৬", "বাংলাদেশ বুলেটিন", "সশস্ত্র বাহিনী দিবসের কর্মসূচির অংশ হিসেবে তিন বাহিনীর প্রধান প্রধানমন্ত্রীর সঙ্গে সাক্ষাৎ করেন।", "https://bdb.orangebd.com/all-news/national"], ["n4", "জাতীয়", "আট জেলায় ৯০ প্লাটুন বিজিবি মোতায়েন", "২১ নভেম্বর ২০২৬", "বাংলাদেশ বুলেটিন", "আইনশৃঙ্খলা ও জননিরাপত্তা বজায় রাখতে কয়েকটি জেলায় বিজিবি মোতায়েনের খবর প্রকাশিত হয়েছে।", "https://bdb.orangebd.com/all-news/national"], ["n5", "জাতীয়", "গোপালগঞ্জে বাস-মোটরসাইকেল সংঘর্ষে নিহত ২", "২১ নভেম্বর ২০২৬", "বাংলাদেশ বুলেটিন", "গোপালগঞ্জে সড়ক দুর্ঘটনায় দুইজন নিহত হওয়ার খবর জানিয়েছে সংবাদমাধ্যমটি।", "https://bdb.orangebd.com/all-news/national"], ["n6", "জাতীয়", "পাগলা মসজিদের দানবাক্সে রেকর্ড পরিমাণ টাকা", "২১ নভেম্বর ২০২৬", "ইউএনবি", "কিশোরগঞ্জের পাগলা মসজিদের দানবাক্সে পাওয়া অর্থ গণনা নিয়ে প্রতিবেদন প্রকাশিত হয়েছে।", "https://unb.com.bd/author/17%2C%2021"], ["n7", "আবহাওয়া", "আকভানের প্রভাবে ভোলায় নদী-সমুদ্র উত্তাল", "২১ নভেম্বর ২০২৬", "বাসস", "ঘূর্ণিঝড় আকভানের প্রভাবে ভোলার নদী ও সমুদ্র এলাকায় বৈরী পরিস্থিতির খবর প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n8", "আবহাওয়া", "আট বিভাগে বৃষ্টি ও বজ্রবৃষ্টির সম্ভাবনা", "২১ নভেম্বর ২০২৬", "ইউএনবি", "দেশের আট বিভাগে বৃষ্টি বা বজ্রবৃষ্টির সম্ভাবনার কথা জানিয়েছে আবহাওয়া-সংক্রান্ত প্রতিবেদনে।", "https://unb.com.bd/author/17%2C%2021"], ["n9", "স্বাস্থ্য", "ডেঙ্গুতে ৩ জনের মৃত্যু, হাসপাতালে ভর্তি ১,৬৭৪", "২১ নভেম্বর ২০২৬", "বাসস", "ডেঙ্গু পরিস্থিতি নিয়ে প্রকাশিত প্রতিবেদনে নতুন মৃত্যু ও হাসপাতালে ভর্তি রোগীর তথ্য তুলে ধরা হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n10", "জাতীয়", "ট্রাফিক আইন লঙ্ঘনে দুই দিনে ডিএমপির ৯০০ মামলা", "২১ নভেম্বর ২০২৬", "বাসস", "রাজধানীতে ট্রাফিক আইন বাস্তবায়নে ডিএমপির অভিযানে মামলা দেওয়ার তথ্য প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n11", "জাতীয়", "ডিএমপির অভিযানে ২৪ ঘণ্টায় গ্রেফতার ২৯৯", "২১ নভেম্বর ২০২৬", "বাসস", "রাজধানীতে পুলিশের অভিযানে গ্রেফতার ও মামলার পরিসংখ্যান নিয়ে প্রতিবেদন প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n12", "শিক্ষা", "ষষ্ঠ থেকে দ্বাদশ শ্রেণির ছাত্রীরা পাবে উপবৃত্তি", "২১ নভেম্বর ২০২৬", "বাসস", "ছাত্রীদের উপবৃত্তি কার্যক্রম নিয়ে সরকারি নির্দেশনা প্রকাশের খবর জানিয়েছে বাসস।", "https://www.bssnews.net/bangla/national/"], ["n13", "শিক্ষা", "বিশ্বকে নেতৃত্ব দিতে যোগ্য শিক্ষার্থী তৈরির ওপর গুরুত্ব", "২০ নভেম্বর ২০২৬", "বাংলাদেশ বুলেটিন", "শিক্ষার্থীদের দক্ষতা ও নেতৃত্বের সক্ষমতা গড়ে তোলার বিষয়ে শিক্ষামন্ত্রীর বক্তব্য প্রকাশিত হয়েছে।", "https://www.bd-bulletin.com/latest-news/0"], ["n14", "অর্থনীতি", "বেগমগঞ্জ টেক্সটাইল কলেজের উন্নয়নে ৮৫ লাখ টাকা বরাদ্দ", "২০ নভেম্বর ২০২৬", "বাসস", "শিক্ষাপ্রতিষ্ঠানের অবকাঠামো ও উন্নয়ন কার্যক্রমে বরাদ্দের খবর প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n15", "কৃষি", "দিনাজপুরে কৃষকদের মধ্যে সরিষার বীজ ও সার বিতরণ", "২০ নভেম্বর ২০২৬", "বাসস", "সরিষা চাষে সহায়তার অংশ হিসেবে কৃষকদের মধ্যে বীজ ও সার বিতরণের খবর জানানো হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n16", "কৃষি", "সার ব্যবস্থাপনায় অনিয়ম হলে কঠোর ব্যবস্থা নেওয়া হবে", "২০ নভেম্বর ২০২৬", "বাসস", "সার বিতরণ ও ব্যবস্থাপনায় অনিয়মের বিরুদ্ধে ব্যবস্থা নেওয়ার বিষয়ে কৃষি সচিবের বক্তব্য প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n17", "প্রযুক্তি", "ফ্রিল্যান্সিং দক্ষতা পার্বত্য চট্টগ্রামের অর্থনীতিতে ভূমিকা রাখতে পারে", "২১ নভেম্বর ২০২৬", "বাসস", "দক্ষ জনবল গড়ে তোলার মাধ্যমে পার্বত্য অঞ্চলে ফ্রিল্যান্সিংয়ের সম্ভাবনা নিয়ে বক্তব্য প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n18", "পরিবেশ", "তিস্তায় সেতু নির্মাণের দাবিতে ঘোড়দৌড় প্রতিযোগিতা", "২১ নভেম্বর ২০২৬", "বাসস", "তিস্তা নদীতে সেতু নির্মাণের দাবিকে সামনে রেখে স্থানীয় ঐতিহ্যবাহী আয়োজনের খবর প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n19", "জাতীয়", "সুপ্রিম কোর্টে প্রবেশে পরিচয়পত্র বাধ্যতামূলক", "২১ নভেম্বর ২০২৬", "বাসস", "সুপ্রিম কোর্টে প্রবেশের নিরাপত্তা ব্যবস্থায় পরিচয়পত্র ও তল্লাশি জোরদারের খবর প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/national/"], ["n20", "জাতীয়", "সরকারি খরচে অস্বচ্ছল বিচারপ্রার্থীদের ২ লাখ ৪৫ হাজার মামলা নিষ্পত্তি", "২১ নভেম্বর ২০২৬", "বাসস", "আইনি সহায়তার আওতায় অস্বচ্ছল বিচারপ্রার্থীদের মামলা নিষ্পত্তির তথ্য প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n21", "আন্তর্জাতিক", "পেরুতে ৬.৭ মাত্রার শক্তিশালী ভূমিকম্প", "২১ নভেম্বর ২০২৬", "বাসস", "পেরুতে শক্তিশালী ভূমিকম্পের ঘটনা নিয়ে সংবাদ প্রকাশিত হয়েছে; ক্ষয়ক্ষতির হালনাগাদ জানতে মূল প্রতিবেদন দেখুন।", "https://www.bssnews.net/bangla/national/"], ["n22", "জাতীয়", "দিনাজপুরে সড়ক দুর্ঘটনায় ৭ যাত্রী আহত", "২১ নভেম্বর ২০২৬", "বাসস", "দিনাজপুরে সড়ক দুর্ঘটনায় আহত হওয়ার খবর জানিয়েছে সংবাদ সংস্থা বাসস।", "https://www.bssnews.net/bangla/national/"], ["n23", "জাতীয়", "গোপালগঞ্জের আইনশৃঙ্খলা পরিস্থিতি ভালো বলে জানিয়েছেন আইজিপি", "২১ নভেম্বর ২০২৬", "বাসস", "গোপালগঞ্জের সার্বিক আইনশৃঙ্খলা পরিস্থিতি নিয়ে আইজিপির বক্তব্য প্রকাশিত হয়েছে।", "https://www.bssnews.net/bangla/news"], ["n24", "শহর", "চট্টগ্রামের উন্নয়ন কাজে কোনো এলাকাকে পিছিয়ে রাখা হবে না", "২১ নভেম্বর ২০২৬", "বাসস", "নগরীর উন্নয়ন কার্যক্রমে সব এলাকার জন্য সমান গুরুত্ব দেওয়ার কথা জানিয়েছেন চসিক প্রশাসক।", "https://www.bssnews.net/bangla/news"], ["n25", "জাতীয়", "বাংলাদেশে মালয়েশিয়ার প্রধানমন্ত্রী ও মালদ্বীপের প্রেসিডেন্টের সফরের প্রস্তুতি", "২১ নভেম্বর ২০২৬", "ইউএনবি", "আগামী মাসে দুই দেশের শীর্ষ নেতার বাংলাদেশ সফর আয়োজনের প্রস্তুতি নিয়ে প্রতিবেদন প্রকাশিত হয়েছে।", "https://unb.com.bd/author/17%2C%2021"]];
+const emoji={জাতীয়:"🇧🇩",আবহাওয়া:"🌦️",স্বাস্থ্য:"🩺",শিক্ষা:"🎓",অর্থনীতি:"📊",কৃষি:"🌾",প্রযুক্তি:"💻",পরিবেশ:"🌱",আন্তর্জাতিক:"🌍",শহর:"🏙️"};
+const groups={national:["জাতীয়","শিক্ষা"],world:["আন্তর্জাতিক"],economy:["অর্থনীতি","কৃষি","শহর"],tech:["প্রযুক্তি","পরিবেশ"],health:["স্বাস্থ্য","আবহাওয়া"]};
+const KEY="dailyread-bn-v1";let state;try{state=JSON.parse(localStorage.getItem(KEY))||{saved:[],history:[],reads:{},days:[]}}catch(e){state={saved:[],history:[],reads:{},days:[]}}
+const bn=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d]);const today=()=>new Date().toISOString().slice(0,10);
+function save(){localStorage.setItem(KEY,JSON.stringify(state));stats()}
+function stats(){document.getElementById("readN").textContent=bn(Object.keys(state.reads).length);document.getElementById("saveN").textContent=bn(state.saved.length);let days=[...new Set(state.days)].sort().reverse(),st=0,d=new Date();if(days.includes(today()))while(days.includes(d.toISOString().slice(0,10))){st++;d.setDate(d.getDate()-1)}document.getElementById("streakN").textContent=bn(st);let c=state.reads[today()]||0;document.getElementById("goalText").textContent=bn(Math.min(c,5))+" / ৫টি";document.getElementById("goalBar").style.width=Math.min(c/5*100,100)+"%"}
+function card(n){return `<article class="card" onclick="openNews('${n[0]}')"><div class="body"><span class="cat">${n[1]}</span><div class="title">${n[2]}</div><div class="meta">${n[3]} · ${n[4]}</div><div class="actions"><button class="mini" onclick="event.stopPropagation();toggleSave('${n[0]}')">${state.saved.includes(n[0])?"♥ সংরক্ষিত":"♡ সংরক্ষণ"}</button><button class="mini" onclick="event.stopPropagation();share('${n[0]}')">↗ শেয়ার</button></div></div><div class="emoji">${emoji[n[1]]||"📰"}</div></article>`}
+function fill(id,arr){document.getElementById(id).innerHTML=arr.length?arr.map(card).join(""):'<div class="empty">এখানে এখনো কোনো সংবাদ নেই।</div>'}
+function render(){fill("homeList",NEWS);Object.keys(groups).forEach(k=>fill("list-"+k,NEWS.filter(n=>groups[k].includes(n[1]))));fill("list-saved",NEWS.filter(n=>state.saved.includes(n[0])));fill("list-history",state.history.map(id=>NEWS.find(n=>n[0]===id)).filter(Boolean));document.getElementById("featuredTitle").textContent=NEWS[0][2];stats()}
+function page(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.getElementById("p-"+id).classList.add("active");document.getElementById("t-"+id)?.classList.add("active");document.getElementById("scroll").scrollTop=0;if(id==="saved"||id==="history")render()}
+function openNews(id){let n=NEWS.find(x=>x[0]===id);if(!n)return;state.history=[id,...state.history.filter(x=>x!==id)].slice(0,60);state.reads[today()]=(state.reads[today()]||0)+1;if(!state.days.includes(today()))state.days.push(today());save();render();document.getElementById("rtitle").textContent=n[2];document.getElementById("rbody").innerHTML=`<span class="cat">${n[1]}</span><h1>${n[2]}</h1><div class="rmeta">${n[3]} · সূত্র: ${n[4]}</div><p>${n[5]}</p><p>এই সংক্ষিপ্ত সংবাদটি প্রাথমিক তথ্য জানার জন্য সাজানো হয়েছে। ঘটনার বিস্তারিত, সংশ্লিষ্ট কর্তৃপক্ষের বক্তব্য এবং পরবর্তী হালনাগাদ জানতে মূল সংবাদসূত্র দেখুন।</p><a class="source" href="${n[6]}" target="_blank" rel="noopener">মূল সংবাদসূত্রে বিস্তারিত পড়ুন ↗</a><div class="rbuttons"><button onclick="toggleSave('${id}')">${state.saved.includes(id)?"♥ সংরক্ষিত":"♡ সংরক্ষণ করুন"}</button><button onclick="share('${id}')">↗ শেয়ার করুন</button></div><div class="adbox"><p>বিজ্ঞাপন দেখা ঐচ্ছিক। বিজ্ঞাপন না দেখলেও সব সংবাদ পড়া যাবে।</p><button class="adbtn" onclick="optionalAd()">▶ ঐচ্ছিক বিজ্ঞাপন দেখুন</button></div>`;document.getElementById("rscroll").scrollTop=0;document.getElementById("reader").classList.add("open")}
+function closeReader(){document.getElementById("reader").classList.remove("open")}
+function toggleSave(id){state.saved=state.saved.includes(id)?state.saved.filter(x=>x!==id):[id,...state.saved];save();render();toast(state.saved.includes(id)?"সংবাদ সংরক্ষণ করা হয়েছে":"সংরক্ষণ থেকে সরানো হয়েছে")}
+async function share(id){let n=NEWS.find(x=>x[0]===id),url=location.href.split("#")[0]+"#news="+id;try{if(navigator.share)await navigator.share({title:n[2],text:"ডেইলিরিডে পড়ুন",url});else{await navigator.clipboard.writeText(url);toast("লিংক কপি হয়েছে")}}catch(e){}}
+function searchNews(){let q=document.getElementById("q").value.trim().toLowerCase(),box=document.getElementById("searchResults"),home=document.getElementById("homeBody");if(!q){box.classList.add("hidden");home.classList.remove("hidden");return}home.classList.add("hidden");box.classList.remove("hidden");let found=NEWS.filter(n=>n.join(" ").toLowerCase().includes(q));box.innerHTML='<div class="slabel">খোঁজের ফলাফল: '+bn(found.length)+'</div><div class="list">'+(found.length?found.map(card).join(""):'<div class="empty">মিল পাওয়া যায়নি। অন্য শব্দ দিয়ে খুঁজুন।</div>')+'</div>'}
+function clearSearch(){document.getElementById("q").value="";searchNews()}
+function clearHistory(){state.history=[];save();render();toast("পড়ার ইতিহাস মুছে ফেলা হয়েছে")}
+function toast(t){let x=document.getElementById("toast");x.textContent=t;x.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>x.classList.remove("show"),2200)}
+let ad=null;try{if(window.Adsgram)ad=window.Adsgram.init({blockId:"int-43506",debug:false})}catch(e){}
+async function optionalAd(){if(!ad){toast("এ মুহূর্তে বিজ্ঞাপন পাওয়া যাচ্ছে না");return}try{await ad.show();toast("DailyRead-কে সহায়তা করার জন্য ধন্যবাদ")}catch(e){toast("বিজ্ঞাপন সম্পন্ন হয়নি; আপনি পড়া চালিয়ে যেতে পারেন")}}
+const tg=window.Telegram?.WebApp;if(tg){try{tg.ready();tg.expand();tg.setHeaderColor?.("#0f0f14");tg.setBackgroundColor?.("#0f0f14")}catch(e){}}
+render();let h=location.hash.match(/news=([^&]+)/);if(h)openNews(h[1]);
+</script></body></html>
