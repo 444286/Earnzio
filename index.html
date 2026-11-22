@@ -1,664 +1,127 @@
 <!DOCTYPE html>
-<html lang="bn" data-theme="light">
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#f3ead8">
-<meta name="description" content="লাইভ বাংলা সংবাদ টাইমলাইনে পড়ুন, বিষয় অনুসরণ করুন, মার্জিনে নোট রাখুন, কুইজ খেলুন।">
-<title>ডেইলিরিড — খবরের খাতা</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Serif+Bengali:wght@600;800&display=swap" rel="stylesheet">
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3ead8"><meta name="description" content="Rajshahi News — fast English news, local updates, bookmarks, notes and quizzes.">
+<title>Rajshahi News | Your daily news desk</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--paper:#f3ead8;--card:#fbf6ea;--ink:#1d1a14;--soft:#6f6859;--line:#d8cbb0;--ac:#d9421f;--ac2:#0f6b5c;--on:#fffaf0;--fs:15px;
---serif:"Noto Serif Bengali","Noto Sans Bengali",serif;--sans:"Noto Sans Bengali","Hind Siliguri",system-ui,sans-serif}
-[data-theme=dark]{--paper:#16130e;--card:#201b14;--ink:#f1e8d4;--soft:#a79d88;--line:#383024;--ac:#ff7048;--ac2:#46c2a9;--on:#16130e}
-html,body{height:100%;overflow:hidden}
-body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:flex;flex-direction:column}
+:root{--bg:#f3ead8;--card:#fffaf0;--ink:#211d16;--muted:#766d5e;--line:#d9cbb0;--accent:#c63d20;--green:#126b59;--shadow:#211d16}
+[data-theme=dark]{--bg:#17140f;--card:#231e17;--ink:#f5ead7;--muted:#b2a58f;--line:#403729;--accent:#ff7954;--green:#5bd0b0;--shadow:#080706}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
 button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}
-button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
-
-/* মাস্টহেড */
-.mast{flex-shrink:0;padding:10px 16px 8px;background:var(--paper);border-bottom:3px double var(--ink)}
-.mast-top{display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:8px;font:800 23px/1 var(--serif)}
-.logo svg{width:26px;height:26px}.logo em{font-style:normal;color:var(--ac)}
-.ic{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;font-size:15px;display:grid;place-items:center}
-.dateline{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:10.5px;color:var(--soft);font-weight:600}
-
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background-image:radial-gradient(var(--line) .7px,transparent .7px);background-size:18px 18px}
-.page{display:none;padding-bottom:28px}.page.active{display:block;animation:in .25s ease}
-@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.page.active{animation:none}.sheet{transition:none!important}.skel{animation:none!important}}
-
-/* ডক */
-.dock{flex-shrink:0;display:grid;grid-template-columns:repeat(5,1fr);background:var(--paper);border-top:1.5px solid var(--ink);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
-.dk{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;color:var(--soft)}
-.dk .ico{width:46px;height:28px;border-radius:14px;display:grid;place-items:center;transition:.2s}
-.dk svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.dk.on{color:var(--ink)}.dk.on .ico{background:var(--ac);color:var(--on)}
-
-/* খোঁজা ও চিপ */
-.finder{margin:14px 16px 0;display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--ink);padding:4px 2px}
-.finder svg{width:18px;height:18px;stroke:var(--soft);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0}
-.finder input{flex:1;min-width:0;background:none;border:0;padding:8px 0;font-size:14px;outline:0}
-.finder input::placeholder{color:var(--soft)}
-.finder button{background:none;border:0;color:var(--soft);font-size:15px;padding:4px 6px}
-.chips{display:flex;gap:7px;overflow:auto;padding:12px 16px 4px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
-.chips button{white-space:nowrap;background:transparent;border:1.5px solid var(--ink);border-radius:6px;padding:6px 11px;font-size:11.5px;font-weight:700}
-.chips button.on{background:var(--ink);color:var(--paper)}
-.status{margin:10px 16px 0;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px;color:var(--soft)}
-.status button{background:none;border:0;color:var(--ac);font-weight:700;font-size:11px}
-
-/* পালস (লক্ষ্য ও পরিসংখ্যান) */
-.pulse{margin:14px 16px;border:2px solid var(--ink);border-radius:18px;background:var(--card);display:flex;align-items:center;gap:14px;padding:12px 14px}
-.ring{position:relative;width:66px;height:66px;flex-shrink:0}
-.ring svg{width:66px;height:66px;transform:rotate(-90deg)}
-.ring circle{fill:none;stroke-width:6}.ring .bg{stroke:var(--line)}.ring .fg{stroke:var(--ac);stroke-linecap:round;stroke-dasharray:163.4;stroke-dashoffset:163.4;transition:stroke-dashoffset .5s}
-.ring b{position:absolute;inset:0;display:grid;place-items:center;font:800 14px var(--serif)}
-.pstats{flex:1;display:grid;grid-template-columns:repeat(3,1fr);text-align:center}
-.pstats div{border-left:1.5px dashed var(--line);padding:2px 0}.pstats div:first-child{border:0}
-.pstats b{display:block;font:800 19px var(--serif);color:var(--ac2)}.pstats span{font-size:9.5px;color:var(--soft);font-weight:600}
-.psub{margin:-4px 16px 12px;font-size:11px;color:var(--soft);font-weight:600}
-
-/* প্রধান খবর */
-.lead{margin:6px 16px 16px 16px;padding:18px 18px 16px;border:2px solid var(--ink);border-radius:4px 22px 4px 22px;background:var(--card);box-shadow:5px 5px 0 var(--ink);cursor:pointer}
-.lead small{display:inline-block;background:var(--ac);color:var(--on);font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px}
-.lead h2{font:800 21px/1.55 var(--serif);margin:9px 0 8px}
-.lead p{font-size:11.5px;color:var(--soft);font-weight:600}
-
-.slabel{padding:14px 16px 8px;font:800 13px var(--serif)}
-.setrow{display:flex;gap:8px;margin:10px 16px;flex-wrap:wrap}
-.setrow button{flex:1;background:var(--card);border:1.5px solid var(--ink);border-radius:10px;padding:10px;font-size:12px;font-weight:700}
-.setrow button.on{background:var(--ink);color:var(--paper)}
-
-/* টাইমলাইন */
-.tline{padding:0 16px}
-.dayhead{display:flex;align-items:center;gap:10px;margin:6px 0 14px;font:800 12.5px var(--serif)}
-.dayhead:after{content:"";flex:1;border-top:1.5px dashed var(--line)}
-.story{display:grid;grid-template-columns:40px 14px 1fr auto;gap:0 8px;cursor:pointer}
-.when{font-size:10.5px;font-weight:700;color:var(--soft);text-align:right;padding-top:4px}
-.rail{position:relative}.rail:before{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px solid var(--line)}
-.rail i{position:absolute;left:50%;top:7px;width:11px;height:11px;margin-left:-5.5px;border-radius:50%;background:var(--cc);box-shadow:0 0 0 3px var(--paper)}
-.sbody{padding-bottom:22px;min-width:0}
-.kick{display:flex;gap:8px;font-size:10.5px;color:var(--soft);font-weight:600}.kick b{color:var(--cc);font-weight:700}
-.story h3{font:700 15.5px/1.6 var(--serif);margin:3px 0 4px}
-.sum{font-size:12px;line-height:1.75;color:var(--soft);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.pic{width:66px;height:66px;border-radius:10px;background:var(--line) center/cover no-repeat;margin-top:4px}
-.sact{display:flex;gap:4px}.sact button{background:none;border:0;color:var(--soft);font-size:11px;font-weight:700;padding:7px 12px 0 0}.sact .on{color:var(--ac)}
-.story.isread h3{color:var(--soft);font-weight:600}
-.empty{margin:14px 16px;padding:22px;border:2px dashed var(--line);border-radius:14px;text-align:center;color:var(--soft);font-size:13px;line-height:1.8}
-.note{margin:14px 16px;color:var(--soft);font-size:10.5px;line-height:1.8}
-.skel{height:78px;margin:0 16px 12px;border-radius:12px;background:linear-gradient(90deg,var(--line),var(--card),var(--line));background-size:200% 100%;animation:sk 1.2s infinite}
-@keyframes sk{to{background-position:-200% 0}}
-
-/* খাতা (সেগমেন্ট) */
-.seg{display:flex;margin:14px 16px 4px;border:2px solid var(--ink);border-radius:12px;overflow:hidden}
-.seg button{flex:1;background:transparent;border:0;padding:10px 4px;font-size:12px;font-weight:700}
-.seg button+button{border-left:2px solid var(--ink)}
-.seg button.on{background:var(--ink);color:var(--paper)}
-.khp{display:none}.khp.on{display:block}
-.nitem{margin:0 16px 12px;background:var(--card);border:1.5px solid var(--ink);border-radius:4px 14px 4px 14px;padding:12px 14px}
-.nitem h4{font:700 13px/1.6 var(--serif);margin-bottom:6px;cursor:pointer}
-.nitem p{font-size:12.5px;line-height:1.8;color:var(--soft);white-space:pre-wrap}
-
-/* প্যানেল */
-.panel{margin:12px 16px;padding:16px;background:var(--card);border:2px solid var(--ink);border-radius:16px}
-.panel h3{font:800 15px var(--serif);margin-bottom:8px}
-.panel p{font-size:12px;line-height:1.85;color:var(--soft);margin:7px 0}
-.panel p b{color:var(--ink)}
-.bar{height:8px;background:var(--line);border-radius:20px;overflow:hidden}.bar div{height:100%;background:var(--ac)}
-
-/* কুইজ */
-.qcard{margin:14px 16px;background:var(--card);border:2px solid var(--ink);border-radius:4px 22px 4px 22px;padding:18px;box-shadow:5px 5px 0 var(--ink)}
-.qcard h2{font:800 17px/1.6 var(--serif);margin:6px 0 12px}
-.qprog{font-size:11px;color:var(--soft);font-weight:700}
-.opt{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:var(--paper);border:1.5px solid var(--ink);border-radius:10px;padding:11px 12px;margin-bottom:9px;font-size:13px;font-weight:600}
-.opt i{font-style:normal;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-size:12px;flex-shrink:0}
-.opt.ok{border-color:var(--ac2);background:color-mix(in srgb,var(--ac2) 16%,var(--paper))}.opt.bad{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 14%,var(--paper))}
-.bigbtn{background:var(--ac);color:var(--on);border:2px solid var(--ink);border-radius:12px;padding:12px;width:100%;font-size:13px;font-weight:700;margin-top:6px}
-.qscore{font:800 40px var(--serif);color:var(--ac);text-align:center;margin:8px 0}
-.qline{font-size:14px;line-height:1.8;margin-bottom:14px}
-
-/* রিডার শিট */
-.sheet{position:fixed;inset:0;z-index:50;background:var(--paper);display:flex;flex-direction:column;visibility:hidden;transform:translateY(100%);transition:transform .28s ease,visibility 0s .28s}
-.sheet.open{visibility:visible;transform:none;transition:transform .28s ease}
-.rbar{position:relative;display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1.5px solid var(--ink);background:var(--paper)}
-.back{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;font-size:17px}
-.rtitle{font:700 12px var(--serif);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rprog{position:absolute;left:0;bottom:-1.5px;height:3px;width:0;background:var(--ac)}
-.rscroll{overflow-y:auto;flex:1}.rbody{padding:20px 18px 40px}
-.rbody h1{font:800 23px/1.55 var(--serif);margin:10px 0}
-.rmeta{font-size:10.5px;color:var(--soft);font-weight:600;padding-bottom:14px;margin-bottom:16px;border-bottom:1.5px dashed var(--line)}
-.rbody p.txt{font-size:var(--fs);line-height:2;margin-bottom:14px}
-.rimg{width:100%;border-radius:12px;margin-bottom:14px;max-height:230px;object-fit:cover;border:1.5px solid var(--ink)}
-.cat{display:inline-block;font-size:10.5px;font-weight:700;color:var(--on);background:var(--cc,var(--ac));padding:2px 10px;border-radius:20px}
-.source{display:block;text-align:center;background:var(--ac);color:var(--on);border:2px solid var(--ink);text-decoration:none;font-size:13px;font-weight:700;padding:12px;border-radius:12px;margin:16px 0;box-shadow:3px 3px 0 var(--ink)}
-.rtools{display:flex;align-items:center;gap:8px;margin:14px 0;flex-wrap:wrap}
-.rtools button{background:var(--card);border:1.5px solid var(--ink);border-radius:8px;padding:7px 11px;font-size:11px;font-weight:700}
-.rtools .readmark{margin-left:auto;color:var(--ac2);border-color:var(--ac2)}
-.margin{margin:16px 0;padding:14px;background:var(--card);border:1.5px solid var(--ink);border-radius:4px 14px 4px 14px}
-.margin label{display:block;font:800 13px var(--serif);margin-bottom:8px}
-.margin textarea{width:100%;min-height:112px;resize:vertical;background:repeating-linear-gradient(transparent,transparent 27px,var(--line) 28px);background-attachment:local;border:0;border-left:3px solid var(--ac);padding:0 10px;font-size:13px;line-height:28px;outline:0}
-.margin small{display:block;color:var(--soft);font-size:10px;margin-top:8px;line-height:1.7}
-.rbuttons{display:flex;gap:8px}.rbuttons button{flex:1;background:var(--card);border:1.5px solid var(--ink);padding:11px;border-radius:10px;font-size:12px;font-weight:700}
-.break{margin-top:22px;padding:14px;border:2px dashed var(--soft);border-radius:14px;text-align:center}
-.break small{display:block;font:800 12px var(--serif);margin-bottom:6px}
-.break p{font-size:11px;color:var(--soft);line-height:1.8}
-.adbtn{background:transparent;color:var(--ac);border:2px solid var(--ac);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:12px;font-weight:700;width:100%}
-
-.toast{position:fixed;bottom:84px;left:50%;transform:translate(-50%,90px);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:30px;font-size:12px;font-weight:600;z-index:90;transition:.25s;max-width:90%;text-align:center}
-.toast.show{transform:translate(-50%,0)}.hidden{display:none!important}
-</style>
-</head>
+header{padding:15px 16px 12px;border-bottom:3px double var(--ink);position:sticky;top:0;background:var(--bg);z-index:5}
+.headrow{display:flex;justify-content:space-between;align-items:center}.brand{font:900 25px Georgia,serif;letter-spacing:-1px}.brand span{color:var(--accent)}.iconbtn{border:1.5px solid var(--ink);border-radius:50%;width:38px;height:38px;background:transparent}
+.date{font-size:11px;color:var(--muted);margin-top:7px;display:flex;justify-content:space-between}
+main{max-width:850px;margin:auto;padding-bottom:90px}.page{display:none;padding:14px 15px}.page.active{display:block}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:8;background:var(--bg);border-top:1.5px solid var(--ink);display:grid;grid-template-columns:repeat(5,1fr);padding:7px 3px calc(7px + env(safe-area-inset-bottom))}
+nav button{border:0;background:none;color:var(--muted);font-size:10px;font-weight:700;padding:4px 1px}nav button b{display:block;font-size:19px;margin-bottom:3px}nav button.active{color:var(--accent)}
+.search{display:flex;gap:8px;border-bottom:2px solid var(--ink);padding:7px 2px;margin-bottom:12px}.search input{background:none;border:0;outline:0;flex:1;min-width:0;font-size:14px}
+.chips{display:flex;gap:7px;overflow:auto;padding:3px 0 12px;scrollbar-width:none}.chips button,.pill{white-space:nowrap;border:1px solid var(--ink);border-radius:20px;background:transparent;padding:7px 12px;font-size:11px;font-weight:700}.chips button.active,.pill.active{background:var(--ink);color:var(--bg)}
+.status{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;margin:4px 0 12px}
+.lead{background:var(--card);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--shadow);padding:16px;border-radius:4px 20px;margin:8px 4px 20px;cursor:pointer}
+.tag{display:inline-block;background:var(--accent);color:white;border-radius:20px;padding:4px 9px;font-size:10px;font-weight:700}.lead h2{font: bold 21px/1.35 Georgia,serif;margin:10px 0}.lead p{font-size:12px;color:var(--muted);line-height:1.6}
+.sectiontitle{font:bold 14px Georgia,serif;margin:16px 0 10px}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:13px;margin:0 0 10px;display:grid;grid-template-columns:1fr auto;gap:8px;cursor:pointer}
+.card h3{font:bold 15px/1.4 Georgia,serif;margin:5px 0}.card p{font-size:12px;line-height:1.55;color:var(--muted)}.meta{font-size:10px;color:var(--muted);font-weight:700}.card .actions{display:flex;gap:8px;margin-top:8px}.actions button{border:0;background:none;color:var(--accent);font-size:11px;font-weight:700}
+.empty,.panel{background:var(--card);border:1.5px dashed var(--line);border-radius:13px;padding:18px;margin:10px 0;color:var(--muted);font-size:13px;line-height:1.7}
+.panel{border-style:solid;color:var(--ink)}.panel h3{font: bold 16px Georgia,serif;margin-bottom:8px}.panel p{font-size:12px;color:var(--muted);line-height:1.7;margin:6px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:9px 0}.btn{background:var(--accent);color:white;border:1.5px solid var(--ink);border-radius:9px;padding:10px 13px;font-size:12px;font-weight:700}.btn.secondary{background:transparent;color:var(--ink)}
+input.field,textarea.field{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;background:var(--bg);margin:6px 0 10px}
+.reader{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;overflow:auto}.reader.open{display:block}.readerbar{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);padding:12px;display:flex;gap:12px;align-items:center}.readercontent{max-width:760px;margin:auto;padding:20px 18px 55px}.readercontent h1{font: bold 27px/1.3 Georgia,serif;margin:12px 0}.readercontent p{font-size:16px;line-height:1.85;margin:13px 0}.readercontent .summary{color:var(--muted);font-size:14px}.readercontent textarea{min-height:110px}.source{display:block;text-align:center;background:var(--accent);color:#fff;padding:13px;border-radius:10px;text-decoration:none;font-weight:700;margin:18px 0}
+.quizopt{width:100%;text-align:left;background:var(--bg);border:1px solid var(--line);padding:12px;border-radius:9px;margin:5px 0}.quizopt.correct{border-color:var(--green)}.quizopt.wrong{border-color:var(--accent)}
+.toast{position:fixed;bottom:80px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--ink);color:var(--bg);padding:10px 15px;border-radius:30px;font-size:12px;z-index:40;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+small.muted{color:var(--muted)}.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.statgrid div{background:var(--bg);padding:12px;border-radius:9px;text-align:center}.statgrid strong{display:block;font-size:22px;color:var(--accent)}
+</style></head>
 <body>
-
-<header class="mast">
-  <div class="mast-top">
-    <div class="logo">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M8.5 12h7M8.5 16h4.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="15.5" cy="7" r="1.8" fill="#d9421f"/></svg>
-      <span>ডেইলি<em>রিড</em></span>
-    </div>
-    <button class="ic" id="themeBtn" onclick="toggleTheme()" aria-label="থিম বদলান">☾</button>
-  </div>
-  <div class="dateline"><span id="dateLine"></span><span id="hello"></span></div>
-</header>
-
-<main class="scroll" id="scroll">
-
-<section class="page active" id="p-home">
-  <div class="finder">
-    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-    <input id="q" placeholder="খবর খুঁজুন…" oninput="debSearch()" aria-label="খবর খুঁজুন">
-    <button onclick="clearSearch()" aria-label="মুছুন">✕</button>
-  </div>
-  <div class="chips" id="homeFilters"></div>
-  <div class="status"><span id="statusText">খবর লোড হচ্ছে…</span><button onclick="loadNews(true)">↻ রিফ্রেশ</button></div>
-
-  <div class="pulse">
-    <div class="ring"><svg viewBox="0 0 66 66"><circle class="bg" cx="33" cy="33" r="26"/><circle class="fg" id="goalRing" cx="33" cy="33" r="26"/></svg><b id="goalText">০/৫</b></div>
-    <div class="pstats">
-      <div><b id="readN">০</b><span>পড়া খবর</span></div>
-      <div><b id="saveN">০</b><span>রাখা আছে</span></div>
-      <div><b id="streakN">০</b><span>দিন টানা</span></div>
-    </div>
-  </div>
-  <div class="psub" id="goalSub"></div>
-
-  <div id="featuredBox"></div>
-  <div class="setrow"><button onclick="shareDigest()">📋 ৫ শিরোনাম পাঠান</button><button onclick="openBot()">🔔 দৈনিক ডাইজেস্ট (বট)</button></div>
-  <div class="slabel" id="listLabel">সর্বশেষ</div>
-  <div id="homeList"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
-
-  <div class="break" style="margin:14px 16px"><small>সৌজন্য বিরতি</small><p>ডেইলিরিডের সব ফিচার বিজ্ঞাপন ছাড়াই ব্যবহার করা যায়। চাইলে একটি ঐচ্ছিক বিজ্ঞাপন দেখে সহায়তা করতে পারেন।</p><button class="adbtn" onclick="optionalAd()">▶ ঐচ্ছিক বিজ্ঞাপন দেখুন</button></div>
-  <p class="note">শিরোনাম ও সংক্ষিপ্তসার প্রকাশকদের পাবলিক RSS ফিড থেকে স্বয়ংক্রিয়ভাবে আসে। পূর্ণ প্রতিবেদনের জন্য খবরের ভেতরের “পূর্ণ প্রতিবেদন” বোতামে প্রকাশকের সাইটে যান।</p>
+<header><div class="headrow"><div class="brand">RAJSHAHI <span>NEWS</span></div><button class="iconbtn" onclick="toggleTheme()" aria-label="Toggle theme">☾</button></div><div class="date"><span id="today"></span><span>Independent • Local • Updated</span></div></header>
+<main>
+<section class="page active" id="home">
+ <div class="search"><span>⌕</span><input id="search" placeholder="Search headlines, topics or sources..." oninput="renderHome()"><button onclick="document.getElementById('search').value='';renderHome()">✕</button></div>
+ <div class="chips" id="filters"></div><div class="status"><span id="status">30 editor-curated headlines • instant loading</span><span>● READY</span></div>
+ <div id="lead"></div><div class="sectiontitle" id="listtitle">Today's top stories</div><div id="newslist"></div>
+ <div class="panel"><h3>Newsroom note</h3><p>This edition is preloaded in the page, so the news list appears immediately without waiting for RSS services. Headlines and summaries link to the original publishers. Check the source article for the full report and any later updates.</p></div>
 </section>
-
-<section class="page" id="p-feed">
-  <div class="slabel">⭐ আপনার পছন্দের বিষয়</div>
-  <div class="chips" id="followChips"></div>
-  <div class="finder">
-    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-    <input id="kw" maxlength="30" placeholder="নিজের বিষয় লিখুন (যেমন: ক্রিকেট)" aria-label="নিজের বিষয় যোগ করুন" onkeydown="if(event.key==='Enter')addKw()">
-    <button onclick="addKw()" style="color:var(--ac);font-weight:700;font-size:12px">যোগ</button>
-  </div>
-  <div class="slabel" id="feedLabel"></div>
-  <div id="list-feed"></div>
+<section class="page" id="local"><div class="sectiontitle">Rajshahi & Northern Bangladesh</div><div class="chips" id="localfilters"></div><div id="locallist"></div></section>
+<section class="page" id="quiz"><div class="sectiontitle">Daily News Quiz</div><div id="quizbox" class="panel"></div></section>
+<section class="page" id="saved"><div class="sectiontitle">Your Reading List</div><div class="chips"><button onclick="showSaved('bookmarks')" class="active" id="bmTab">Bookmarks</button><button onclick="showSaved('history')" id="histTab">Reading history</button></div><div id="savedlist"></div></section>
+<section class="page" id="profile">
+ <div class="sectiontitle">Your News Dashboard</div><div class="panel"><div class="statgrid"><div><strong id="readCount">0</strong><small class="muted">Read</small></div><div><strong id="saveCount">0</strong><small class="muted">Saved</small></div><div><strong id="noteCount">0</strong><small class="muted">Notes</small></div></div></div>
+ <div class="sectiontitle">Preferences</div><div class="panel"><h3>Display</h3><div class="row"><button class="btn secondary" onclick="toggleTheme()">Switch light / dark</button><button class="btn secondary" onclick="fontSize(-1)">A− Smaller</button><button class="btn secondary" onclick="fontSize(1)">A+ Larger</button></div><p>Display settings are stored on this device.</p></div>
+ <div class="sectiontitle">Optional features</div><div class="panel"><h3>Optional sponsored content</h3><p>Sponsored content is optional. You can choose whether to display available ads; this setting does not affect access to news or other features.</p><label style="display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;margin-top:12px"><input type="checkbox" id="adsToggle" onchange="setAdsPreference(this.checked)" style="width:18px;height:18px;accent-color:var(--accent)"> Show optional ads</label><small class="muted" id="adsStatus" style="display:block;margin-top:8px">Optional ads are turned off.</small><div id="optionalAdSlot" hidden class="empty" style="margin-top:12px">Optional sponsored content may appear here when an ad provider is configured.</div></div>
+ <div class="sectiontitle">About Rajshahi News</div><div class="panel"><h3>Your local-first news companion</h3><p>Rajshahi News brings together a quick English-language news reading experience with local coverage, national headlines, international updates, saved stories, personal notes, reading history and a daily quiz.</p><p><b>Editorial policy:</b> Headlines are presented with source attribution. Summaries are short reading aids, not replacements for original reporting. Verify developing stories with the linked publisher.</p><p><b>Privacy:</b> Bookmarks, notes, preferences and reading history are saved in your browser's local storage. They are not uploaded to a server by this demo.</p><p><b>Version:</b> Rajshahi News 1.0 • 22 November 2026</p></div>
+ <div class="sectiontitle">Contact & feedback</div><div class="panel"><p>For corrections, source requests or feedback, contact the site administrator through your website's official contact page.</p><input class="field" id="feedback" placeholder="Write feedback"><button class="btn" onclick="sendFeedback()">Copy feedback</button></div>
 </section>
-
-<section class="page" id="p-quiz"><div class="slabel">🧠 আজকের খবরের ধাঁধা</div><div id="quizBox"></div></section>
-
-<section class="page" id="p-khata">
-  <div class="seg" role="tablist">
-    <button class="on" id="sg-saved" onclick="seg('saved')">★ রাখা খবর</button>
-    <button id="sg-notes" onclick="seg('notes')">✎ মার্জিন নোট</button>
-    <button id="sg-history" onclick="seg('history')">◷ ইতিহাস</button>
-  </div>
-  <div class="khp on" id="kh-saved"><div style="height:14px"></div><div id="list-saved"></div></div>
-  <div class="khp" id="kh-notes">
-    <div class="setrow"><button onclick="exportNotes('copy')">📋 সব নোট কপি</button><button onclick="exportNotes('share')">↗ শেয়ার</button></div>
-    <div id="notesList"></div>
-  </div>
-  <div class="khp" id="kh-history"><div style="height:14px"></div><div id="list-history"></div><div class="setrow"><button onclick="clearHistory()">ইতিহাস মুছুন</button></div></div>
-</section>
-
-<section class="page" id="p-me">
-  <div class="slabel">📊 আমার পড়ার খাতা</div>
-  <div id="statsBox"></div>
-  <div class="slabel">⚙️ সেটিংস</div>
-  <div class="panel">
-    <div class="setrow" style="margin:0 0 8px"><button onclick="toggleTheme()" id="themeBtn2">থিম বদলান</button></div>
-    <div class="setrow" style="margin:0 0 8px"><button onclick="changeFont(-1)">অ− ছোট লেখা</button><button onclick="changeFont(1)">অ+ বড় লেখা</button></div>
-    <div class="setrow" style="margin:0"><button id="autoAdBtn" onclick="toggleAutoAd()"></button></div>
-  </div>
-  <div class="slabel">ℹ️ পরিচিতি</div>
-  <div class="panel">
-    <h3>পড়ুন, রাখুন, নোট লিখুন</h3>
-    <p>ডেইলিরিড বিভিন্ন বাংলা সংবাদমাধ্যমের পাবলিক RSS ফিড থেকে সর্বশেষ শিরোনাম এনে সময়ের ক্রমে একটি টাইমলাইনে সাজায়। প্রতিটি খবরের পূর্ণ প্রতিবেদন প্রকাশকের নিজস্ব সাইটে পড়তে হয়।</p>
-    <p><b>যা যা করা যায়:</b> বিষয়ভিত্তিক খোঁজা, পছন্দের বিষয় অনুসরণ (আমার ফিড), খবর রেখে দেওয়া, প্রতিটি খবরের মার্জিনে নোট, নোট কপি/শেয়ার, আজকের খবর থেকে কুইজ, পড়ার পরিসংখ্যান, দৈনিক লক্ষ্য, রাত/দিন থিম।</p>
-    <p><b>সংস্করণ:</b> v5 (২২ নভেম্বর ২০২৬)</p>
-    <p><b>সূত্র:</b> <span id="srcList"></span></p>
-    <p><b>টেলিগ্রাম বট:</b> বটে /digest on লিখলে প্রতিদিন সকালে ৫টি শিরোনাম টেলিগ্রামেই পাবেন, বন্ধ করতে /digest off।</p>
-    <p><b>সিঙ্ক ও গোপনীয়তা:</b> টেলিগ্রামের ভেতরে খুললে নোট, রাখা খবর, ধারাবাহিকতা ও সেটিংস আপনার টেলিগ্রাম অ্যাকাউন্টের ক্লাউড স্টোরেজে সিঙ্ক হয়। ব্রাউজারে খুললে শুধু ওই ব্রাউজারেই থাকে।</p>
-    <p><b>বিজ্ঞাপন:</b> বিজ্ঞাপন সম্পূর্ণ ঐচ্ছিক; কোনো ফিচার বিজ্ঞাপন দেখার ওপর নির্ভর করে না। বিজ্ঞাপন আসে শুধু (১) হোমের “সৌজন্য বিরতি” বোতামে, (২) খবর পড়ার পেজের নিচের বিরতি অংশে, (৩) কুইজের ফলাফলের নিচে, এবং (৪) প্রতি ৩টি নতুন খবর পড়ে ফিরে আসার সময় একটি ইন্টারস্টিশিয়াল (প্রতি সেশনে সর্বোচ্চ ৪টি)। শেষটি উপরের বোতাম থেকে বন্ধ করা যায়।</p>
-    <p><b>কপিরাইট ও দায়:</b> শিরোনাম ও সংক্ষিপ্তসারের স্বত্ব সংশ্লিষ্ট প্রকাশকের। ডেইলিরিড কোনো প্রতিবেদন নিজের বলে দাবি করে না; প্রতিটি খবরে মূল সূত্রের লিংক দেওয়া থাকে।</p>
-  </div>
-</section>
-
 </main>
-
-<nav class="dock" aria-label="প্রধান মেনু">
-  <button class="dk on" id="d-home" onclick="page('home')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>খবর</button>
-  <button class="dk" id="d-feed" onclick="page('feed')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.5 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg></span>আমার ফিড</button>
-  <button class="dk" id="d-quiz" onclick="page('quiz')"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-.9.6-1.5 1-1.5 2M12 17h.01"/></svg></span>ধাঁধা</button>
-  <button class="dk" id="d-khata" onclick="page('khata')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3zM5 17a3 3 0 013-3h11"/></svg></span>খাতা</button>
-  <button class="dk" id="d-me" onclick="page('me')"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg></span>আমি</button>
-</nav>
-
-<div class="sheet" id="reader" role="dialog" aria-modal="true" aria-label="খবর পড়ুন">
-  <div class="rbar"><button class="back" onclick="closeReader()" aria-label="ফিরে যান">←</button><div class="rtitle" id="rtitle"></div><div class="rprog" id="rprog"></div></div>
-  <div class="rscroll" id="rscroll"><div class="rbody" id="rbody"></div></div>
-</div>
-<div class="toast" id="toast" role="status"></div>
-
+<nav><button class="active" data-page="home" onclick="go('home')"><b>⌂</b>Home</button><button data-page="local" onclick="go('local')"><b>⌖</b>Local</button><button data-page="quiz" onclick="go('quiz')"><b>◎</b>Quiz</button><button data-page="saved" onclick="go('saved')"><b>★</b>Saved</button><button data-page="profile" onclick="go('profile')"><b>☻</b>More</button></nav>
+<div class="reader" id="reader"><div class="readerbar"><button class="iconbtn" onclick="closeReader()">←</button><b id="readerlabel">Story</b><button class="iconbtn" style="margin-left:auto" onclick="toggleBookmark(currentId)">☆</button></div><article class="readercontent" id="readerbody"></article></div><div class="toast" id="toast"></div>
 <script>
-/* ============ কনফিগারেশন ============ */
-const FEEDS=[
-  {name:"বিবিসি বাংলা",url:"https://feeds.bbci.co.uk/bengali/rss.xml"},
-  {name:"প্রথম আলো",url:"https://www.prothomalo.com/feed"},
-  {name:"ডিডব্লিউ বাংলা",url:"https://rss.dw.com/xml/rss-bn-all"}
+const TODAY='22 November 2026';
+const stories=[
+['Rajshahi Medical College Hospital employees demand higher wages','Local','New Age','22 Nov 2026','Employees working under the hospital service improvement fund formed a human chain demanding higher salaries and allowances. They warned of a possible work stoppage if their demands are not addressed.','https://www.newagebd.net/latest'],
+['Two arrested with firearms in Godagari, Rajshahi','Local','BangladeshFX','22 Nov 2026','Police reported the arrest of two people with firearms and ammunition in Godagari. The case remains subject to official investigation and further updates.','https://bangladeshfx.com/category/breaking'],
+['Rajshahi youth leaders included in metropolitan committee','Local','Rajshahi News TV','22 Nov 2026','Two people from the Matihar area have been included in the Rajshahi Metropolitan Jubo Dal committee, drawing attention among local residents.','https://rajshahinewstv.com/'],
+['Rain and thundershowers possible in Rajshahi Division','Weather','BSS','22 Nov 2026','The Bangladesh Meteorological Department forecast rain or thundershowers at one or two places in Rajshahi and several other divisions during the next 24 hours.','https://www.bssnews.net/news/448685'],
+['Minimum wage board expects garment owners’ proposal on Monday','National','Dhaka Papers','22 Nov 2026','The Wage Board chairman said the board hopes factory owners will submit a new wage proposal at Monday’s meeting. He said the legal process would continue even if no proposal arrives.','https://en.dhakapapers.com/news-briefs/2026/11/22'],
+['Rain threatens Aman paddy and winter crops in coastal districts','Environment','Dhaka Papers','22 Nov 2026','Persistent rain linked to Cyclone Akvan has waterlogged croplands in low-lying areas, raising concerns for Aman paddy, winter vegetables and seedbeds.','https://en.dhakapapers.com/news-briefs/2026/11/22'],
+['Reported rape cases fall while murders rise, rights data indicate','National','Dhaka Papers','22 Nov 2026','A report summarising rights-group data says reported rape cases declined during the first ten months of the year, while killings following rape increased.','https://en.dhakapapers.com/news-briefs/2026/11/22'],
+['Russian strike kills child and paramedic in Kryvyi Rih','World','Dhaka Papers','22 Nov 2026','A missile and drone attack on the Ukrainian city of Kryvyi Rih killed a child and a paramedic and injured dozens, according to reports cited in the news brief.','https://en.dhakapapers.com/news-briefs/2026/11/22'],
+['Russian cargo ship catches fire in Baltic Sea after drone strike','World','Dhaka Papers','22 Nov 2026','A cargo ship identified as Sparta II caught fire in the Baltic Sea. Its crew evacuated as Finnish authorities began rescue operations.','https://en.dhakapapers.com/news-briefs/2026/11/22'],
+['Workers return to factories in Savar-Ashulia; 23 remain closed','National','Dhaka Tribune','22 Nov 2026','Garment workers returned to workplaces in Savar and Ashulia amid labour unrest over minimum wages. Reports said 23 factories remained closed.','https://epaper.bd/?Category=English+News&PageNum=6&SortBy=latest'],
+['Gold price falls below Tk 195,000 per bhori','Business','New Age','22 Nov 2026','Gold prices fell below Tk 195,000 per bhori after the Bangladesh Jewellers Association announced another price reduction. Buyers should check the latest official rate before purchasing.','https://epaper.bd/?Category=English+News&PageNum=6&SortBy=latest'],
+['German ambassador highlights challenges facing investors','Business','Bangladesh Post','22 Nov 2026','Germany’s ambassador highlighted governance, regulatory reform and anti-corruption efforts as important factors in making Bangladesh more attractive to investors.','https://epaper.bd/?Category=English+News&PageNum=6&SortBy=latest'],
+['Kamalapur metro extension civil works reach 84.85 percent','National','Daily Observer','22 Nov 2026','Civil works on the Motijheel-Kamalapur metro extension were reported to be 84.85 percent complete. Passenger operations are targeted for July 2027.','https://epaper.bd/?Category=English+News&PageNum=6&SortBy=latest'],
+['National SME Product Fair opens in Dhaka','Business','BD24Live','22 Nov 2026','The 13th National SME Product Fair is set to bring small, cottage, micro and medium enterprises together in the capital, promoting local products and businesses.','https://epaper.bd/?Category=English+News&PageNum=6&SortBy=latest'],
+['Foreign ministry responds to reports about Lalmonirhat speech','National','Bangladesh Post','22 Nov 2026','The Ministry of Foreign Affairs said some media reports misrepresented remarks made by the prime minister during a speech in Lalmonirhat on 19 November.','https://epaper.bd/?Category=English+News&PageNum=6&SortBy=latest'],
+['Dhaka ranks 14th among world’s most polluted cities','Environment','The Financial Express','22 Nov 2026','Dhaka recorded an air-quality index reading of 117 in a Sunday morning snapshot, placing it among cities with air quality considered unhealthy for sensitive groups.','https://epaper.bd/?Category=English+News&PageNum=6&SortBy=latest'],
+['Rain likely across five divisions, says weather office','Weather','BSS','22 Nov 2026','The weather bulletin forecast possible rain in parts of Rangpur, Rajshahi, Khulna, Barishal and Chattogram divisions.','https://www.bssnews.net/news/448685'],
+['BGB deploys personnel in several districts','National','Bangladesh News Archive','22 Nov 2026','A news archive lists deployment of 95 Border Guard Bangladesh platoons across several districts as authorities prepare for public-order duties.','https://bangladesh-news.pages.dev/2026-11-22/'],
+['Mushfiqur ruled out of second Test against South Africa','Sports','Bangladesh News Archive','22 Nov 2026','Bangladesh batter Mushfiqur Rahim was reported unavailable for the second Test against South Africa because of a groin injury.','https://bangladesh-news.pages.dev/2026-11-22/'],
+['India post 720 for nine against New Zealand in Wellington Test','Sports','Bangladesh News Archive','22 Nov 2026','A remarkable batting display saw India reach 720 for nine in the first Test against New Zealand, putting the home side under pressure.','https://bangladesh-news.pages.dev/2026-11-22/'],
+['Two more children die with measles symptoms, reports say','Health','Bangladesh News Archive','22 Nov 2026','News reports describe additional child deaths with measles-like symptoms and renewed concern over reported infections. Health authorities’ latest statements should be consulted for verified figures.','https://bangladesh-news.pages.dev/2026-11-22/'],
+['Cyclone Akvan weakens into a low-pressure area','Weather','Bangladesh News Archive','22 Nov 2026','Reports say Cyclone Akvan weakened into a low-pressure system, though rain continued in several parts of the country and could affect crops and daily life.','https://bangladesh-news.pages.dev/2026-11-22/'],
+['Mother and daughter electrocuted in Chapainawabganj','Local','BSS','22 Nov 2026','The BSS archive listed a report about the deaths of a mother and daughter following an electrocution incident in Chapainawabganj.','https://www.bssnews.net/archive/2026/09/22'],
+['New children’s ward opens at Dinajpur General Hospital','Local','BSS','22 Nov 2026','A new children’s ward at Dinajpur General Hospital was among the regional developments highlighted in the BSS news archive.','https://www.bssnews.net/archive/2026/09/22'],
+['Fire Service urges media to verify statements','National','BSS','22 Nov 2026','The Fire Service urged media outlets to verify statements and avoid inaccurate reporting, according to a headline in the BSS archive.','https://www.bssnews.net/archive/2026/09/22'],
+['Bangladesh seeks Thai support after ICJ Rohingya verdict','National','BSS','22 Nov 2026','Bangladesh was reported to be seeking Thailand’s support following developments related to the International Court of Justice case concerning the Rohingya.','https://www.bssnews.net/archive/2026/09/22'],
+['Tribunal frames charges in Yamin killing case','National','BSS','22 Nov 2026','A tribunal framed charges in the Yamin killing case, marking a procedural step in the ongoing judicial process.','https://www.bssnews.net/archive/2026/09/22'],
+['Lighter vessel shortage disrupts Chattogram port cargo unloading','Business','BSS','22 Nov 2026','A shortage of lighter vessels was reported to be disrupting cargo unloading operations at Chattogram Port, raising logistics concerns.','https://www.bssnews.net/archive/2026/09/22'],
+['Bangladesh secures climate grants at COP31','Environment','BSS','22 Nov 2026','Bangladesh was reported to have secured Tk 784 crore in climate grants at COP31, while pursuing a larger funding target.','https://www.bssnews.net/archive/2026/09/22'],
+['Bangladesh and Italy discuss maritime security','World','BSS','22 Nov 2026','Bangladesh and Italy discussed ways to strengthen maritime security in the Bay of Bengal, according to the BSS news archive.','https://www.bssnews.net/archive/2026/09/22']
+].map((x,i)=>({id:i+1,title:x[0],cat:x[1],source:x[2],date:x[3],summary:x[4],url:x[5]}));
+const cats=['All','Local','National','Business','Weather','Sports','Health','Environment','World'];
+let category='All',currentId=null,quizIndex=0,quizScore=0,quizDone=false;
+let data={};try{data=JSON.parse(localStorage.getItem('rajshahi-news-state')||'{}')}catch(e){}
+data.bookmarks=data.bookmarks||[];data.history=data.history||[];data.notes=data.notes||{};data.reads=data.reads||0;data.theme=data.theme||'light';data.font=data.font||16;data.showAds=!!data.showAds;
+const $=id=>document.getElementById(id),save=()=>{localStorage.setItem('rajshahi-news-state',JSON.stringify(data));stats()};
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>$('toast').classList.remove('show'),2000)}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function card(a){return `<article class="card" onclick="openStory(${a.id})"><div><div class="meta">${escapeHTML(a.cat)} · ${escapeHTML(a.source)} · ${a.date}</div><h3>${escapeHTML(a.title)}</h3><p>${escapeHTML(a.summary)}</p><div class="actions"><button onclick="event.stopPropagation();bookmark(${a.id})">${data.bookmarks.includes(a.id)?'★ Saved':'☆ Save story'}</button><button onclick="event.stopPropagation();shareStory(${a.id})">↗ Share</button></div></div></article>`}
+function renderHome(){const q=$('search').value.toLowerCase();$('filters').innerHTML=cats.map(c=>`<button class="${category===c?'active':''}" onclick="setCategory('${c}')">${c}</button>`).join('');let arr=stories.filter(a=>(category==='All'||a.cat===category)&&(`${a.title} ${a.summary} ${a.source} ${a.cat}`).toLowerCase().includes(q));$('listtitle').textContent=q?`Search results (${arr.length})`:`${category==='All'?"Today's top stories":category+' news'} · ${arr.length}`;$('lead').innerHTML=!q&&category==='All'&&arr.length?`<div class="lead" onclick="openStory(${arr[0].id})"><span class="tag">TOP STORY</span><h2>${escapeHTML(arr[0].title)}</h2><p>${escapeHTML(arr[0].summary)}<br><br>${arr[0].source} · ${arr[0].date} · Read story →</p></div>`:'';$('newslist').innerHTML=arr.length?arr.map(card).join(''):'<div class="empty">No matching stories. Try another keyword or category.</div>'}
+function setCategory(c){category=c;renderHome()}
+function renderLocal(){let arr=stories.filter(a=>a.cat==='Local'||a.cat==='Weather');$('localfilters').innerHTML='<button class="active">Rajshahi & North</button>'; $('locallist').innerHTML=arr.map(card).join('')}
+function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='saved')showSaved('bookmarks');if(id==='quiz')quizStart();if(id==='local')renderLocal();if(id==='profile'){stats();applyAdsPreference()}window.scrollTo(0,0)}
+function openStory(id){let a=stories.find(x=>x.id===id);if(!a)return;currentId=id;data.reads++;data.history=[id,...data.history.filter(x=>x!==id)].slice(0,80);save();$('readerlabel').textContent=a.source;$('readerbody').innerHTML=`<span class="tag">${escapeHTML(a.cat)}</span><h1>${escapeHTML(a.title)}</h1><div class="meta">${a.source} · ${a.date} · Rajshahi News desk</div><p class="summary">${escapeHTML(a.summary)}</p><p>This short briefing is based on the linked publisher report. It is provided as a quick overview; details, context and subsequent developments may change as more information becomes available.</p><p>Readers should consult the original source for the complete report, official statements and corrections. Rajshahi News attributes this item to <b>${escapeHTML(a.source)}</b> and does not claim ownership of the original reporting.</p><a class="source" href="${a.url}" target="_blank" rel="noopener">Read the original report at ${escapeHTML(a.source)} ↗</a><div class="panel"><h3>Personal margin note</h3><textarea class="field" placeholder="Write a thought, question or reminder..." oninput="saveNote(${id},this.value)">${escapeHTML(data.notes[id]||'')}</textarea><div class="row"><button class="btn" onclick="bookmark(${id});openStory(${id})">${data.bookmarks.includes(id)?'★ Saved':'☆ Save story'}</button><button class="btn secondary" onclick="shareStory(${id})">Share story</button></div></div>`;$('reader').classList.add('open')}
+function closeReader(){$('reader').classList.remove('open');currentId=null}
+function bookmark(id){let i=data.bookmarks.indexOf(id);if(i>=0)data.bookmarks.splice(i,1);else data.bookmarks.unshift(id);save();toast(i>=0?'Removed from bookmarks':'Story saved')}
+function toggleBookmark(id){bookmark(id);if(currentId)openStory(id)}
+function saveNote(id,v){data.notes[id]=v;save()}
+function showSaved(type){$('bmTab').classList.toggle('active',type==='bookmarks');$('histTab').classList.toggle('active',type==='history');let ids=type==='bookmarks'?data.bookmarks:data.history;$('savedlist').innerHTML=ids.length?ids.map(id=>stories.find(a=>a.id===id)).filter(Boolean).map(card).join(''):'<div class="empty">Nothing here yet. Save a story or open an article to build your reading history.</div>'}
+function stats(){$('readCount').textContent=data.reads;$('saveCount').textContent=data.bookmarks.length;$('noteCount').textContent=Object.values(data.notes).filter(Boolean).length}
+function setAdsPreference(enabled){data.showAds=!!enabled;save();applyAdsPreference();toast(enabled?'Optional ads enabled':'Optional ads disabled')}
+function applyAdsPreference(){const t=$('adsToggle'),slot=$('optionalAdSlot'),status=$('adsStatus');if(!t||!slot||!status)return;t.checked=!!data.showAds;slot.hidden=!data.showAds;status.textContent=data.showAds?'Optional ads are enabled.':'Optional ads are turned off.'}
+function toggleTheme(){data.theme=data.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=data.theme;save()}
+function fontSize(d){data.font=Math.max(13,Math.min(22,data.font+d));document.body.style.fontSize=data.font+'px';save();toast('Text size updated')}
+async function shareStory(id){let a=stories.find(x=>x.id===id);let txt=a.title+' — '+a.url;try{if(navigator.share)await navigator.share({title:a.title,text:a.summary,url:a.url});else{await navigator.clipboard.writeText(txt);toast('Story link copied')}}catch(e){}}
+function sendFeedback(){let v=$('feedback').value.trim();if(!v)return toast('Write your feedback first');navigator.clipboard?.writeText(v).then(()=>toast('Feedback copied')).catch(()=>toast('Could not copy feedback'))}
+const questions=[
+{q:'Which city is mentioned in the Rajshahi Medical College Hospital wage-demand story?',o:['Rajshahi','Khulna','Sylhet'],a:0},
+{q:'Which organisation issued the rain forecast for Rajshahi Division?',o:['Bangladesh Meteorological Department','Election Commission','BTRC'],a:0},
+{q:'What is the main issue in the garment workers’ wage-board story?',o:['Minimum wages','School admissions','River transport'],a:0}
 ];
-const PROXY="https://api.rss2json.com/v1/api.json?rss_url=";
-const BLOCK_ID="int-43506";
-const WORKER_URL="";                   // যেমন: "https://dailyread-backend.YOURNAME.workers.dev"
-const BOT_URL="";                      // যেমন: "https://t.me/YourBot"
-const CACHE_KEY="dailyread-cache-v2",STATE_KEY="dailyread-state-v2";
-const CATS=["জাতীয়","আন্তর্জাতিক","অর্থনীতি","প্রযুক্তি","স্বাস্থ্য","খেলা"];
-const CCOL={"জাতীয়":"#d9421f","আন্তর্জাতিক":"#2b6cb0","অর্থনীতি":"#b7791f","প্রযুক্তি":"#7c4dcc","স্বাস্থ্য":"#0f8a6c","খেলা":"#c05621","সাধারণ":"#7a7466"};
-const ccol=c=>CCOL[c]||CCOL["সাধারণ"];
-const KW={
-  "অর্থনীতি":["অর্থনীত","ব্যাংক","টাকা","বাজেট","শেয়ার","রপ্তানি","আমদানি","মূল্যস্ফীতি","বিনিয়োগ","ডলার","বাণিজ্য","শুল্ক"],
-  "প্রযুক্তি":["প্রযুক্তি","এআই","কৃত্রিম বুদ্ধিমত্তা","ইন্টারনেট","স্মার্টফোন","অ্যাপ","সাইবার","মহাকাশ","গুগল","মাইক্রোসফট","টেক"],
-  "স্বাস্থ্য":["স্বাস্থ্য","ডেঙ্গু","হাসপাতাল","চিকিৎস","রোগ","ভাইরাস","টিকা","ডাক্তার","ক্যানসার","করোনা"],
-  "খেলা":["ক্রিকেট","ফুটবল","বিশ্বকাপ","টেস্ট","ওয়ানডে","টি-টোয়েন্টি","খেলা","ম্যাচ","গোল","টুর্নামেন্ট","বিপিএল","বিসিবি"],
-  "আন্তর্জাতিক":["যুক্তরাষ্ট্র","ভারত","চীন","রাশিয়া","ইসরায়েল","গাজা","ইউক্রেন","ইরান","পাকিস্তান","ট্রাম্প","জাতিসংঘ","ইউরোপ","মার্কিন","লন্ডন","দিল্লি","আফগানিস্তান","মিয়ানমার"],
-  "জাতীয়":["বাংলাদেশ","ঢাকা","সরকার","প্রধানমন্ত্রী","নির্বাচন","পুলিশ","আদালত","সংসদ","চট্টগ্রাম","সচিব","মন্ত্রী","ডিএমপি","বিজিবি"]
-};
-const WD=["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"];
-const MO=["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"];
-
-/* ============ ইউটিল ============ */
-const $=id=>document.getElementById(id);
-const bn=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d]);
-const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const dstr=(d=new Date())=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-const today=()=>dstr();
-const p2=n=>String(n).padStart(2,"0");
-const hm=ms=>{const d=new Date(ms);return bn(p2(d.getHours())+":"+p2(d.getMinutes()))};
-function dayLabel(ms){const d=new Date(ms),t=new Date(),y=new Date();y.setDate(t.getDate()-1);if(dstr(d)===dstr(t))return "আজ";if(dstr(d)===dstr(y))return "গতকাল";return bn(d.getDate())+" "+MO[d.getMonth()]}
-function hash(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h.toString(36)}
-function plain(html){try{return (new DOMParser().parseFromString(html||"","text/html").body.textContent||"").replace(/\s+/g," ").trim()}catch(e){return ""}}
-function ago(ms){const m=Math.max(0,Math.round((Date.now()-ms)/60000));if(m<1)return "এইমাত্র";if(m<60)return bn(m)+" মিনিট আগে";const h=Math.round(m/60);if(h<24)return bn(h)+" ঘণ্টা আগে";return bn(Math.round(h/24))+" দিন আগে"}
-function classify(t){for(const c of ["খেলা","স্বাস্থ্য","প্রযুক্তি","অর্থনীতি","আন্তর্জাতিক","জাতীয়"]){if(KW[c].some(k=>t.includes(k)))return c}return "সাধারণ"}
-function toast(t){const x=$("toast");x.textContent=t;x.classList.add("show");clearTimeout(window._tt);window._tt=setTimeout(()=>x.classList.remove("show"),2200)}
-
-/* ============ টেলিগ্রাম ও ক্লাউড স্টোরেজ ============ */
-const tg=window.Telegram&&window.Telegram.WebApp;
-const tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;
-const CS=(tg&&tg.CloudStorage&&tg.initData)?tg.CloudStorage:null;
-const cloud={
-  set(k,v){if(!CS)return;try{CS.setItem(k,String(v).slice(0,1000),()=>{})}catch(e){}},
-  del(k){if(!CS)return;try{CS.removeItem(k,()=>{})}catch(e){}},
-  all(cb){if(!CS)return cb({});try{CS.getKeys((e,keys)=>{if(e||!keys||!keys.length)return cb({});CS.getItems(keys.slice(0,200),(e2,vals)=>cb(e2?{}:vals))})}catch(e){cb({})}}
-};
-if(tg){try{tg.ready();tg.expand()}catch(e){}}
-
-/* ============ স্টেট ============ */
-const blank=()=>({saved:{},history:[],meta:{},reads:{},days:[],notes:{},readIds:[],prefs:{theme:"light",font:15,goal:5,autoAd:true},follow:[],catReads:{},quiz:{played:0,score:0,best:0,total:0}});
-let state;try{state=Object.assign(blank(),JSON.parse(localStorage.getItem(STATE_KEY)||"{}"))}catch(e){state=blank()}
-state.prefs=Object.assign(blank().prefs,state.prefs||{});state.quiz=Object.assign(blank().quiz,state.quiz||{});state.follow=state.follow||[];state.catReads=state.catReads||{};
-let adsShown=0,ARTS=[],AMAP={},catFilter="সব",sessionReads=0,pendingAd=false,openId=null;
-
-function persist(){try{localStorage.setItem(STATE_KEY,JSON.stringify(state))}catch(e){}stats()}
-function cloudPrefs(){cloud.set("p",JSON.stringify({p:state.prefs,q:state.quiz,f:state.follow}));cloud.set("d",JSON.stringify(state.days.slice(-30)));cloud.set("r",JSON.stringify(state.reads))}
-function cloudSaved(id){const m=state.saved[id];if(m)cloud.set("s_"+id,JSON.stringify({t:m.t.slice(0,150),s:m.s,u:m.u.slice(0,300),d:m.d,c:m.c}));else cloud.del("s_"+id)}
-function cloudNote(id){const v=state.notes[id];if(v){const m=state.meta[id]||{};cloud.set("n_"+id,JSON.stringify({n:v.slice(0,520),t:(m.t||"").slice(0,110),u:(m.u||"").slice(0,220),s:m.s||""}).slice(0,1000))}else cloud.del("n_"+id)}
-function pullCloud(){
-  cloud.all(v=>{
-    let changed=false;
-    Object.keys(v||{}).forEach(k=>{
-      try{
-        const j=JSON.parse(v[k]);
-        if(k==="p"){state.prefs=Object.assign(state.prefs,j.p||{});if(j.f)state.follow=[...new Set([...state.follow,...j.f])];if(j.q&&j.q.played>=state.quiz.played)state.quiz=j.q;changed=true}
-        else if(k==="d"){state.days=[...new Set([...state.days,...j])].sort();changed=true}
-        else if(k==="r"){Object.keys(j).forEach(d=>{state.reads[d]=Math.max(state.reads[d]||0,j[d])});changed=true}
-        else if(k.startsWith("s_")){const id=k.slice(2);if(!state.saved[id]){state.saved[id]=j;changed=true}}
-        else if(k.startsWith("n_")){const id=k.slice(2);if(!state.notes[id]){state.notes[id]=j.n;state.meta[id]={t:j.t,u:j.u,s:j.s};changed=true}}
-      }catch(e){}
-    });
-    if(changed){applyPrefs();persist();renderAll()}
-  });
-}
-
-/* ============ থিম ও ফন্ট ============ */
-function applyPrefs(){
-  const dark=state.prefs.theme==="dark";
-  document.documentElement.setAttribute("data-theme",state.prefs.theme);
-  document.documentElement.style.setProperty("--fs",state.prefs.font+"px");
-  $("autoAdBtn").textContent="ইন্টারস্টিশিয়াল বিজ্ঞাপন: "+(state.prefs.autoAd!==false?"চালু (বন্ধ করুন)":"বন্ধ (চালু করুন)");
-  $("themeBtn").textContent=dark?"☀":"☾";
-  $("themeBtn2").textContent=dark?"☀ দিনের সংস্করণে যান":"☾ রাতের সংস্করণে যান";
-  const c=dark?"#16130e":"#f3ead8";
-  document.querySelector('meta[name=theme-color]').setAttribute("content",c);
-  if(tg){try{tg.setHeaderColor&&tg.setHeaderColor(c);tg.setBackgroundColor&&tg.setBackgroundColor(c)}catch(e){}}
-}
-function toggleTheme(){state.prefs.theme=state.prefs.theme==="dark"?"light":"dark";applyPrefs();persist();cloudPrefs()}
-function changeFont(d){state.prefs.font=Math.max(12,Math.min(24,state.prefs.font+d*2));applyPrefs();persist();cloudPrefs();toast("লেখার আকার: "+bn(state.prefs.font))}
-
-/* ============ খবর লোড (নিজস্ব API → RSS প্রক্সি → ক্যাশ) ============ */
-async function tfetch(url,ms){
-  const c=new AbortController(),t=setTimeout(()=>c.abort(),ms||9000);
-  try{return await fetch(url,{signal:c.signal})}finally{clearTimeout(t)}
-}
-function mk(f,title,link,pub,desc,img){
-  title=plain(title);const sum=plain(desc).slice(0,420);
-  return {id:hash(link||title),t:title,s:f.name,u:link,d:pub||Date.now(),x:sum,img:/^https?:/.test(img||"")?img:"",c:classify(title+" "+sum)};
-}
-async function viaWorker(){
-  const r=await tfetch(WORKER_URL.replace(/\/$/,"")+"/api/news",10000);
-  if(!r.ok)throw new Error("worker "+r.status);
-  const j=await r.json();
-  return (j.items||[]).map(it=>mk({name:it.source},it.title,it.link,it.d,it.desc,it.img)).filter(a=>a.t&&/^https?:/.test(a.u));
-}
-async function viaJson(f){
-  const r=await tfetch(PROXY+encodeURIComponent(f.url));
-  if(!r.ok)throw new Error("http "+r.status);
-  const j=await r.json();
-  if(j.status!=="ok")throw new Error("feed");
-  return (j.items||[]).map(it=>mk(f,it.title,it.link,Date.parse((it.pubDate||"").replace(" ","T")+"Z")||Date.parse(it.pubDate),it.description||it.content,it.thumbnail||(it.enclosure&&it.enclosure.link)));
-}
-async function viaXml(f){
-  const r=await tfetch("https://api.allorigins.win/raw?url="+encodeURIComponent(f.url));
-  if(!r.ok)throw new Error("http "+r.status);
-  const x=new DOMParser().parseFromString(await r.text(),"text/xml");
-  const its=[...x.querySelectorAll("item")];
-  if(!its.length)throw new Error("empty");
-  return its.map(it=>{
-    const g=n=>{const e=it.getElementsByTagName(n)[0];return e?e.textContent:""};
-    const enc=it.getElementsByTagName("enclosure")[0],th=it.getElementsByTagName("media:thumbnail")[0];
-    return mk(f,g("title"),g("link").trim(),Date.parse(g("pubDate")),g("description"),(th&&th.getAttribute("url"))||(enc&&enc.getAttribute("url")));
-  });
-}
-async function fetchFeed(f){
-  try{const r=await viaJson(f);if(r.length)return r}catch(e){}
-  return (await viaXml(f)).filter(a=>a.t&&/^https?:/.test(a.u));
-}
-function setArts(list,note){
-  ARTS=list;AMAP={};list.forEach(a=>AMAP[a.id]=a);
-  $("statusText").textContent=note;
-  renderAll();
-  const m=location.hash.match(/news=([^&]+)/);if(m&&AMAP[m[1]]){openNews(m[1]);history.replaceState(null,"",location.pathname)}
-}
-async function loadNews(manual){
-  $("statusText").textContent="খবর লোড হচ্ছে…";
-  let cached=null;try{cached=JSON.parse(localStorage.getItem(CACHE_KEY)||"null")}catch(e){}
-  if(!manual&&cached&&cached.items&&cached.items.length&&Date.now()-cached.t<10*60000){setArts(cached.items,"হালনাগাদ: "+ago(cached.t));return}
-  let ok=[];
-  if(WORKER_URL){try{ok=await viaWorker()}catch(e){}}
-  if(!ok.length){const res=await Promise.allSettled(FEEDS.map(fetchFeed));ok=res.filter(r=>r.status==="fulfilled").flatMap(r=>r.value)}
-  const seen=new Set(),items=[];
-  ok.sort((a,b)=>b.d-a.d).forEach(a=>{if(!seen.has(a.id)){seen.add(a.id);items.push(a)}});
-  if(items.length){
-    const list=items.slice(0,60);
-    try{localStorage.setItem(CACHE_KEY,JSON.stringify({t:Date.now(),items:list}))}catch(e){}
-    setArts(list,"লাইভ · "+bn(list.length)+"টি খবর · "+ago(Date.now()));
-    if(manual)toast("খবর হালনাগাদ হয়েছে");
-  }else if(cached&&cached.items&&cached.items.length){
-    setArts(cached.items,"অফলাইন · আগের খবর দেখাচ্ছে ("+ago(cached.t)+")");
-    toast("ইন্টারনেট নেই, আগের খবর দেখানো হচ্ছে");
-  }else{
-    ARTS=[];AMAP={};
-    $("statusText").textContent="খবর লোড করা যায়নি";
-    $("homeList").innerHTML='<div class="empty">ইন্টারনেট সংযোগ পরীক্ষা করে “রিফ্রেশ” চাপুন।</div>';
-    $("featuredBox").innerHTML="";
-  }
-}
-
-/* ============ রেন্ডার ============ */
-const getArt=id=>AMAP[id]||state.saved[id]||state.meta[id]||null;
-function story(a){
-  const saved=!!state.saved[a.id],isr=state.readIds.includes(a.id),c=a.c||"সাধারণ";
-  return `<article class="story${isr?" isread":""}" style="--cc:${ccol(c)}" onclick="openNews('${a.id}')"><div class="when">${a.d?hm(a.d):""}</div><div class="rail"><i></i></div><div class="sbody"><div class="kick"><b>${esc(c)}</b><span>${esc(a.s)}</span></div><h3>${esc(a.t)}</h3>${a.x?`<p class="sum">${esc(a.x)}</p>`:""}<div class="sact"><button class="${saved?"on":""}" onclick="event.stopPropagation();toggleSave('${a.id}')">${saved?"★ রাখা আছে":"☆ রেখে দিন"}</button><button onclick="event.stopPropagation();share('${a.id}')">↗ পাঠান</button></div></div>${a.img?`<div class="pic" style="background-image:url('${esc(a.img)}')"></div>`:""}</article>`;
-}
-function timeline(arr,flat){
-  let out="",last="";
-  arr.forEach(a=>{
-    if(!flat&&a.d){const g=dayLabel(a.d);if(g!==last){out+=`<div class="dayhead">${g}</div>`;last=g}}
-    out+=story(a);
-  });
-  return `<div class="tline">${out}</div>`;
-}
-function fill(id,arr,emptyMsg,flat){$(id).innerHTML=arr.length?timeline(arr,flat):`<div class="empty">${emptyMsg}</div>`}
-function renderFilters(){
-  $("homeFilters").innerHTML=["সব",...CATS].map(c=>`<button class="${c===catFilter?"on":""}" onclick="setCat('${c}')">${c==="সব"?"সব খবর":c}</button>`).join("");
-}
-function setCat(c){catFilter=c;renderHome()}
-function renderHome(){
-  renderFilters();
-  const q=$("q").value.trim().toLowerCase();
-  let arr=ARTS;
-  if(catFilter!=="সব")arr=arr.filter(a=>a.c===catFilter);
-  if(q)arr=arr.filter(a=>(a.t+" "+a.x+" "+a.s).toLowerCase().includes(q));
-  $("listLabel").textContent=q?`🔎 খোঁজের ফলাফল · ${bn(arr.length)}টি`:`${catFilter==="সব"?"সময়ের ক্রমে সর্বশেষ":catFilter} · ${bn(arr.length)}টি`;
-  const f=ARTS[0];
-  $("featuredBox").innerHTML=(!q&&catFilter==="সব"&&f)?`<div class="lead" onclick="openNews('${f.id}')"><small>প্রধান খবর</small><h2>${esc(f.t)}</h2><p>${esc(f.s)} · ${ago(f.d)} · পড়ুন →</p></div>`:"";
-  if(!ARTS.length&&!q)return;
-  fill("homeList",arr,"মিল পাওয়া যায়নি। অন্য শব্দ বা বিভাগ চেষ্টা করুন।");
-}
-function renderSaved(){fill("list-saved",Object.values(state.saved).sort((a,b)=>(b.at||0)-(a.at||0)),"এখনো কিছু রাখেননি। যেকোনো খবরের নিচে “☆ রেখে দিন” চাপুন।",true)}
-function renderHistory(){fill("list-history",state.history.map(getArt).filter(Boolean),"এখনো কোনো খবর পড়েননি। “খবর” ট্যাব থেকে একটি খুলুন।",true)}
-function renderNotes(){
-  const ids=Object.keys(state.notes).filter(id=>state.notes[id]&&state.notes[id].trim());
-  $("notesList").innerHTML=ids.length?ids.map(id=>{const m=getArt(id)||{};return `<div class="nitem"><h4 onclick="openNews('${id}')">${esc(m.t||"সংবাদ")}</h4><p>${esc(state.notes[id])}</p></div>`}).join(""):'<div class="empty">কোনো নোট নেই। খবর খুলে নিচের “মার্জিনের নোট” ঘরে লিখুন, এখানে জমা হবে।</div>';
-}
-function renderAll(){
-  renderHome();renderSaved();renderHistory();renderNotes();renderFeed();renderStats();stats();
-  $("srcList").textContent=FEEDS.map(f=>f.name).join(", ");
-  const n=new Date();$("dateLine").textContent=WD[n.getDay()]+", "+bn(n.getDate())+" "+MO[n.getMonth()]+" "+bn(n.getFullYear());
-}
-function stats(){
-  $("readN").textContent=bn(state.readIds.length);
-  $("saveN").textContent=bn(Object.keys(state.saved).length);
-  const days=new Set(state.days);let st=0,d=new Date();
-  if(!days.has(dstr(d)))d.setDate(d.getDate()-1);
-  while(days.has(dstr(d))){st++;d.setDate(d.getDate()-1)}
-  $("streakN").textContent=bn(st);
-  const c=state.reads[today()]||0,G=state.prefs.goal||5;
-  $("goalText").textContent=bn(Math.min(c,G))+"/"+bn(G);
-  $("goalRing").style.strokeDashoffset=163.4*(1-Math.min(c/G,1));
-  $("goalSub").textContent=c>=G?"✓ আজকের লক্ষ্য পূরণ হয়েছে!":"আজকের লক্ষ্যে আর "+bn(G-c)+"টি খবর বাকি";
-}
-function markDay(){if(!state.days.includes(today()))state.days.push(today())}
-
-/* ============ নেভিগেশন ============ */
-function page(id){
-  const map={saved:["khata","saved"],notes:["khata","notes"],history:["khata","history"],stats:["me"],about:["me"]};
-  let sub=null;if(map[id]){sub=map[id][1];id=map[id][0]}
-  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll(".dk").forEach(x=>x.classList.remove("on"));
-  $("p-"+id).classList.add("active");$("d-"+id).classList.add("on");
-  $("scroll").scrollTop=0;
-  if(id==="feed")renderFeed();if(id==="me")renderStats();if(id==="quiz")quizHome();
-  if(id==="khata"){renderSaved();renderHistory();renderNotes();seg(sub||currentSeg)}
-}
-let currentSeg="saved";
-function seg(n){currentSeg=n;["saved","notes","history"].forEach(k=>{$("sg-"+k).classList.toggle("on",k===n);$("kh-"+k).classList.toggle("on",k===n)})}
-function clearSearch(){$("q").value="";renderHome()}
-
-/* ============ রিডার ============ */
-function openNews(id){
-  const a=getArt(id);if(!a)return;
-  openId=id;
-  state.meta[id]={t:a.t,s:a.s,u:a.u,d:a.d,c:a.c};
-  state.history=[id,...state.history.filter(x=>x!==id)].slice(0,60);
-  if(!state.readIds.includes(id)){state.readIds.push(id);state.reads[today()]=(state.reads[today()]||0)+1;const cc=a.c||"সাধারণ";state.catReads[cc]=(state.catReads[cc]||0)+1;sessionReads++;if(sessionReads%3===0)pendingAd=true}
-  markDay();persist();cloudPrefs();renderAll();
-  const saved=!!state.saved[id],c=a.c||"সাধারণ";
-  $("rtitle").textContent=a.t;
-  $("rbody").innerHTML=`<span class="cat" style="--cc:${ccol(c)}">${esc(c)}</span><h1>${esc(a.t)}</h1><div class="rmeta">${a.d?dayLabel(a.d)+", "+hm(a.d)+" · ":""}সূত্র: ${esc(a.s)}</div>
-  ${a.img?`<img class="rimg" src="${esc(a.img)}" alt="" loading="lazy" onerror="this.remove()">`:""}
-  ${a.x?`<p class="txt">${esc(a.x)}${a.x.length>=419?"…":""}</p>`:""}
-  <a class="source" href="${esc(a.u)}" target="_blank" rel="noopener" onclick="openSource(event,'${id}')">${esc(a.s)}-এ পূর্ণ প্রতিবেদন পড়ুন ↗</a>
-  <div class="rtools"><button onclick="changeFont(-1)">অ− ছোট</button><button onclick="changeFont(1)">অ+ বড়</button><button class="readmark" onclick="markRead('${id}')">✓ পড়া হয়েছে</button></div>
-  <div class="margin"><label for="note-${id}">✎ মার্জিনের নোট</label><textarea id="note-${id}" placeholder="গুরুত্বপূর্ণ তথ্য, প্রশ্ন বা নিজের মতামত…" oninput="saveNote('${id}',this.value)">${esc(state.notes[id]||"")}</textarea><small>টেলিগ্রামে খুললে নোট আপনার অ্যাকাউন্টে সিঙ্ক হয়; অন্য কেউ দেখতে পায় না।</small></div>
-  <div class="rbuttons"><button id="saveBtn" onclick="toggleSave('${id}')">${saved?"★ রাখা আছে":"☆ রেখে দিন"}</button><button onclick="share('${id}')">↗ পাঠান</button></div>
-  <div class="break"><small>সৌজন্য বিরতি</small><p>সব ফিচার বিজ্ঞাপন ছাড়াই ব্যবহার করা যায়। চাইলে একটি ঐচ্ছিক বিজ্ঞাপন দেখে ডেইলিরিডকে সহায়তা করতে পারেন।</p><button class="adbtn" onclick="optionalAd()">▶ ঐচ্ছিক বিজ্ঞাপন দেখুন</button></div>`;
-  $("rscroll").scrollTop=0;$("rprog").style.width="0";$("reader").classList.add("open");
-}
-function openSource(e,id){if(tg&&tg.openLink){e.preventDefault();const u=(getArt(id)||{}).u;try{tg.openLink(u)}catch(x){window.open(u,"_blank")}}}
-function closeReader(){
-  $("reader").classList.remove("open");openId=null;
-  if(pendingAd){pendingAd=false;if(state.prefs.autoAd!==false&&adsShown<4)setTimeout(interstitial,400)}
-}
-function saveNote(id,v){
-  state.notes[id]=v;clearTimeout(window._nt);
-  window._nt=setTimeout(()=>{persist();cloudNote(id);renderNotes();toast("নোট সংরক্ষিত হয়েছে")},700);
-}
-function markRead(id){if(!state.readIds.includes(id))state.readIds.push(id);persist();renderAll();toast("পড়া হিসেবে চিহ্নিত হয়েছে")}
-function toggleSave(id){
-  const a=getArt(id);if(!a)return;
-  if(state.saved[id])delete state.saved[id];else state.saved[id]={id,t:a.t,s:a.s,u:a.u,d:a.d,c:a.c,at:Date.now()};
-  persist();cloudSaved(id);renderAll();
-  const sb=$("saveBtn");if(sb&&openId===id)sb.textContent=state.saved[id]?"★ রাখা আছে":"☆ রেখে দিন";
-  toast(state.saved[id]?"খবর রেখে দেওয়া হয়েছে":"রাখা খবর থেকে সরানো হয়েছে");
-}
-function clearHistory(){state.history=[];persist();renderAll();toast("পড়ার ইতিহাস মুছে ফেলা হয়েছে")}
-
-/* ============ শেয়ার ও নোট এক্সপোর্ট ============ */
-async function copyText(t){try{await navigator.clipboard.writeText(t);return true}catch(e){const x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();let ok=false;try{ok=document.execCommand("copy")}catch(_){}x.remove();return ok}}
-function tgShare(url,text){const l="https://t.me/share/url?url="+encodeURIComponent(url)+"&text="+encodeURIComponent(text||"");if(tg&&tg.openTelegramLink)tg.openTelegramLink(l);else window.open(l,"_blank")}
-async function share(id){
-  const a=getArt(id);if(!a)return;
-  if(tg&&tg.openTelegramLink){tgShare(a.u,a.t+" — "+a.s);return}
-  try{if(navigator.share){await navigator.share({title:a.t,text:a.t,url:a.u});return}}catch(e){return}
-  toast((await copyText(a.t+"\n"+a.u))?"লিংক কপি হয়েছে":"কপি করা যায়নি");
-}
-function notesText(){
-  const ids=Object.keys(state.notes).filter(id=>state.notes[id]&&state.notes[id].trim());
-  return ids.map(id=>{const m=getArt(id)||{};return "• "+(m.t||"সংবাদ")+(m.s?" ("+m.s+")":"")+"\n"+state.notes[id]+(m.u?"\n"+m.u:"")}).join("\n\n");
-}
-async function exportNotes(mode){
-  const t=notesText();if(!t){toast("এখনো কোনো নোট নেই");return}
-  if(mode==="share"){
-    if(tg&&tg.openTelegramLink){tgShare(BOT_URL||"https://t.me/",t.slice(0,3500));return}
-    try{if(navigator.share){await navigator.share({title:"আমার পাঠ-নোট",text:t});return}}catch(e){return}
-  }
-  toast((await copyText(t))?"সব নোট কপি হয়েছে":"কপি করা যায়নি");
-}
-
-/* ============ আমার ফিড, পরিসংখ্যান, ডাইজেস্ট ============ */
-function debSearch(){clearTimeout(window._sd);window._sd=setTimeout(renderHome,200)}
-const ek=k=>encodeURIComponent(k).replace(/'/g,"%27");
-function toggleFollow(k){const i=state.follow.indexOf(k);if(i>=0)state.follow.splice(i,1);else state.follow.push(k);persist();cloudPrefs();renderFeed()}
-function addKw(){const v=$("kw").value.trim();if(!v)return;if(!state.follow.includes(v))state.follow.push(v);$("kw").value="";persist();cloudPrefs();renderFeed();toast("“"+v+"” যোগ হয়েছে")}
-function renderFeed(){
-  const chips=[...CATS,...state.follow.filter(k=>!CATS.includes(k))];
-  $("followChips").innerHTML=chips.map(k=>`<button class="${state.follow.includes(k)?"on":""}" onclick="toggleFollow(decodeURIComponent('${ek(k)}'))">${state.follow.includes(k)?"✓ ":"+ "}${esc(k)}</button>`).join("");
-  if(!state.follow.length){$("feedLabel").textContent="";$("list-feed").innerHTML='<div class="empty">উপরের বিষয়গুলো ট্যাপ করে অনুসরণ করুন, বা নিজের শব্দ যোগ করুন। আপনার পছন্দের খবর এখানে আলাদা করে সাজানো থাকবে।</div>';return}
-  const arr=ARTS.filter(a=>state.follow.some(k=>a.c===k||(a.t+" "+a.x).includes(k)));
-  $("feedLabel").textContent="আপনার ফিড · "+bn(arr.length)+"টি খবর";
-  fill("list-feed",arr,"এই মুহূর্তে আপনার পছন্দের বিষয়ে নতুন খবর নেই। পরে রিফ্রেশ করে দেখুন।");
-}
-function setGoal(n){state.prefs.goal=n;persist();cloudPrefs();renderStats();toast("দৈনিক লক্ষ্য: "+bn(n)+"টি")}
-function renderStats(){
-  const names=["রবি","সোম","মঙ্গল","বুধ","বৃহ","শুক্র","শনি"],days=[];
-  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push({n:state.reads[dstr(d)]||0,w:names[d.getDay()]})}
-  const mx=Math.max(1,...days.map(d=>d.n));
-  const cats=Object.entries(state.catReads).sort((a,b)=>b[1]-a[1]);const cm=cats.length?cats[0][1]:1;
-  const q=state.quiz,acc=q.total?Math.round(q.score/q.total*100):0,G=state.prefs.goal||5;
-  $("statsBox").innerHTML=`
-  <div class="panel"><h3>গত ৭ দিনে পড়া খবর</h3>
-    <div style="display:flex;align-items:flex-end;gap:7px;height:104px;margin-top:10px">${days.map(d=>`<div style="flex:1;text-align:center;font-size:10px;color:var(--soft);font-weight:700"><div style="height:${Math.round(d.n/mx*70)}px;min-height:3px;background:var(--ac);border:1.5px solid var(--ink);border-radius:5px 5px 0 0"></div>${bn(d.n)}<br>${d.w}</div>`).join("")}</div></div>
-  <div class="panel"><h3>কোন বিষয়ে বেশি পড়ছেন</h3>${cats.length?cats.map(([k,v])=>`<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700"><span>${esc(k)}</span><span style="color:var(--soft)">${bn(v)}</span></div><div class="bar"><div style="width:${Math.round(v/cm*100)}%;background:${ccol(k)}"></div></div></div>`).join(""):'<p>এখনো কোনো খবর পড়েননি। কয়েকটি খবর পড়লে এখানে হিসাব দেখাবে।</p>'}</div>
-  <div class="panel"><h3>ধাঁধা (কুইজ)</h3><p>খেলেছেন ${bn(q.played)} বার · সঠিক উত্তরের হার ${bn(acc)}% · সর্বোচ্চ স্কোর ${bn(q.best)}/৩</p></div>
-  <div class="panel"><h3>দৈনিক পড়ার লক্ষ্য</h3><p>প্রতিদিন কয়টি খবর পড়তে চান?</p><div class="setrow" style="margin:8px 0 0">${[3,5,10].map(n=>`<button class="${n===G?"on":""}" onclick="setGoal(${n})">${bn(n)}টি</button>`).join("")}</div></div>`;
-}
-function toggleAutoAd(){state.prefs.autoAd=state.prefs.autoAd===false;persist();cloudPrefs();applyPrefs();toast(state.prefs.autoAd!==false?"ইন্টারস্টিশিয়াল চালু হয়েছে":"ইন্টারস্টিশিয়াল বিজ্ঞাপন বন্ধ হয়েছে")}
-function openBot(){
-  if(!BOT_URL){toast("বট লিংক এখনো সেট করা নেই");return}
-  const u=BOT_URL.replace(/\/$/,"")+"?start=digest";
-  if(tg&&tg.openTelegramLink)tg.openTelegramLink(u);else window.open(u,"_blank");
-}
-async function shareDigest(){
-  if(!ARTS.length){toast("আগে খবর লোড হোক");return}
-  const t="📰 আজকের ৫ শিরোনাম\n\n"+ARTS.slice(0,5).map((a,i)=>bn(i+1)+". "+a.t+" ("+a.s+")\n"+a.u).join("\n\n");
-  if(tg&&tg.openTelegramLink){tgShare(BOT_URL||ARTS[0].u,t.slice(0,3500));return}
-  try{if(navigator.share){await navigator.share({title:"আজকের ৫ শিরোনাম",text:t});return}}catch(e){return}
-  toast((await copyText(t))?"শিরোনাম কপি হয়েছে":"কপি করা যায়নি");
-}
-
-/* ============ কুইজ ============ */
-let QZ=null;const LET=["ক","খ","গ"];
-function pick(arr,n){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a.slice(0,n)}
-function buildQuiz(){
-  const sources=[...new Set(ARTS.map(a=>a.s))];
-  const qs=[];
-  pick(ARTS,Math.min(ARTS.length,9)).forEach((a,i)=>{
-    if(qs.length>=3)return;
-    const catOk=a.c&&a.c!=="সাধারণ";
-    if(catOk&&i%2===1){
-      const wrong=pick(CATS.filter(c=>c!==a.c),2);
-      qs.push({q:"এই খবরটি কোন বিভাগের?",h:a.t,opts:pick([a.c,...wrong],3),ans:a.c});
-    }else if(sources.length>=2){
-      qs.push({q:"এই শিরোনামটি কোন সংবাদমাধ্যমের?",h:a.t,opts:pick(sources,Math.min(3,sources.length)),ans:a.s});
-    }
-  });
-  return qs.slice(0,3);
-}
-function quizHome(){
-  const q=state.quiz;
-  $("quizBox").innerHTML=`<div class="qcard"><h2>আজকের খবর থেকে ৩টি প্রশ্ন</h2><p class="qprog">খেলেছেন: ${bn(q.played)} বার · সর্বোচ্চ স্কোর: ${bn(q.best)}/৩</p><div style="height:14px"></div>${ARTS.length>=3?'<button class="bigbtn" onclick="startQuiz()">শুরু করুন</button>':'<div class="empty" style="margin:0">ধাঁধার জন্য আগে খবর লোড হতে হবে। “খবর” ট্যাবে গিয়ে রিফ্রেশ করুন।</div>'}</div>`;
-}
-function startQuiz(){
-  const qs=buildQuiz();
-  if(qs.length<1){toast("ধাঁধা বানানোর মতো খবর নেই");return}
-  QZ={qs,i:0,score:0};showQ();
-}
-function showQ(){
-  const q=QZ.qs[QZ.i];
-  $("quizBox").innerHTML=`<div class="qcard"><div class="qprog">প্রশ্ন ${bn(QZ.i+1)} / ${bn(QZ.qs.length)}</div><h2>${esc(q.q)}</h2><p class="qline">“${esc(q.h)}”</p><div id="qopts">${q.opts.map((o,k)=>`<button class="opt" onclick="answerQ(${k})"><i>${LET[k]}</i>${esc(o)}</button>`).join("")}</div><div id="qnext"></div></div>`;
-}
-function answerQ(k){
-  const q=QZ.qs[QZ.i];if(QZ.done)return;QZ.done=true;
-  const right=q.opts[k]===q.ans;if(right)QZ.score++;
-  document.querySelectorAll("#qopts .opt").forEach((b,i)=>{b.disabled=true;if(q.opts[i]===q.ans)b.classList.add("ok");else if(i===k)b.classList.add("bad")});
-  const last=QZ.i===QZ.qs.length-1;
-  $("qnext").innerHTML=`<p style="font-size:12px;font-weight:700;margin:8px 0;color:var(--${right?"ac2":"ac"})">${right?"সঠিক!":"ভুল। সঠিক উত্তর: "+esc(q.ans)}</p><button class="bigbtn" onclick="${last?"endQuiz()":"nextQ()"}">${last?"ফলাফল দেখুন":"পরের প্রশ্ন"}</button>`;
-}
-function nextQ(){QZ.i++;QZ.done=false;showQ()}
-function endQuiz(){
-  const n=QZ.qs.length,s=QZ.score;
-  state.quiz.played++;state.quiz.best=Math.max(state.quiz.best,s);state.quiz.score+=s;state.quiz.total+=n;
-  markDay();persist();cloudPrefs();
-  $("quizBox").innerHTML=`<div class="qcard"><div class="qprog">আপনার ফলাফল</div><div class="qscore">${bn(s)} / ${bn(n)}</div><p style="text-align:center;font-size:13px;color:var(--soft);margin-bottom:14px">${s===n?"চমৎকার! সবগুলো ঠিক।":s>0?"ভালো হয়েছে। আবার চেষ্টা করুন।":"আজকের খবর আরেকটু পড়ে আবার চেষ্টা করুন।"}</p><button class="bigbtn" onclick="startQuiz()">আবার খেলুন</button><button class="opt" style="margin-top:10px;justify-content:center" onclick="page('home')">খবর পড়তে ফিরে যান</button><button class="adbtn" onclick="optionalAd()">▶ ঐচ্ছিক বিজ্ঞাপন দেখুন</button></div>`;
-  QZ=null;
-}
-
-/* ============ ঐচ্ছিক বিজ্ঞাপন (Adsgram) ============ */
-let ad=null;try{if(window.Adsgram)ad=window.Adsgram.init({blockId:BLOCK_ID,debug:false})}catch(e){}
-async function optionalAd(){
-  if(!ad){toast("এই মুহূর্তে বিজ্ঞাপন পাওয়া যাচ্ছে না");return}
-  try{await ad.show();toast("ডেইলিরিডকে সহায়তা করার জন্য ধন্যবাদ")}catch(e){toast("বিজ্ঞাপন সম্পন্ন হয়নি; আপনি পড়া চালিয়ে যেতে পারেন")}
-}
-async function interstitial(){ if(!ad)return; adsShown++; try{await ad.show()}catch(e){} }
-
-/* ============ শুরু ============ */
-$("rscroll").addEventListener("scroll",()=>{const e=$("rscroll"),m=e.scrollHeight-e.clientHeight;$("rprog").style.width=(m>0?Math.min(100,e.scrollTop/m*100):100)+"%"},{passive:true});
-$("hello").textContent=tgUser&&tgUser.first_name?"স্বাগতম, "+tgUser.first_name:"খবরের খাতা";
-applyPrefs();renderAll();pullCloud();loadNews(false);
-setInterval(()=>{if(!document.hidden)loadNews(false)},10*60000);
-</script>
-</body>
-</html>
+function quizStart(){quizIndex=0;quizScore=0;quizDone=false;showQuestion()}
+function showQuestion(){let q=questions[quizIndex];$('quizbox').innerHTML=`<div class="meta">QUESTION ${quizIndex+1} OF ${questions.length}</div><h3>${q.q}</h3>${q.o.map((v,i)=>`<button class="quizopt" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${v}</button>`).join('')}<p id="quizfeedback"></p>`}
+function answer(i){if(quizDone)return;quizDone=true;let q=questions[quizIndex],ok=i===q.a;if(ok)quizScore++;document.querySelectorAll('.quizopt').forEach((b,n)=>{if(n===q.a)b.classList.add('correct');else if(n===i)b.classList.add('wrong')});$('quizfeedback').innerHTML=`<p>${ok?'Correct!':'Not quite.'}</p><button class="btn" onclick="nextQuestion()">${quizIndex===questions.length-1?'See results':'Next question'}</button>`}
+function nextQuestion(){quizIndex++;quizDone=false;if(quizIndex<questions.length)showQuestion();else $('quizbox').innerHTML=`<h3>Quiz complete</h3><p>You scored <b>${quizScore} / ${questions.length}</b>.</p><button class="btn" onclick="quizStart()">Play again</button>`}
+$('today').textContent=TODAY+' • Sunday';document.documentElement.dataset.theme=data.theme;document.body.style.fontSize=data.font+'px';renderHome();renderLocal();stats();
+</script></body></html>
