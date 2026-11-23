@@ -6,6 +6,9 @@
 <meta name="theme-color" content="#101827">
 <title>ToolHub — Free Online Tools</title>
 <meta name="description" content="A practical collection of free browser-based tools for text, images, coding, QR codes, calculations and everyday tasks.">
+<script>
+try{if(!localStorage.getItem('toolhub_theme_default_v2')){localStorage.setItem('toolhub_theme_v1','dark');localStorage.setItem('toolhub_theme_default_v2','1')}}catch(e){}
+</script>
 <style>
 :root{--bg:#0b1220;--panel:#111c2e;--panel2:#17243a;--line:#263750;--text:#eaf1fb;--muted:#9aabc2;--accent:#63e6be;--accent2:#65a8ff;--danger:#ff7777;--radius:18px}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% -10%,#1b3651 0,transparent 35%),var(--bg);color:var(--text);font:15px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
@@ -161,10 +164,15 @@ body.night-mode footer{background:#080d0a}
  footer{padding:28px 18px}
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+.page-backbar{display:flex;align-items:center;gap:12px;margin:0 0 18px}.page-backbar .back-btn{display:inline-flex;align-items:center;gap:8px;border:1px solid #cfc8b9;background:#fffdf8;color:#17241f;border-radius:999px;padding:10px 16px;font-weight:800;text-decoration:none}.page-backbar .back-btn:hover{background:#17241f;color:#d2ff4a}.page-backbar .crumb{color:#737b72;font-size:13px}.workspace{margin-top:8px;min-height:55vh}.workspace.active{display:block}
+@media(max-width:620px){.page-backbar{margin-bottom:12px}.page-backbar .crumb{display:none}}
 </style>
 
 </head>
 <body>
+<script>
+try{document.body.classList.toggle('night-mode',(localStorage.getItem('toolhub_theme_v1')||'dark')==='dark')}catch(e){document.body.classList.add('night-mode')}
+</script>
 <header><div class="top"><a class="brand" href="#" onclick="home();return false"><span class="logo">T</span>ToolHub</a><div class="spacer"></div><nav class="nav"><button onclick="home()">All tools</button><button onclick="showInfo('about')">About</button><button onclick="showInfo('privacy')">Privacy</button><button onclick="showInfo('contact')">Contact</button></nav></div></header>
 <main>
 <section class="hero" id="hero"><div><div class="eyebrow">THE TOOLHUB WORKBENCH · BUILT FOR REAL TASKS</div><h1>Make room<br><span style="color:var(--accent)">for better work.</span></h1><p>A focused workspace for the small jobs that slow your day down. Clean text, shape images, inspect data and solve quick calculations — all from one place.</p></div><div class="hero-card"><strong>A WORKBENCH OF 36+</strong><span>Text · Images · Developer · QR · Calculator</span><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><span>Pick a task. Open a tool. Get straight to the result.</span></div></section>
@@ -185,7 +193,7 @@ body.night-mode footer{background:#080d0a}
 <div class="grid" id="toolGrid"></div>
 
 </div>
-<section class="workspace" id="workspace"><div class="workhead"><div><h2 id="toolTitle">Tool</h2><p id="toolDesc"></p></div><div class="spacer"></div><button class="ghost" onclick="home()">← All tools</button></div><div class="tool-body" id="toolBody"></div><div class="status" id="status" aria-live="polite"></div></section>
+<section class="workspace" id="workspace"><div class="page-backbar"><button class="back-btn" type="button" onclick="goBack()">← Back</button><a class="back-btn" href="./" onclick="return goHomeLink(event)">⌂ Home</a><span class="crumb">ToolHub / Individual tool</span></div><div class="workhead"><div><h2 id="toolTitle">Tool</h2><p id="toolDesc"></p></div><div class="spacer"></div><button class="ghost" onclick="home()">← All tools</button></div><div class="tool-body" id="toolBody"></div><div class="status" id="status" aria-live="polite"></div></section>
 </main>
 <footer>© <span id="year"></span> ToolHub · Free browser-based utilities<br><div style="margin-top:9px"><a href="#" onclick="showInfo('about');return false">About</a><a href="#" onclick="showInfo('privacy');return false">Privacy Policy</a><a href="#" onclick="showInfo('terms');return false">Terms</a><a href="#" onclick="showInfo('contact');return false">Contact</a></div><p class="hint">ToolHub is an independent utility website. Results should be checked before use in important work.</p></footer>
 <div class="modal" id="infoModal"><div class="modalbox"><button class="ghost close" onclick="closeInfo()">Close ✕</button><div id="infoContent"></div></div></div>
@@ -234,8 +242,13 @@ const tools=[
 ];
 const $=id=>document.getElementById(id);
 function renderTools(){let q=$('search').value.toLowerCase();let arr=tools.filter(t=>(t.name+' '+t.cat+' '+t.desc).toLowerCase().includes(q));$('toolGrid').innerHTML=arr.map(t=>`<button class="tool-card" onclick="openTool('${t.id}')"><span class="ico">${t.icon}</span><b>${t.name}</b><small>${t.desc}</small></button>`).join('');$('count').textContent=arr.length+' tools';}
-function home(){$('workspace').classList.remove('active');$('homeContent').style.display='block';$('hero').style.display='grid';window.scrollTo({top:0,behavior:'smooth'});}
-function openTool(id){const t=tools.find(x=>x.id===id);if(!t)return;$('homeContent').style.display='none';$('hero').style.display='none';$('workspace').classList.add('active');$('toolTitle').textContent=t.name;$('toolDesc').textContent=t.desc;$('status').textContent='';buildTool(id);$('workspace').scrollIntoView({behavior:'smooth',block:'start'});}
+function showHomeView(){ $('workspace').classList.remove('active');$('homeContent').style.display='block';$('hero').style.display='grid';document.title='ToolHub — Free Online Tools';window.scrollTo({top:0,behavior:'smooth'}); }
+function home(){if(new URL(location.href).searchParams.has('tool')){location.href='./';return;}showHomeView()}
+function openTool(id){const t=tools.find(x=>x.id===id);if(!t)return;location.href='?tool='+encodeURIComponent(id);}
+function renderToolPage(id){const t=tools.find(x=>x.id===id);if(!t){showHomeView();return;} $('homeContent').style.display='none';$('hero').style.display='none';$('workspace').classList.add('active');$('toolTitle').textContent=t.name;$('toolDesc').textContent=t.desc;$('status').textContent='';document.title=t.name+' — ToolHub';buildTool(id);window.scrollTo(0,0);}
+function goBack(){if(history.length>1 && document.referrer && new URL(document.referrer).origin===location.origin){history.back();}else{location.href='./';}}
+function goHomeLink(e){e.preventDefault();location.href='./';return false;}
+window.addEventListener('popstate',()=>{const id=new URL(location.href).searchParams.get('tool');if(id)renderToolPage(id);else showHomeView();});
 function field(label,id,placeholder='',type='text'){return `<div class="field"><label for="${id}">${label}</label><input id="${id}" type="${type}" placeholder="${placeholder}"></div>`}
 function area(label,id,placeholder='Paste or type your content here...'){return `<div class="field"><label for="${id}">${label}</label><textarea id="${id}" placeholder="${placeholder}"></textarea></div>`}
 function actions(...items){return `<div class="actions">${items.join('')}</div>`}
@@ -354,7 +367,7 @@ function hubRecent(){return readHub(HUB_STORE.recent,[])}
 function initDynamicHub(){
   const cats=['All',...new Set(tools.map(t=>t.cat))];
   $('categoryFilters').innerHTML=cats.map(c=>`<button class="filter-chip ${c==='All'?'active':''}" onclick="setCategory('${c.replace(/'/g,"\\'")}',this)">${c}</button>`).join('');
-  const theme=localStorage.getItem(HUB_STORE.theme)||'light';
+  const theme=localStorage.getItem(HUB_STORE.theme)||'dark';
   document.body.classList.toggle('night-mode',theme==='dark');
   updateQuickPanels();
   renderTools();
@@ -368,7 +381,7 @@ function setView(view){activeView=view;document.querySelectorAll('.dash-tab').fo
 function toggleFavorite(id){let f=hubFavorites();f=f.includes(id)?f.filter(x=>x!==id):[...f,id];saveHub(HUB_STORE.favorites,f);updateQuickPanels();renderTools()}
 function updateQuickPanels(){
  const f=hubFavorites(),r=hubRecent();$('favCount').textContent=f.length;
- const make=(ids,empty)=>ids.length?ids.map(id=>tools.find(t=>t.id===id)).filter(Boolean).map(t=>`<button class="mini-tool" onclick="openTool('${t.id}')">${t.icon} ${t.name}</button>`).join(''):`<p class="empty-note">${empty}</p>`;
+ const make=(ids,empty)=>ids.length?ids.map(id=>tools.find(t=>t.id===id)).filter(Boolean).map(t=>`<a class="mini-tool" href="?tool=${encodeURIComponent(t.id)}">${t.icon} ${t.name}</a>`).join(''):`<p class="empty-note">${empty}</p>`;
  $('favoriteTools').innerHTML=make(f,'Tap the ☆ on any tool to save it here.');
  $('recentTools').innerHTML=make(r,'Your recently opened tools will appear here.');
 }
@@ -382,7 +395,7 @@ function renderTools(){
  if(sort==='az')arr.sort((a,b)=>a.name.localeCompare(b.name));
  if(sort==='za')arr.sort((a,b)=>b.name.localeCompare(a.name));
  if(sort==='category')arr.sort((a,b)=>a.cat.localeCompare(b.cat)||a.name.localeCompare(b.name));
- $('toolGrid').innerHTML=arr.length?arr.map(t=>`<article class="tool-card" role="group"><button class="favorite-star ${fav.includes(t.id)?'saved':''}" aria-label="${fav.includes(t.id)?'Remove from':'Add to'} favorites" title="Toggle favorite" onclick="toggleFavorite('${t.id}')">${fav.includes(t.id)?'★':'☆'}</button><button style="all:unset;display:block;cursor:pointer;width:100%" onclick="openTool('${t.id}')"><span class="ico">${t.icon}</span><b>${t.name}</b><small>${t.desc}</small><span class="tool-category">${t.cat}</span></button></article>`).join(''):`<div class="empty-state"><strong>No tools found</strong><p>Try another keyword or choose a different category.</p><button class="btn secondary" onclick="resetHubFilters()">Reset filters</button></div>`;
+ $('toolGrid').innerHTML=arr.length?arr.map(t=>`<article class="tool-card" role="group"><button class="favorite-star ${fav.includes(t.id)?'saved':''}" aria-label="${fav.includes(t.id)?'Remove from':'Add to'} favorites" title="Toggle favorite" onclick="toggleFavorite('${t.id}')">${fav.includes(t.id)?'★':'☆'}</button><a class="tool-open-link" href="?tool=${encodeURIComponent(t.id)}" style="all:unset;display:block;cursor:pointer;width:100%"><span class="ico">${t.icon}</span><b>${t.name}</b><small>${t.desc}</small><span class="tool-category">${t.cat}</span></a></article>`).join(''):`<div class="empty-state"><strong>No tools found</strong><p>Try another keyword or choose a different category.</p><button class="btn secondary" onclick="resetHubFilters()">Reset filters</button></div>`;
  $('count').textContent=`${arr.length} of ${tools.length} tools`;
 }
 function resetHubFilters(){activeCategory='All';activeView='all';$('search').value='';document.querySelectorAll('.filter-chip').forEach(x=>x.classList.toggle('active',x.textContent==='All'));document.querySelectorAll('.dash-tab').forEach(x=>x.classList.toggle('active',x.dataset.view==='all'));$('quickPanels').style.display='grid';renderTools()}
@@ -393,6 +406,9 @@ const originalHome=home;
 home=function(){originalHome();$('quickPanels').style.display=activeView==='all'?'grid':'none';renderTools()};
 $('themeToggle').textContent=(localStorage.getItem(HUB_STORE.theme)==='dark')?'☀ Light':'◐ Theme';
 initDynamicHub();
+// Load a directly-addressable tool page when its unique URL is opened or refreshed.
+const initialTool=new URL(location.href).searchParams.get('tool');
+if(initialTool){renderToolPage(initialTool);}
 </script>
 
 </body></html>
