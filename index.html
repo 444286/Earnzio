@@ -168,12 +168,106 @@ body.night-mode footer{background:#080d0a}
 @media(max-width:620px){.page-backbar{margin-bottom:12px}.page-backbar .crumb{display:none}}
 </style>
 
-</head>
+
+<style id="toolhub-mobile-dashboard">
+/* Compact app-dashboard layout inspired by the supplied mobile reference */
+.mobile-sidebar{display:none}
+@media(max-width:1000px){
+  body{background:#030817;color:#e7efff;min-height:100vh}
+  header{position:sticky;top:0;margin-left:116px;width:calc(100% - 116px);height:58px;background:#050b1b;border-bottom:1px solid #1c2942;backdrop-filter:none}
+  .top{height:58px;padding:8px 12px;gap:8px}
+  .brand{font-size:0}.brand .logo{width:27px;height:27px;border-radius:8px;font-size:15px}
+  .nav{display:none}
+  .mobile-sidebar{display:flex;position:fixed;z-index:15;left:0;top:0;bottom:0;width:116px;padding:12px 7px 10px;background:#030817;border-right:1px solid #1a2740;flex-direction:column;gap:5px;overflow-y:auto}
+  .side-brand{display:flex;align-items:center;gap:6px;padding:3px 2px 17px;color:#eaf1ff;font-size:10px;font-weight:800;line-height:1.2}
+  .side-brand small,.side-bottom small{display:block;font-size:7px;letter-spacing:.12em;color:#7f91b0;font-weight:600;margin-top:3px}
+  .side-logo{width:20px;height:20px;display:grid;place-items:center;border-radius:7px;background:#2563eb;color:white;font-size:12px}
+  .side-label{font-size:7px;letter-spacing:.18em;color:#647593;font-weight:800;padding:11px 4px 4px}
+  .side-link{display:flex;align-items:center;gap:6px;width:100%;border:0;background:transparent;color:#8fa0bf;text-align:left;border-radius:6px;padding:7px 5px;font-size:9px;line-height:1.1}
+  .side-link span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .side-link.active,.side-link:focus{background:#2869e8;color:white}
+  .side-bottom{display:flex;align-items:center;gap:6px;margin-top:auto;padding:10px 2px 2px;border-top:1px solid #1b2942;color:#cbd7ee;font-size:8px}
+  .user-dot{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:#142c55;color:#76a8ff;font-size:7px}
+  main{width:calc(100% - 116px);margin:0 0 0 116px;padding:12px 10px 28px;max-width:none}
+  .hero{display:none!important}
+  .searchbar{margin:0 0 10px;gap:5px}
+  .searchbar input{min-width:0;padding:8px 9px;font-size:9px;border-radius:7px;background:#0d172b;border-color:#1b2942}
+  .searchbar .btn{padding:7px 8px;font-size:8px;border-radius:7px;white-space:nowrap}
+  #themeToggle{display:none}
+  .dash-controls{margin:0 0 8px}
+  .filter-row{display:none}
+  .dash-row{justify-content:flex-start;gap:5px}
+  .dash-tabs{gap:4px;flex-wrap:nowrap;width:100%;overflow-x:auto}
+  .dash-tab{flex:0 0 auto;padding:6px 8px;font-size:8px;border-radius:5px;background:#0c1528;border-color:#1c2942;color:#9eafd0}
+  .dash-tab span{font-size:7px}
+  .dash-row select{display:none}
+  .quick-panels{display:none!important}
+  .section-head{margin:9px 0 8px;align-items:center}
+  .section-head h2{font-size:12px;letter-spacing:0}
+  .section-head p{display:none}
+  .section-head .hint{font-size:8px}
+  .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .tool-card{min-width:0;min-height:88px;padding:8px 7px 7px;border:1px solid #17233a;border-radius:8px;background:#0b1427;color:#e7efff;box-shadow:none}
+  .tool-card:before{display:none}
+  .tool-card .ico{width:21px;height:21px;margin:0 0 7px;font-size:11px;border-radius:7px;background:#10264b;color:#62a0ff}
+  .tool-card b{font-size:8px;line-height:1.25;letter-spacing:0;overflow-wrap:anywhere}
+  .tool-card small{font-size:6.5px;line-height:1.25;margin-top:3px;color:#8292af;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .tool-card .tool-category{display:none}
+  .favorite-star{right:5px;top:5px;width:15px;height:15px;padding:0;font-size:9px;border-radius:4px;background:#101c32;border-color:#293955;color:#a7b8d3}
+  .tool-card .ico{margin-right:18px}
+  .workspace{margin-top:0;padding:12px;border-radius:9px;background:#0b1427;border-color:#1b2942}
+  .page-backbar{display:flex;gap:5px;flex-wrap:wrap}
+  .page-backbar .back-btn{font-size:9px;padding:6px 8px}
+  .workhead h2{font-size:16px}.workhead p{font-size:10px}
+  .tool-body{gap:9px}.row{grid-template-columns:1fr}
+  .field label,.hint{font-size:10px}
+  input,textarea,select{font-size:12px;padding:9px}
+  .btn{font-size:10px;padding:8px 10px}
+  footer{display:none}
+}
+@media(max-width:390px){
+  .mobile-sidebar{width:104px}
+  header{margin-left:104px;width:calc(100% - 104px)}
+  main{margin-left:104px;width:calc(100% - 104px);padding-left:7px;padding-right:7px}
+  .grid{gap:4px}
+  .tool-card{min-height:82px;padding:7px 5px}
+  .tool-card b{font-size:7.5px}
+}
+
+/* Final responsive override: make the compact dashboard win over all earlier theme rules. */
+@media screen and (max-width:1000px){
+  .mobile-sidebar{display:flex!important}
+  #hero,.hero{display:none!important}
+  body{background:#030817!important;color:#e7efff!important}
+  .grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important}
+  .tool-card{min-height:88px!important;padding:8px 7px!important;background:#0b1427!important;color:#e7efff!important;border:1px solid #17233a!important;border-radius:8px!important}
+  .tool-card b{font-size:8px!important;line-height:1.25!important}
+  .tool-card small{font-size:6.5px!important;line-height:1.25!important}
+  .quick-panels{display:none!important}
+  footer{display:none!important}
+}
+</style>
+\n</head>
 <body>
 <script>
 try{document.body.classList.toggle('night-mode',(localStorage.getItem('toolhub_theme_v1')||'dark')==='dark')}catch(e){document.body.classList.add('night-mode')}
 </script>
-<header><div class="top"><a class="brand" href="#" onclick="home();return false"><span class="logo">T</span>ToolHub</a><div class="spacer"></div><nav class="nav"><button onclick="home()">All tools</button><button onclick="showInfo('about')">About</button><button onclick="showInfo('privacy')">Privacy</button><button onclick="showInfo('contact')">Contact</button></nav></div></header>
+
+<aside class="mobile-sidebar" aria-label="ToolHub navigation">
+  <div class="side-brand"><span class="side-logo">T</span><span>ToolHub<small>DASHBOARD</small></span></div>
+  <div class="side-label">MAIN</div>
+  <button class="side-link active" onclick="home()">▦ <span>Dashboard</span></button>
+  <div class="side-label">CATEGORIES</div>
+  <button class="side-link" onclick="setCategory('Image')">▧ <span>Image</span></button>
+  <button class="side-link" onclick="setCategory('PDF')">▤ <span>PDF</span></button>
+  <button class="side-link" onclick="setCategory('Developer')">‹› <span>Developer</span></button>
+  <button class="side-link" onclick="setCategory('Calculators')">▦ <span>Calculators</span></button>
+  <button class="side-link" onclick="setCategory('Security')">◇ <span>Security</span></button>
+  <button class="side-link" onclick="setCategory('Utility')">⌁ <span>Utility</span></button>
+  <button class="side-link" onclick="setCategory('Text')">T <span>Text</span></button>
+  <div class="side-bottom"><span class="user-dot">TH</span><span>ToolHub<small>Free tools</small></span></div>
+</aside>
+\n<header><div class="top"><a class="brand" href="#" onclick="home();return false"><span class="logo">T</span>ToolHub</a><div class="spacer"></div><nav class="nav"><button onclick="home()">All tools</button><button onclick="showInfo('about')">About</button><button onclick="showInfo('privacy')">Privacy</button><button onclick="showInfo('contact')">Contact</button></nav></div></header>
 <main>
 <section class="hero" id="hero"><div><div class="eyebrow">THE TOOLHUB WORKBENCH · BUILT FOR REAL TASKS</div><h1>Make room<br><span style="color:var(--accent)">for better work.</span></h1><p>A focused workspace for the small jobs that slow your day down. Clean text, shape images, inspect data and solve quick calculations — all from one place.</p></div><div class="hero-card"><strong>A WORKBENCH OF 36+</strong><span>Text · Images · Developer · QR · Calculator</span><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><span>Pick a task. Open a tool. Get straight to the result.</span></div></section>
 <div class="searchbar"><input id="search" placeholder="Search tools (e.g. image, word, JSON)..." oninput="renderTools()"><button class="btn secondary" onclick="document.getElementById('search').value='';renderTools()">Clear</button><button class="btn secondary" id="themeToggle" onclick="toggleTheme()" title="Switch appearance">◐ Theme</button></div>
