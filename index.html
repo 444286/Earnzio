@@ -247,7 +247,46 @@ body.night-mode footer{background:#080d0a}
   footer{display:none!important}
 }
 </style>
-\n</head>
+\n
+<style id="mobile-sidebar-drawer-fix">
+.mobile-menu-toggle,.mobile-sidebar-overlay{display:none}
+@media(max-width:1000px){
+  header{margin:0!important;width:100%!important;height:58px!important;left:0!important}
+  .top{height:58px!important;padding:8px 12px!important;gap:10px!important}
+  .mobile-menu-toggle{display:grid!important;place-items:center;width:36px;height:36px;flex:0 0 36px;border:1px solid #263753;border-radius:9px;background:#101d34;color:#eaf1ff;font-size:25px;line-height:1;cursor:pointer;transform:rotate(90deg)}
+  .brand{font-size:18px!important;display:flex!important;align-items:center;gap:8px}
+  .brand .logo{width:30px!important;height:30px!important;font-size:16px!important}
+  main{width:100%!important;margin:0!important;padding:14px 14px 42px!important;max-width:none!important}
+  .mobile-sidebar{display:flex!important;position:fixed!important;z-index:1002!important;left:0!important;top:0!important;bottom:0!important;width:245px!important;max-width:82vw!important;transform:translateX(-105%)!important;transition:transform .25s ease!important;box-shadow:18px 0 50px #0008!important;padding:18px 13px!important}
+  .mobile-sidebar.is-open{transform:translateX(0)!important}
+  .mobile-sidebar-overlay{display:block;position:fixed;inset:0;background:#0009;z-index:1001;opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease}
+  .mobile-sidebar-overlay.is-visible{opacity:1;visibility:visible}
+  #hero,.hero{display:grid!important;visibility:visible!important;min-height:0!important;grid-template-columns:1fr!important;padding:30px 22px!important;margin:0 0 18px!important;border-radius:12px!important}
+  .hero h1{font-size:clamp(38px,10vw,54px)!important;line-height:.96!important}
+  .hero p{font-size:15px!important;line-height:1.65!important}
+  .hero-card{display:block!important;border-left:0!important;border-top:1px solid #596057!important;padding:16px 0 0!important;margin-top:14px!important}
+  .searchbar{margin:14px 0!important;gap:7px!important}
+  .searchbar input{font-size:13px!important;padding:11px!important}
+  .searchbar .btn{font-size:11px!important;padding:9px 10px!important}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .tool-card{min-height:135px!important;padding:13px!important;border-radius:10px!important}
+  .tool-card b{font-size:13px!important;line-height:1.3!important}
+  .tool-card small{font-size:11px!important;line-height:1.4!important}
+  .tool-card .ico{width:27px!important;height:27px!important;font-size:14px!important}
+  .section-head h2{font-size:19px!important}
+}
+@media(max-width:390px){.hero{padding:25px 17px!important}.hero h1{font-size:39px!important}.tool-card{min-height:128px!important;padding:10px!important}.tool-card b{font-size:12px!important}}
+</style>
+
+
+<style id="toolhub-advanced-workspace">
+.advanced-workspace{margin:26px 0 30px;border:1px solid var(--line);background:var(--panel);padding:22px;border-radius:18px;color:var(--text)}
+.aw-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}.aw-head h2{margin:0 0 5px;font-size:22px}.aw-head p{margin:0;color:var(--muted);font-size:13px}.aw-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}.aw-card{border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:16px;min-width:0}.aw-card h3{font-size:15px;margin:0 0 12px}.aw-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.aw-metric{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px}.aw-metric b{display:block;font-size:22px;color:var(--accent)}.aw-metric span{font-size:11px;color:var(--muted)}.aw-input,.aw-card textarea{width:100%;box-sizing:border-box;background:var(--bg)!important;color:var(--text)!important;border:1px solid var(--line)!important;border-radius:10px;padding:11px;font:inherit}.aw-card textarea{min-height:110px;resize:vertical}.aw-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.aw-task-row{display:flex;gap:8px;margin-bottom:10px}.aw-task-list{display:grid;gap:7px;max-height:190px;overflow:auto}.aw-task{display:flex;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--line);padding:8px 10px;border-radius:9px;font-size:13px}.aw-task span{flex:1;overflow-wrap:anywhere}.aw-task.done span{text-decoration:line-through;opacity:.55}.aw-task button{background:transparent;border:0;color:var(--muted);font-size:16px}.aw-note-status{font-size:11px;color:var(--muted);margin-top:7px;min-height:15px}.aw-btn{border:1px solid var(--line);background:var(--bg);color:var(--text);padding:8px 11px;border-radius:9px;font-weight:700;font-size:12px}.aw-btn.primary{background:var(--accent);color:#111;border-color:var(--accent)}.aw-empty{color:var(--muted);font-size:12px}
+body.night-mode .advanced-workspace{background:#0b1427;border-color:#1b2942}body.night-mode .aw-card{background:#101c32;border-color:#263956}body.night-mode .aw-metric,body.night-mode .aw-task,body.night-mode .aw-input,body.night-mode .aw-card textarea{background:#091225!important;border-color:#263956!important;color:#eaf1ff!important}
+@media(max-width:680px){.advanced-workspace{padding:14px;margin:18px 0}.aw-grid{grid-template-columns:1fr}.aw-head h2{font-size:19px}.aw-metrics{gap:6px}.aw-metric{padding:8px}.aw-metric b{font-size:19px}}
+</style>
+
+</head>
 <body>
 <script>
 try{document.body.classList.toggle('night-mode',(localStorage.getItem('toolhub_theme_v1')||'dark')==='dark')}catch(e){document.body.classList.add('night-mode')}
@@ -267,9 +306,18 @@ try{document.body.classList.toggle('night-mode',(localStorage.getItem('toolhub_t
   <button class="side-link" onclick="setCategory('Text')">T <span>Text</span></button>
   <div class="side-bottom"><span class="user-dot">TH</span><span>ToolHub<small>Free tools</small></span></div>
 </aside>
-\n<header><div class="top"><a class="brand" href="#" onclick="home();return false"><span class="logo">T</span>ToolHub</a><div class="spacer"></div><nav class="nav"><button onclick="home()">All tools</button><button onclick="showInfo('about')">About</button><button onclick="showInfo('privacy')">Privacy</button><button onclick="showInfo('contact')">Contact</button></nav></div></header>
+<div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" onclick="closeMobileSidebar()"></div>
+\n<header><div class="top"><button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation" aria-expanded="false" onclick="toggleMobileSidebar()">⋮</button><a class="brand" href="#" onclick="home();return false"><span class="logo">T</span>ToolHub</a><div class="spacer"></div><nav class="nav"><button onclick="home()">All tools</button><button onclick="showInfo('about')">About</button><button onclick="showInfo('privacy')">Privacy</button><button onclick="showInfo('contact')">Contact</button></nav></div></header>
 <main>
 <section class="hero" id="hero"><div><div class="eyebrow">THE TOOLHUB WORKBENCH · BUILT FOR REAL TASKS</div><h1>Make room<br><span style="color:var(--accent)">for better work.</span></h1><p>A focused workspace for the small jobs that slow your day down. Clean text, shape images, inspect data and solve quick calculations — all from one place.</p></div><div class="hero-card"><strong>A WORKBENCH OF 36+</strong><span>Text · Images · Developer · QR · Calculator</span><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><span>Pick a task. Open a tool. Get straight to the result.</span></div></section>
+<section class="advanced-workspace" id="myWorkspace" aria-label="Personal productivity workspace">
+ <div class="aw-head"><div><h2>My Workspace</h2><p>A private, browser-based space to capture tasks, notes and track your ToolHub activity.</p></div><div class="aw-actions" style="margin:0"><button class="aw-btn" onclick="exportWorkspace()">Export backup</button><button class="aw-btn" onclick="document.getElementById('workspaceImport').click()">Import backup</button><input id="workspaceImport" type="file" accept="application/json" hidden onchange="importWorkspace(event)"></div></div>
+ <div class="aw-metrics"><div class="aw-metric"><b id="awToolsUsed">0</b><span>Tools used</span></div><div class="aw-metric"><b id="awTasksDone">0</b><span>Tasks completed</span></div><div class="aw-metric"><b id="awTasksOpen">0</b><span>Open tasks</span></div></div>
+ <div class="aw-grid">
+  <div class="aw-card"><h3>Task list</h3><form class="aw-task-row" onsubmit="addWorkspaceTask(event)"><input class="aw-input" id="awTaskInput" maxlength="140" placeholder="Add a task or reminder…" aria-label="New task"><button class="aw-btn primary" type="submit">Add</button></form><div class="aw-task-list" id="awTaskList"><p class="aw-empty">Your tasks will appear here.</p></div></div>
+  <div class="aw-card"><h3>Quick notes</h3><textarea id="awNotes" placeholder="Capture an idea, draft, link or reminder…" maxlength="12000" aria-label="Quick notes"></textarea><div class="aw-note-status" id="awNoteStatus">Notes save automatically in this browser.</div><div class="aw-actions"><button class="aw-btn" onclick="copyWorkspaceNotes()">Copy notes</button><button class="aw-btn" onclick="clearWorkspaceNotes()">Clear notes</button></div></div>
+ </div>
+</section>
 <div class="searchbar"><input id="search" placeholder="Search tools (e.g. image, word, JSON)..." oninput="renderTools()"><button class="btn secondary" onclick="document.getElementById('search').value='';renderTools()">Clear</button><button class="btn secondary" id="themeToggle" onclick="toggleTheme()" title="Switch appearance">◐ Theme</button></div>
 <div class="dash-controls">
   <div class="filter-row" id="categoryFilters" aria-label="Filter tools by category"></div>
@@ -331,7 +379,23 @@ const tools=[
 {id:'datecalc',name:'Date Difference Calculator',cat:'Utility',icon:'▣',desc:'Calculate the days between two dates.'},
 {id:'random',name:'Random Number & List Picker',cat:'Utility',icon:'⚄',desc:'Generate random numbers or pick a random list item.'},
 {id:'timer',name:'Focus Timer',cat:'Productivity',icon:'◴',desc:'Run a simple focus countdown with start, pause and reset.'},
-{id:'textcompare',name:'Text Difference Checker',cat:'Text',icon:'≠',desc:'Compare two text blocks and highlight changed lines.'}
+{id:'textcompare',name:'Text Difference Checker',cat:'Text',icon:'≠',desc:'Compare two text blocks and highlight changed lines.'},
+{id:'bmi',name:'BMI & Health Range Calculator',cat:'Calculators',icon:'⚖',desc:'Calculate BMI from height and weight with a general adult range indicator.'},
+{id:'loan',name:'Loan & EMI Calculator',cat:'Calculators',icon:'৳',desc:'Estimate monthly payment, total repayment and interest for a fixed-rate loan.'},
+{id:'age',name:'Age & Birthday Calculator',cat:'Calculators',icon:'🎂',desc:'Calculate exact age and days until the next birthday.'},
+{id:'expense',name:'Personal Expense Tracker',cat:'Productivity',icon:'▤',desc:'Record expenses, categorize spending and review totals in this browser.'},
+{id:'invoice',name:'Invoice Builder',cat:'Productivity',icon:'▧',desc:'Create a simple itemized invoice and print or save it as PDF.'},
+{id:'uuid',name:'UUID Generator',cat:'Developer',icon:'◇',desc:'Generate cryptographically random UUID v4 identifiers.'},
+{id:'csvstats',name:'CSV Data Inspector',cat:'Developer',icon:'▦',desc:'Inspect CSV rows, columns, empty cells and numeric summaries.'},
+{id:'jsonpath',name:'JSON Path Explorer',cat:'Developer',icon:'$.',desc:'Query nested JSON values with a simple dot and array-index path.'},
+{id:'htmlpreview',name:'HTML Live Preview',cat:'Developer',icon:'⌘',desc:'Write HTML and preview it in a sandboxed frame.'},
+{id:'textspeech',name:'Text to Speech',cat:'Accessibility',icon:'🔊',desc:'Read text aloud using voices available in your browser.'},
+{id:'speechtext',name:'Speech to Text',cat:'Accessibility',icon:'🎙',desc:'Dictate text using browser speech recognition when supported.'},
+{id:'stopwatch',name:'Stopwatch & Lap Timer',cat:'Productivity',icon:'◷',desc:'Run a stopwatch, record lap times and copy the results.'},
+{id:'strength',name:'Password Strength Checker',cat:'Security',icon:'▣',desc:'Estimate password strength locally without sending it anywhere.'},
+{id:'imagefilter',name:'Image Filter Studio',cat:'Image',icon:'◐',desc:'Apply brightness, contrast, grayscale and blur effects to an image.'},
+{id:'tip',name:'Tip & Bill Split Calculator',cat:'Calculators',icon:'％',desc:'Calculate tip amount and split a bill among people.'},
+{id:'compound',name:'Compound Interest Calculator',cat:'Calculators',icon:'↗',desc:'Estimate future value with recurring compounding.'}
 
 ];
 const $=id=>document.getElementById(id);
@@ -384,11 +448,36 @@ if(id==='random')b=`<div class="row">${field('Minimum','rmin','1','number')}${fi
 if(id==='timer')b=`<div class="row">${field('Minutes','tmins','25','number')}<div class="result" id="timerdisplay" style="font-size:30px;text-align:center">25:00</div></div>`+actions(btn('Start',"startTimer()"),btn('Pause',"pauseTimer()",true),btn('Reset',"resetTimer()",true));
 if(id==='textcompare')b=`<div class="row">${area('Original text','oldtext')}${area('New text','newtext')}</div><div class="result" id="diffout">Differences will appear here.</div>`+actions(btn('Compare lines',"compareText()"));
 
+
+if(id==='bmi')b=`<div class="row">${field('Height (cm)','bmiHeight','170','number')}${field('Weight (kg)','bmiWeight','65','number')}</div><div class="result" id="bmiOut">Enter your height and weight.</div>`+actions(btn('Calculate BMI',"calcBMI()"));
+if(id==='loan')b=`<div class="row">${field('Loan amount','loanAmount','500000','number')}${field('Annual interest (%)','loanRate','9','number')}</div><div class="row">${field('Term (years)','loanYears','5','number')}<div class="field"><label>Payment frequency</label><select id="loanFreq"><option value="12">Monthly</option><option value="4">Quarterly</option></select></div></div><div class="result" id="loanOut">Payment estimate will appear here.</div>`+actions(btn('Calculate repayment',"calcLoan()"));
+if(id==='age')b=field('Date of birth','birthDate','','date')+`<div class="result" id="ageOut">Choose your date of birth.</div>`+actions(btn('Calculate age',"calcAge()"));
+if(id==='expense')b=`<form class="tool-body" onsubmit="addExpense(event)"><div class="row">${field('Description','expName','Groceries')}${field('Amount','expAmount','250','number')}</div><div class="row"><div class="field"><label>Category</label><select id="expCategory"><option>Food</option><option>Transport</option><option>Shopping</option><option>Bills</option><option>Health</option><option>Other</option></select></div>${field('Date','expDate','','date')}</div><button class="btn" type="submit">Add expense</button></form><div class="result" id="expenseTotal">Total: 0</div><div id="expenseList" class="tool-body"></div>`;
+if(id==='invoice')b=`<div class="row">${field('Your business / name','invFrom','Your business')}${field('Customer','invTo','Customer name')}</div><div class="row">${field('Invoice number','invNo','INV-001')}${field('Date','invDate',new Date().toISOString().slice(0,10),'date')}</div><div class="row">${field('Item / service','invItem','Service')}${field('Quantity','invQty','1','number')}</div><div class="row">${field('Unit price','invPrice','1000','number')}${field('Tax (%)','invTax','0','number')}</div><div class="result" id="invoiceOut">Invoice total will appear here.</div>`+actions(btn('Calculate total',"calcInvoice()"),btn('Print / Save PDF',"window.print()",true));
+if(id==='uuid')b=`<div class="result" id="uuidOut">Your UUIDs will appear here.</div>`+actions(btn('Generate one',"makeUUID(1)"),btn('Generate 10',"makeUUID(10)"),btn('Copy',"copyText($('uuidOut').textContent)",true));
+if(id==='csvstats')b=area('Paste CSV data','csvInput','name,amount\nAva,120\nNoah,80')+`<div class="result" id="csvStatsOut">CSV summary will appear here.</div>`+actions(btn('Inspect CSV',"inspectCSV()"));
+if(id==='jsonpath')b=area('JSON document','jpJson','{"user":{"name":"Ava","scores":[10,20]}}')+field('Path (e.g. user.name or user.scores[0])','jpPath','user.name')+`<div class="result" id="jpOut">Query result will appear here.</div>`+actions(btn('Find value',"runJSONPath()"));
+if(id==='htmlpreview')b=area('HTML source','htmlSource','<h1>Hello ToolHub</h1>\n<p>Preview your markup here.</p>')+`<iframe id="htmlFrame" title="HTML preview" sandbox="" style="width:100%;height:280px;background:white;border:1px solid var(--line);border-radius:12px"></iframe>`+actions(btn('Update preview',"updateHTMLPreview()"));
+if(id==='textspeech')b=area('Text to read','ttsText','Hello! Welcome to ToolHub.')+`<div class="row"><div class="field"><label>Voice</label><select id="ttsVoice"></select></div>${field('Rate (0.5–2)','ttsRate','1','number')}</div>`+actions(btn('Speak',"speakText()"),btn('Pause',"speechSynthesis.pause()",true),btn('Resume',"speechSynthesis.resume()",true),btn('Stop',"speechSynthesis.cancel()",true));
+if(id==='speechtext')b=`<p class="hint">Speech recognition support depends on your browser and device. Microphone permission may be required.</p><div class="result" id="speechOut" style="min-height:120px">Your dictated text will appear here.</div>`+actions(btn('Start listening',"startSpeechRecognition()"),btn('Stop',"stopSpeechRecognition()",true),btn('Copy text',"copyText($('speechOut').textContent)",true));
+if(id==='stopwatch')b=`<div class="result" id="stopwatchDisplay" style="font-size:34px;text-align:center">00:00.000</div><div class="result" id="lapList">Lap times will appear here.</div>`+actions(btn('Start',"startStopwatch()"),btn('Lap',"lapStopwatch()",true),btn('Stop',"stopStopwatch()",true),btn('Reset',"resetStopwatch()",true),btn('Copy laps',"copyText($('lapList').textContent)",true));
+if(id==='strength')b=`<div class="field"><label for="strengthInput">Password to check</label><input id="strengthInput" type="password" autocomplete="off" placeholder="Enter a sample password"></div><label><input type="checkbox" style="width:auto" onchange="document.getElementById('strengthInput').type=this.checked?'text':'password'"> Show password</label><div class="result" id="strengthOut">Strength estimate will appear here.</div>`+actions(btn('Check strength',"checkStrength()"));
+if(id==='imagefilter')b=`<div class="drop"><label>Choose image<input id="filterFile" type="file" accept="image/*"></label></div><div class="row">${field('Brightness (%)','filterBright','100','number')}${field('Contrast (%)','filterContrast','100','number')}</div><div class="row">${field('Blur (px)','filterBlur','0','number')}<div class="field"><label>Effect</label><select id="filterMode"><option value="none">Normal</option><option value="grayscale(1)">Grayscale</option><option value="sepia(1)">Sepia</option><option value="saturate(1.8)">Vivid</option></select></div></div><canvas id="filterCanvas" style="max-width:100%;display:none;border-radius:12px"></canvas>`+actions(btn('Apply & download',"applyImageFilter()"));
+if(id==='tip')b=`<div class="row">${field('Bill amount','tipBill','1000','number')}${field('Tip (%)','tipRate','10','number')}</div>${field('People','tipPeople','2','number')}<div class="result" id="tipOut">Enter bill details.</div>`+actions(btn('Calculate split',"calcTip()"));
+if(id==='compound')b=`<div class="row">${field('Starting amount','ciPrincipal','10000','number')}${field('Annual rate (%)','ciRate','8','number')}</div><div class="row">${field('Years','ciYears','10','number')}<div class="field"><label>Compounding</label><select id="ciFreq"><option value="1">Yearly</option><option value="4">Quarterly</option><option value="12">Monthly</option><option value="365">Daily</option></select></div></div><div class="result" id="ciOut">Future value will appear here.</div>`+actions(btn('Calculate growth',"calcCompound()"));
+
 $('toolBody').innerHTML=b;
 if(id==='word')$('txt').addEventListener('input',countText);
 if(id==='image'||id==='resize')$('imgfile').addEventListener('change',loadImage);
 if(id==='qr')loadQRLib();
+if(id==='expense')renderExpenses();
+if(id==='invoice')$('invDate').value=new Date().toISOString().slice(0,10);
+if(id==='tts')populateVoices();
+if(id==='textspeech')populateVoices();
+if(id==='imagefilter')$('filterFile').addEventListener('change',loadFilterImage);
+if(id==='htmlpreview')updateHTMLPreview();
 }
+
 function setText(v){$('txt').value=v}
 function sentenceCase(s){return s.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g,c=>c.toUpperCase())}
 async function copyText(v){try{await navigator.clipboard.writeText(v);$('status').textContent='Copied to clipboard.'}catch(e){$('status').textContent='Clipboard access unavailable. Select and copy the text manually.'}}
@@ -447,6 +536,26 @@ function pauseTimer(){clearInterval(timerId);timerId=null}
 function resetTimer(){pauseTimer();timerLeft=Math.max(1,Number($('tmins').value)||25)*60;updateTimer()}
 function compareText(){let a=$('oldtext').value.split(/\r?\n/),b=$('newtext').value.split(/\r?\n/),n=Math.max(a.length,b.length),out=[];for(let i=0;i<n;i++){if(a[i]===b[i])out.push('  '+(a[i]??''));else{if(a[i]!==undefined)out.push('− '+a[i]);if(b[i]!==undefined)out.push('+ '+b[i])}}$('diffout').textContent=out.join('\n')||'No differences.'}
 
+
+// Advanced browser-side tools
+function calcBMI(){let h=Number($('bmiHeight').value)/100,w=Number($('bmiWeight').value);if(h<=0||w<=0){$('bmiOut').textContent='Enter valid height and weight.';return}let bmi=w/(h*h),label=bmi<18.5?'Below the general adult reference range':bmi<25?'Within the general adult reference range':bmi<30?'Above the general adult reference range':'High BMI range';$('bmiOut').textContent=`BMI: ${bmi.toFixed(1)}\n${label}.\nBMI is a rough screening measure, not a diagnosis.`}
+function calcLoan(){let p=Number($('loanAmount').value),annual=Number($('loanRate').value)/100,n=Number($('loanYears').value)*Number($('loanFreq').value),r=annual/Number($('loanFreq').value);if(p<=0||n<=0||annual<0){$('loanOut').textContent='Enter valid loan details.';return}let pay=r===0?p/n:p*r/(1-Math.pow(1+r,-n));$('loanOut').textContent=`Payment: ${pay.toLocaleString(undefined,{maximumFractionDigits:2})} per period\nTotal repayment: ${(pay*n).toLocaleString(undefined,{maximumFractionDigits:2})}\nTotal interest: ${(pay*n-p).toLocaleString(undefined,{maximumFractionDigits:2})}\nEstimate excludes fees and changing rates.`}
+function calcAge(){let v=$('birthDate').value;if(!v){$('ageOut').textContent='Choose a birth date.';return}let b=new Date(v+'T00:00:00'),now=new Date();if(b>now){$('ageOut').textContent='Birth date cannot be in the future.';return}let y=now.getFullYear()-b.getFullYear(),m=now.getMonth()-b.getMonth(),d=now.getDate()-b.getDate();if(d<0){m--;d+=new Date(now.getFullYear(),now.getMonth(),0).getDate()}if(m<0){y--;m+=12}let next=new Date(now.getFullYear(),b.getMonth(),b.getDate());if(next<new Date(now.getFullYear(),now.getMonth(),now.getDate()))next.setFullYear(now.getFullYear()+1);let days=Math.ceil((next-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/86400000);$('ageOut').textContent=`Age: ${y} years, ${m} months, ${d} days\nDays until next birthday: ${days}`}
+const EXP_KEY='toolhub_expenses_v1';function readExpenses(){try{return JSON.parse(localStorage.getItem(EXP_KEY))||[]}catch(e){return []}}function renderExpenses(){let a=readExpenses(),total=a.reduce((s,x)=>s+x.amount,0);$('expenseTotal').textContent=`Total expenses: ${total.toLocaleString(undefined,{maximumFractionDigits:2})} · ${a.length} entries`;$('expenseList').innerHTML=a.length?a.slice().reverse().map(x=>`<div class="result"><b>${escapeText(x.name)}</b> · ${escapeText(x.category)} · ${escapeText(x.date)}<br>${x.amount.toLocaleString()} <button class="btn secondary" onclick="deleteExpense('${x.id}')">Delete</button></div>`).join(''):'<p class="hint">No expenses recorded yet.</p>'}function escapeText(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function addExpense(e){e.preventDefault();let name=$('expName').value.trim(),amount=Number($('expAmount').value);if(!name||amount<=0){$('status').textContent='Enter a description and positive amount.';return}let a=readExpenses();a.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),name,amount,category:$('expCategory').value,date:$('expDate').value||new Date().toISOString().slice(0,10)});localStorage.setItem(EXP_KEY,JSON.stringify(a));$('expName').value='';$('expAmount').value='';renderExpenses()}function deleteExpense(id){localStorage.setItem(EXP_KEY,JSON.stringify(readExpenses().filter(x=>x.id!==id)));renderExpenses()}
+function calcInvoice(){let q=Number($('invQty').value),p=Number($('invPrice').value),tax=Number($('invTax').value),sub=q*p;if(q<=0||p<0||tax<0){$('invoiceOut').textContent='Enter valid quantity, price and tax.';return}let total=sub*(1+tax/100);$('invoiceOut').textContent=`${$('invFrom').value} → ${$('invTo').value}\nInvoice: ${$('invNo').value} · ${$('invDate').value}\n${$('invItem').value}: ${q} × ${p.toFixed(2)} = ${sub.toFixed(2)}\nTax: ${tax}% (${(sub*tax/100).toFixed(2)})\nTOTAL: ${total.toFixed(2)}`}
+function makeUUID(n){let a=Array.from({length:n},()=>crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{let r=crypto.getRandomValues(new Uint8Array(1))[0]%16;return(c==='x'?r:(r&3|8)).toString(16)}));$('uuidOut').textContent=a.join('\n')}
+function inspectCSV(){try{let rows=parseCSV($('csvInput').value);if(!rows.length)throw Error('No rows found');let cols=Math.max(...rows.map(r=>r.length)),empty=rows.flat().filter(x=>!String(x).trim()).length;let headers=rows[0];let numeric=headers.map((h,i)=>{let vals=rows.slice(1).map(r=>Number(r[i])).filter(Number.isFinite);return vals.length?`${h}: ${vals.length} numeric values · sum ${vals.reduce((a,b)=>a+b,0).toFixed(2)} · avg ${(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2)}`:null}).filter(Boolean);$('csvStatsOut').textContent=`Rows (including header): ${rows.length}\nColumns: ${cols}\nEmpty cells: ${empty}\nHeader: ${headers.join(' | ')}\n\nNumeric columns:\n${numeric.join('\n')||'No numeric columns detected.'}`}catch(e){$('csvStatsOut').textContent='CSV error: '+e.message}}
+function runJSONPath(){try{let obj=JSON.parse($('jpJson').value),path=$('jpPath').value.trim().replace(/\[(\d+)\]/g,'.$1').split('.').filter(Boolean),v=obj;for(const k of path){if(v==null||!(k in Object(v)))throw Error('Path not found at '+k);v=v[k]}$('jpOut').textContent=typeof v==='string'?v:JSON.stringify(v,null,2)}catch(e){$('jpOut').textContent='Query error: '+e.message}}
+function updateHTMLPreview(){let f=$('htmlFrame');if(f)f.srcdoc=$('htmlSource').value}
+function populateVoices(){if(!('speechSynthesis'in window))return;let sel=$('ttsVoice');if(!sel)return;let fill=()=>{sel.innerHTML='';speechSynthesis.getVoices().forEach((v,i)=>{let o=document.createElement('option');o.value=i;o.textContent=v.name+' ('+v.lang+')';sel.append(o)})};fill();speechSynthesis.onvoiceschanged=fill}
+function speakText(){if(!('speechSynthesis'in window)){$('status').textContent='Text-to-speech is not supported in this browser.';return}let u=new SpeechSynthesisUtterance($('ttsText').value);let vs=speechSynthesis.getVoices();u.voice=vs[Number($('ttsVoice').value)]||null;u.rate=Math.max(.5,Math.min(2,Number($('ttsRate').value)||1));speechSynthesis.cancel();speechSynthesis.speak(u)}
+let speechRec=null;function startSpeechRecognition(){let SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){$('speechOut').textContent='Speech recognition is not supported in this browser.';return}speechRec=new SR();speechRec.continuous=true;speechRec.interimResults=true;speechRec.onresult=e=>{let s='';for(let i=0;i<e.results.length;i++)s+=e.results[i][0].transcript+(e.results[i].isFinal?' ':'');$('speechOut').textContent=s};speechRec.onerror=e=>$('status').textContent='Speech recognition: '+e.error;speechRec.start();$('status').textContent='Listening…'}function stopSpeechRecognition(){speechRec?.stop();speechRec=null;$('status').textContent='Stopped listening.'}
+let swStart=0,swElapsed=0,swInterval=null,swLaps=[];function fmtStop(ms){let m=Math.floor(ms/60000),sec=Math.floor(ms/1000)%60,mm=ms%1000;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')+'.'+String(mm).padStart(3,'0')}function paintStop(){let d=$('stopwatchDisplay');if(d)d.textContent=fmtStop(swElapsed+(swInterval?performance.now()-swStart:0))}function startStopwatch(){if(swInterval)return;swStart=performance.now();swInterval=setInterval(paintStop,40)}function stopStopwatch(){if(swInterval){swElapsed+=performance.now()-swStart;clearInterval(swInterval);swInterval=null;paintStop()}}function lapStopwatch(){let t=swElapsed+(swInterval?performance.now()-swStart:0);swLaps.push(fmtStop(t));$('lapList').textContent=swLaps.map((x,i)=>`Lap ${i+1}: ${x}`).join('\n')||'No laps yet.'}function resetStopwatch(){stopStopwatch();swElapsed=0;swLaps=[];paintStop();$('lapList').textContent='Lap times will appear here.'}
+function checkStrength(){let p=$('strengthInput').value,score=0;if(p.length>=12)score++;if(p.length>=16)score++;if(/[a-z]/.test(p)&&/[A-Z]/.test(p))score++;if(/\d/.test(p))score++;if(/[^A-Za-z0-9]/.test(p))score++;let labels=['Very weak','Weak','Fair','Good','Strong','Very strong'];$('strengthOut').textContent=`${labels[score]} (${score}/5) · ${p.length} characters\n${p.length<12?'Consider using at least 12 characters.':'Length is a good start.'}\nThis is a local heuristic, not a security audit.`}
+let filterImage=null;function loadFilterImage(e){let f=e.target.files[0];if(!f)return;let im=new Image();im.onload=()=>{filterImage=im;$('status').textContent=`Loaded ${im.width} × ${im.height}px`};im.src=URL.createObjectURL(f)}function applyImageFilter(){if(!filterImage){$('status').textContent='Choose an image first.';return}let c=$('filterCanvas'),ctx=c.getContext('2d');c.width=filterImage.width;c.height=filterImage.height;ctx.filter=`brightness(${Math.max(0,Number($('filterBright').value)||100)}%) contrast(${Math.max(0,Number($('filterContrast').value)||100)}%) blur(${Math.max(0,Number($('filterBlur').value)||0)}px) ${$('filterMode').value}`;ctx.drawImage(filterImage,0,0);ctx.filter='none';c.style.display='block';c.toBlob(blob=>{if(!blob)return;let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='toolhub-filtered-image.png';a.click()},'image/png')}
+function calcTip(){let bill=Number($('tipBill').value),rate=Number($('tipRate').value),people=Math.floor(Number($('tipPeople').value));if(bill<0||rate<0||people<1){$('tipOut').textContent='Enter valid bill, tip and people values.';return}let tip=bill*rate/100,total=bill+tip;$('tipOut').textContent=`Tip: ${tip.toFixed(2)}\nTotal bill: ${total.toFixed(2)}\nEach person pays: ${(total/people).toFixed(2)}`}
+function calcCompound(){let p=Number($('ciPrincipal').value),r=Number($('ciRate').value)/100,n=Number($('ciFreq').value),t=Number($('ciYears').value);if(p<0||r<0||n<=0||t<0){$('ciOut').textContent='Enter valid values.';return}let total=p*Math.pow(1+r/n,n*t);$('ciOut').textContent=`Future value: ${total.toLocaleString(undefined,{maximumFractionDigits:2})}\nInterest earned: ${(total-p).toLocaleString(undefined,{maximumFractionDigits:2})}\nEstimate excludes taxes, fees and changing rates.`}
+
 $('year').textContent=new Date().getFullYear();renderTools();
 </script>
 
@@ -503,6 +612,35 @@ initDynamicHub();
 // Load a directly-addressable tool page when its unique URL is opened or refreshed.
 const initialTool=new URL(location.href).searchParams.get('tool');
 if(initialTool){renderToolPage(initialTool);}
+</script>
+
+
+<script>
+function toggleMobileSidebar(){const side=document.querySelector('.mobile-sidebar');const overlay=document.getElementById('mobileSidebarOverlay');const btn=document.getElementById('mobileMenuToggle');const open=!side.classList.contains('is-open');side.classList.toggle('is-open',open);overlay.classList.toggle('is-visible',open);btn?.setAttribute('aria-expanded',String(open));}
+function closeMobileSidebar(){document.querySelector('.mobile-sidebar')?.classList.remove('is-open');document.getElementById('mobileSidebarOverlay')?.classList.remove('is-visible');document.getElementById('mobileMenuToggle')?.setAttribute('aria-expanded','false');}
+document.addEventListener('click',e=>{if(e.target.closest('.mobile-sidebar .side-link'))closeMobileSidebar();});
+</script>
+
+
+<script>
+/* ToolHub Advanced Workspace — data stays on this device unless the user exports a backup. */
+(()=>{
+ const KEY='toolhub_advanced_workspace_v1';
+ const $w=id=>document.getElementById(id);
+ const read=()=>{try{return JSON.parse(localStorage.getItem(KEY))||{tasks:[],notes:''}}catch(e){return {tasks:[],notes:''}}};
+ const write=data=>{try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){return false}};
+ let data=read();
+ function metrics(){const recent=(()=>{try{return JSON.parse(localStorage.getItem('toolhub_recent_v1'))||[]}catch(e){return []}})();$w('awToolsUsed').textContent=recent.length;$w('awTasksDone').textContent=data.tasks.filter(t=>t.done).length;$w('awTasksOpen').textContent=data.tasks.filter(t=>!t.done).length;}
+ function renderTasks(){const box=$w('awTaskList');box.replaceChildren();if(!data.tasks.length){const p=document.createElement('p');p.className='aw-empty';p.textContent='No tasks yet. Add your first task above.';box.append(p)}data.tasks.forEach(task=>{const row=document.createElement('div');row.className='aw-task'+(task.done?' done':'');const check=document.createElement('input');check.type='checkbox';check.checked=!!task.done;check.setAttribute('aria-label','Mark task complete');check.addEventListener('change',()=>{task.done=check.checked;save()});const label=document.createElement('span');label.textContent=task.text;const del=document.createElement('button');del.type='button';del.textContent='×';del.title='Delete task';del.setAttribute('aria-label','Delete task');del.addEventListener('click',()=>{data.tasks=data.tasks.filter(t=>t.id!==task.id);save()});row.append(check,label,del);box.append(row)});metrics()}
+ function save(){write(data);renderTasks()}
+ window.addWorkspaceTask=e=>{e.preventDefault();const input=$w('awTaskInput'),text=input.value.trim();if(!text)return;data.tasks.unshift({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),text,done:false,createdAt:new Date().toISOString()});input.value='';save()};
+ window.copyWorkspaceNotes=async()=>{try{await navigator.clipboard.writeText($w('awNotes').value);$w('awNoteStatus').textContent='Notes copied.'}catch(e){$w('awNotes').select();$w('awNoteStatus').textContent='Select and copy your notes.'}};
+ window.clearWorkspaceNotes=()=>{if(confirm('Clear all quick notes?')){$w('awNotes').value='';data.notes='';write(data);$w('awNoteStatus').textContent='Notes cleared.'}};
+ window.exportWorkspace=()=>{const payload={app:'ToolHub Workspace Backup',version:1,exportedAt:new Date().toISOString(),workspace:data,favorites:(()=>{try{return JSON.parse(localStorage.getItem('toolhub_favorites_v1'))||[]}catch(e){return []}})(),recent:(()=>{try{return JSON.parse(localStorage.getItem('toolhub_recent_v1'))||[]}catch(e){return []}})()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='toolhub-workspace-backup.json';a.click();URL.revokeObjectURL(url)};
+ window.importWorkspace=e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const payload=JSON.parse(reader.result);const w=payload.workspace;if(!w||!Array.isArray(w.tasks)||typeof w.notes!=='string')throw new Error('Invalid backup');data={tasks:w.tasks.filter(t=>t&&typeof t.text==='string').map(t=>({id:String(t.id||Date.now()),text:t.text.slice(0,140),done:!!t.done,createdAt:t.createdAt||''})),notes:w.notes.slice(0,12000)};write(data);if(Array.isArray(payload.favorites))localStorage.setItem('toolhub_favorites_v1',JSON.stringify(payload.favorites.filter(x=>typeof x==='string')));if(Array.isArray(payload.recent))localStorage.setItem('toolhub_recent_v1',JSON.stringify(payload.recent.filter(x=>typeof x==='string')));$w('awNotes').value=data.notes;renderTasks();$w('awNoteStatus').textContent='Backup imported successfully.';if(typeof updateQuickPanels==='function')updateQuickPanels();if(typeof renderTools==='function')renderTools()}catch(err){alert('This backup file is not valid for ToolHub.')}};reader.readAsText(file);e.target.value=''};
+ $w('awNotes').value=data.notes||'';$w('awNotes').addEventListener('input',()=>{data.notes=$w('awNotes').value;write(data);$w('awNoteStatus').textContent='Saved locally · '+new Date().toLocaleTimeString()});renderTasks();
+ window.addEventListener('storage',e=>{if(e.key==='toolhub_recent_v1')metrics()});
+})();
 </script>
 
 </body></html>
