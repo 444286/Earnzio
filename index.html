@@ -125,7 +125,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
 .podium-box{width:100%;display:flex;align-items:center;justify-content:center;border-radius:8px 8px 0 0;background:var(--bg3);font-size:18px;font-weight:900}
 
 /* Login */
-#login-screen{position:absolute;inset:0;background:var(--bg);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center}
+#login-screen{display:none!important}
 .spinner{width:40px;height:40px;border:4px solid rgba(124,58,237,.3);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -533,70 +533,68 @@ async function loadFromFirebase() {
 //  FIREBASE & TELEGRAM INIT
 // ═══════════════════════════════════════════════════════
 async function bootstrap() {
-  // Try Firebase
-  let fbOk = false;
+  // Initialize Firebase without blocking the app's first screen.
   try {
-    if(FB_CONFIG.apiKey && !FB_CONFIG.apiKey.includes('DEMO')) {
-      firebase.initializeApp(FB_CONFIG);
+    if (FB_CONFIG.apiKey && !FB_CONFIG.apiKey.includes('DEMO') && window.firebase) {
+      if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
       db = firebase.firestore();
-      fbOk = true;
     }
-  } catch(e){ console.warn('Firebase init failed:', e); }
+  } catch(e) { console.warn('Firebase init failed:', e); db = null; }
 
-  // Try Telegram
+  // Telegram user data is available only when the bot is configured/launched
+  // as a Telegram Mini App. If it is absent, continue with a local guest.
   const tg = window.Telegram && window.Telegram.WebApp;
-  let loginOk = false;
+  try {
+    if (tg) { tg.ready(); tg.expand(); }
+  } catch(e) { console.warn('Telegram WebApp setup:', e); }
 
-  if(tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-    tg.ready();
-    tg.expand();
-    tgUser = tg.initDataUnsafe.user;
+  tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user : null;
+
+  if (tgUser) {
     uid = 'tg_' + tgUser.id;
-    setStatus('Loading your data…');
-    loginOk = true;
-  }
-
-  if(!loginOk) {
-    // Not inside Telegram — show guest option
-    setStatus('Not in Telegram. Play as guest?');
-    document.getElementById('login-spinner').style.display = 'none';
-    document.getElementById('guest-btn').style.display = 'inline-flex';
-    return;
-  }
-
-  // Load from Firebase
-  if(fbOk) {
-    const loaded = await loadFromFirebase();
-    if(!loaded) {
-      // New user — set defaults from TG
-      P.name = tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : '');
-      P.id = 'NX-' + tgUser.id;
-      P.avatar = tgUser.username ? tgUser.first_name[0] + '👤' : '😎';
-      await saveToFirebase();
-    }
+    P.name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || 'Player';
+    P.id = 'NX-' + tgUser.id;
+    P.avatar = '😎';
   } else {
-    // Firebase not configured — use localStorage
-    const ls = localStorage.getItem('nexora_' + uid);
-    if(ls) Object.assign(P, JSON.parse(ls));
-    else {
-      P.name = tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : '');
-      P.id = 'NX-' + tgUser.id;
-    }
-    saveToFirebase = async () => { localStorage.setItem('nexora_' + uid, JSON.stringify(P)); };
+    uid = 'guest_local';
+    P.name = 'Guest Player';
+    P.id = 'NX-GUEST';
+    db = null; // Guests are stored locally, not as a shared Firebase account.
+    try {
+      const saved = localStorage.getItem('takakaman_guest');
+      if (saved) Object.assign(P, JSON.parse(saved));
+    } catch(e) { console.warn('Guest data read failed:', e); }
+    saveToFirebase = async () => {
+      try { localStorage.setItem('takakaman_guest', JSON.stringify(P)); }
+      catch(e) { console.warn('Guest save failed:', e); }
+    };
   }
 
+  // Show the actual game immediately; never leave users on a loading/splash page.
   enterApp();
+
+  // Sync Telegram accounts in the background so a slow network cannot block launch.
+  if (tgUser && db) {
+    try {
+      const loaded = await Promise.race([
+        loadFromFirebase(),
+        new Promise(resolve => setTimeout(() => resolve(false), 5000))
+      ]);
+      if (!loaded) await saveToFirebase();
+      renderAll();
+    } catch(e) { console.warn('Background profile sync failed:', e); }
+  }
 }
 
 function loginAsGuest() {
-  uid = 'guest_' + Date.now();
+  uid = 'guest_local';
   P.name = 'Guest Player';
   P.id = 'NX-GUEST';
   // Use localStorage for guests
   db = null;
   const saveOrig = saveToFirebase;
-  saveToFirebase = async () => { localStorage.setItem('nexora_guest', JSON.stringify(P)); };
-  const ls = localStorage.getItem('nexora_guest');
+  saveToFirebase = async () => { localStorage.setItem('takakaman_guest', JSON.stringify(P)); };
+  const ls = localStorage.getItem('takakaman_guest');
   if(ls) Object.assign(P, JSON.parse(ls));
   enterApp();
 }
@@ -1232,16 +1230,7 @@ function startDailyTimer() {
 // ═══════════════════════════════════════════════════════
 //  BOOT
 // ═══════════════════════════════════════════════════════
-// Show guest button after 4 seconds if TG not detected
-setTimeout(()=>{
-  const ls=document.getElementById('login-screen');
-  if(ls&&ls.style.display!=='none'){
-    document.getElementById('login-spinner').style.display='none';
-    setStatus('Open inside Telegram, or:');
-    document.getElementById('guest-btn').style.display='inline-flex';
-  }
-},4000);
-
+// Launch directly into the app; Telegram login and Firebase sync are non-blocking.
 bootstrap();
 </script>
 </body>
