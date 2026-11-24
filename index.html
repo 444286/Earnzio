@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
-<meta name="description" content="TAKAKAMAN is a casual skill gaming mini app with puzzle, memory, arcade and word challenges, player progress and personal game records."/>
+<meta name="description" content="TAKAKAMAN — Custom Telegram mini app with 30+ hand-built skill games, real-time leaderboard, XP system, daily spin wheel, and optional rewarded ads."/>
 <meta name="theme-color" content="#0d0a1f"/>
-<title>TAKAKAMAN</title>
+<title>TAKAKAMAN · 30+ Skill Games</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet"/>
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -179,7 +179,10 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
         <span style="font-size:26px">🎮</span>
         <div>
           <div style="color:var(--purpleL);font-size:19px;font-weight:900;letter-spacing:1px">TAKAKAMAN</div>
-          <div style="color:var(--muted);font-size:9px;font-weight:800">PLAY · LEVEL UP · REPEAT</div>
+          <div style="display:flex;align-items:center;gap:5px">
+            <div style="color:var(--muted);font-size:9px;font-weight:800">PLAY · LEVEL UP · REPEAT</div>
+            <span style="background:var(--green);color:#000;font-size:8px;font-weight:900;padding:1px 5px;border-radius:4px">v3.0</span>
+          </div>
         </div>
       </div>
       <div style="position:relative;cursor:pointer" onclick="showNotifToast()">
@@ -221,7 +224,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
 
     <!-- Optional Ad -->
     <div style="padding:0 16px 14px">
-      <div class="opt-label">📺 OPTIONAL AD</div>
+      <div class="opt-label">📺 OPTIONAL REWARDED AD — Skip anytime, no penalty</div>
       <div class="ad-banner" onclick="openAdModal(0,'home')">
         <div class="ad-pulse">📺</div>
         <div style="flex:1">
@@ -285,10 +288,10 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
     <div style="padding:0 16px 14px">
       <div class="sec-header"><span class="sec-title">⚡ Quick Actions</span></div>
       <div class="grid2">
+        <button class="card" onclick="navTo('quiz')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">🧩</div><b style="font-size:13px">Daily Quiz</b><div style="font-size:10px;color:var(--green)">+15 pts per answer</div></button>
         <button class="card" onclick="navTo('rewards')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">🎡</div><b style="font-size:13px">Daily Spin</b><div style="font-size:10px;color:var(--muted)">Try your luck</div></button>
         <button class="card" onclick="claimCheckin()" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">📅</div><b style="font-size:13px">Daily Check-in</b><div style="font-size:10px;color:var(--muted)">Claim +25 points</div></button>
         <button class="card" onclick="navTo('profile');showSub('history')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">📜</div><b style="font-size:13px">Points History</b><div style="font-size:10px;color:var(--muted)">Track your points</div></button>
-        <button class="card" onclick="navTo('ranks')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">🏆</div><b style="font-size:13px">Leaderboard</b><div style="font-size:10px;color:var(--muted)">See your rank</div></button>
       </div>
     </div>
     <div style="padding:0 16px 16px"><div class="card">
@@ -305,11 +308,99 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
   <!-- GAMES -->
   <div class="screen" id="screen-games">
     <div class="top-bar">
-      <div style="font-size:18px;font-weight:900">Games Library</div>
-      <input id="game-search" oninput="renderGames(currentCat)" placeholder="Search games..." style="width:145px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:var(--text);font:700 12px Nunito,sans-serif;outline:none">
+      <div>
+        <div style="font-size:18px;font-weight:900">Games Library</div>
+        <div style="color:var(--green);font-size:10px;font-weight:800">🎮 34 hand-built games</div>
+      </div>
+      <input id="game-search" oninput="renderGames(currentCat)" placeholder="Search games..." style="width:140px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:var(--text);font:700 12px Nunito,sans-serif;outline:none">
     </div>
     <div class="row" style="padding:0 16px 14px" id="g-cats"></div>
     <div class="grid2" style="padding:0 16px 16px" id="g-grid"></div>
+  </div>
+
+  <!-- DAILY QUIZ -->
+  <div class="screen" id="screen-quiz">
+    <div class="top-bar" style="flex-direction:column;align-items:flex-start;gap:2px;padding-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+        <div style="font-size:18px;font-weight:900">🧩 Daily Quiz</div>
+        <div id="quiz-streak-badge" style="display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:5px 10px">
+          <span style="font-size:14px">🔥</span>
+          <span id="quiz-streak-val" style="font-weight:900;font-size:13px">0</span>
+          <span style="color:var(--muted);font-size:10px">day streak</span>
+        </div>
+      </div>
+      <div style="color:var(--muted);font-size:11px">New questions every day • Earn up to 150 pts</div>
+    </div>
+
+    <!-- Quiz category tabs -->
+    <div style="display:flex;gap:7px;padding:0 16px 12px;overflow-x:auto" id="quiz-cat-tabs"></div>
+
+    <!-- Quiz card -->
+    <div style="padding:0 16px 14px">
+      <div class="card" id="quiz-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <span id="quiz-cat-label" class="badge badge-gold">General</span>
+          <span id="quiz-q-num" style="color:var(--muted);font-size:12px">Q 1 / 10</span>
+        </div>
+        <div id="quiz-question" style="font-size:17px;font-weight:800;line-height:1.45;min-height:52px;margin-bottom:16px">Loading…</div>
+        <div id="quiz-options" style="display:flex;flex-direction:column;gap:9px"></div>
+        <div id="quiz-feedback" style="margin-top:12px;font-size:13px;font-weight:700;min-height:20px"></div>
+      </div>
+    </div>
+
+    <!-- Quiz progress bar -->
+    <div style="padding:0 16px 14px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+        <span style="font-size:12px;color:var(--muted)">Today's progress</span>
+        <span id="quiz-score-label" style="font-size:12px;font-weight:800;color:var(--goldL)">0 pts earned</span>
+      </div>
+      <div class="xp-bar"><div class="xp-fill" id="quiz-prog-fill" style="width:0%"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px">
+        <span id="quiz-correct-label" style="font-size:11px;color:var(--muted)">0 correct</span>
+        <span id="quiz-attempts-label" style="font-size:11px;color:var(--muted)">0 answered</span>
+      </div>
+    </div>
+
+    <!-- Today's Quiz Stats -->
+    <div style="padding:0 16px 14px">
+      <div class="card" style="border-color:rgba(124,58,237,.4)">
+        <div class="sec-header"><span class="sec-title">📊 Today's Stats</span></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div class="card2" style="padding:10px;text-align:center">
+            <div style="font-size:22px">✅</div>
+            <div id="qs-correct" style="font-weight:900;font-size:18px">0</div>
+            <div style="font-size:10px;color:var(--muted)">Correct</div>
+          </div>
+          <div class="card2" style="padding:10px;text-align:center">
+            <div style="font-size:22px">❌</div>
+            <div id="qs-wrong" style="font-weight:900;font-size:18px">0</div>
+            <div style="font-size:10px;color:var(--muted)">Wrong</div>
+          </div>
+          <div class="card2" style="padding:10px;text-align:center">
+            <div style="font-size:22px">⭐</div>
+            <div id="qs-pts" style="font-weight:900;font-size:18px">0</div>
+            <div style="font-size:10px;color:var(--muted)">Pts earned</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- All-time Quiz Stats -->
+    <div style="padding:0 16px 16px">
+      <div class="card">
+        <div class="sec-header"><span class="sec-title">🏅 All-time Quiz Record</span><span class="badge" id="quiz-accuracy-badge">0% acc</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="card2" style="padding:10px;text-align:center">
+            <div style="font-size:11px;color:var(--muted)">Total answered</div>
+            <div id="qt-total" style="font-weight:900;font-size:17px">0</div>
+          </div>
+          <div class="card2" style="padding:10px;text-align:center">
+            <div style="font-size:11px;color:var(--muted)">Best streak</div>
+            <div id="qt-best-streak" style="font-weight:900;font-size:17px">0 🔥</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- REWARDS -->
@@ -330,7 +421,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
       </div>
       <button class="btn btn-gold" id="spin-btn" style="padding:11px 36px;font-size:14px" onclick="doSpin()">SPIN THE WHEEL</button>
       <div style="margin-top:10px;width:100%">
-        <div style="color:var(--muted);font-size:10px;text-align:center;margin-bottom:7px">— optional advertisement —</div>
+        <div style="color:var(--muted);font-size:10px;text-align:center;margin-bottom:7px">— 100% optional rewarded ad · skip anytime —</div>
         <div class="ad-banner" style="padding:9px 13px" onclick="openAdModal(0,'spin')">
           <div class="ad-pulse sm">📺</div>
           <div style="flex:1;font-size:12px;color:var(--goldL);font-weight:800">Watch an optional ad</div>
@@ -355,9 +446,23 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
       </div>
     </div>
 
+
+    <!-- How Points & Ads Work -->
+    <div style="padding:0 16px 14px">
+      <div class="card" style="border-color:rgba(124,58,237,.4)">
+        <div class="sec-header"><span class="sec-title">ℹ️ How Points Work</span></div>
+        <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--muted)">
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-size:14px">🎮</span><span><b style="color:var(--text)">Play games</b> — Earn 10–150 pts depending on performance. No ads required to play.</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-size:14px">📅</span><span><b style="color:var(--text)">Daily check-in</b> — +25 pts every day, no ad required.</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-size:14px">🎡</span><span><b style="color:var(--text)">Daily spin</b> — Spin once per day for bonus pts, free, no ad required.</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-size:14px">📺</span><span><b style="color:var(--text)">Optional rewarded ad</b> — Only if YOU tap the ad button. +25 pts on completion. Skip anytime, zero penalty, app functions fully without watching any ad.</span></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Optional Ad -->
     <div style="padding:0 16px 14px">
-      <div class="opt-label">📺 OPTIONAL AD</div>
+      <div class="opt-label">📺 OPTIONAL REWARDED AD — Skip anytime, no penalty</div>
       <div class="ad-banner" onclick="openAdModal(0,'rewards')">
         <div class="ad-pulse">📺</div>
         <div style="flex:1">
@@ -467,7 +572,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
       <div style="text-align:center"><div style="color:var(--muted);font-size:11px">Pairs</div><div style="font-weight:900;font-size:17px" id="g-pairs">0/8</div></div>
     </div>
     <div style="padding:0 16px">
-      <div class="opt-label">📺 OPTIONAL AD</div>
+      <div class="opt-label">📺 OPTIONAL REWARDED AD — Skip anytime, no penalty</div>
       <div class="ad-banner" style="padding:9px 13px" onclick="openAdModal(0,'game')">
         <div class="ad-pulse sm">📺</div>
         <div style="flex:1">
@@ -482,8 +587,8 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
   <div id="navbar">
     <div class="nav-item active" data-s="home" onclick="navTo('home')"><div class="nav-icon">🏠</div>Home</div>
     <div class="nav-item" data-s="games" onclick="navTo('games')"><div class="nav-icon">🎮</div>Games</div>
+    <div class="nav-item" data-s="quiz" onclick="navTo('quiz')"><div class="nav-icon">🧩</div>Quiz</div>
     <div class="nav-item" data-s="rewards" onclick="navTo('rewards')"><div class="nav-icon">🎁</div>Rewards</div>
-    <div class="nav-item" data-s="ranks" onclick="navTo('ranks')"><div class="nav-icon">🏆</div>Ranks</div>
     <div class="nav-item" data-s="profile" onclick="navTo('profile')"><div class="nav-icon">👤</div>Profile</div>
   </div>
 
@@ -725,10 +830,14 @@ function navTo(id) {
   if(id==='ranks') renderLeaderboard('Weekly');
   if(id==='profile'){showSub('main');renderProfileStats();renderProfileMenu();}
   if(id==='rewards'){renderAchievements();updateSpinBtn();updateCheckinBtn();updateMissionUI();}
+  if(id==='quiz'){initQuiz();}
   document.getElementById('navbar').style.display = id==='game' ? 'none' : 'flex';
 }
 let activeGameId='memory';
+let gameReturnScreen='home';
 function openGame(gameId='memory') {
+  // Remember the screen that launched the game so Back returns to that exact place.
+  if(curScreen !== 'game') gameReturnScreen = (curScreen === 'games' ? 'games' : 'home');
   activeGameId=gameId;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -745,7 +854,11 @@ function restoreMemoryScreen(){
     <div style="display:flex;justify-content:center;gap:28px;margin-bottom:14px"><div style="text-align:center"><div style="color:var(--muted);font-size:11px">Moves</div><div id="g-moves" style="font-weight:900;font-size:17px">0</div></div><div style="text-align:center"><div style="color:var(--muted);font-size:11px">Pairs</div><div id="g-pairs" style="font-weight:900;font-size:17px">0/8</div></div></div>
     <div style="padding:0 16px"><div class="card"><b>How to play</b><p style="color:var(--muted);font-size:12px;margin-top:5px">Flip two cards and find all 8 matching pairs before time runs out.</p></div></div>`;
 }
-function pauseGame() { stopMemoryTimer(); clearInterval(arcadeTimer); clearInterval(snakeIv); clearInterval(extraData?.iv); clearTimeout(extraTimer); navTo('games'); }
+function pauseGame() {
+  stopMemoryTimer(); clearInterval(arcadeTimer); clearInterval(snakeIv); clearInterval(extraData?.iv); clearTimeout(extraTimer);
+  const destination = gameReturnScreen === 'games' ? 'games' : 'home';
+  navTo(destination);
+}
 function recordGameRun(gameId, points, outcome='completed'){
   if(!P.gameStats || typeof P.gameStats!=='object') P.gameStats={};
   const old=P.gameStats[gameId]||{plays:0,best:0,wins:0};
@@ -786,11 +899,11 @@ function renderArcadeGame(id){
  } else if(id==='snake'){
   shell(`<p style="text-align:center;color:var(--muted);font-size:12px">Collect 🍎. Use the controls below.</p><canvas id="snake-canvas" width="320" height="320" style="display:block;width:min(100%,320px);margin:12px auto;background:#101827;border:2px solid var(--border);border-radius:10px"></canvas><div style="display:grid;grid-template-columns:repeat(3,58px);gap:6px;justify-content:center"><span></span><button class="btn btn-purple" onclick="setSnakeDir('up')">⬆</button><span></span><button class="btn btn-purple" onclick="setSnakeDir('left')">⬅</button><button class="btn btn-purple" onclick="setSnakeDir('down')">⬇</button><button class="btn btn-purple" onclick="setSnakeDir('right')">➡</button></div><div style="text-align:center;color:var(--muted);font-size:11px;margin-top:8px">Eat 5 apples to finish.</div>`);startSnake();
  } else if(id==='bubble'){
-  shell(`<div class="card" style="text-align:center"><div style="font-size:15px;font-weight:800;margin-bottom:12px">Tap 10 bubbles of the target color!</div><div>Target: <b id="bubble-target" style="font-size:22px">🔵</b></div><div id="bubble-field" class="grid2" style="margin-top:15px"></div></div>`);startBubble();
+  shell(`<div class="card" style="text-align:center"><b style="font-size:15px">Bubble Shooter</b><p style="color:var(--muted);font-size:12px;margin:4px 0 8px">Match &amp; pop the target color — chains multiply points!</p><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:22px">Target: <b id="bubble-target"></b></span><span id="bubble-round" style="color:var(--muted);font-size:12px"></span></div><div id="bubble-chain" style="color:var(--goldL);font-size:12px;margin-bottom:8px">Chain: 0</div><div id="bubble-field"></div></div>`);startBubble();
  } else if(id==='block'){
-  shell(`<div class="card" style="text-align:center"><b>Block Puzzle · Strategic Grid</b><p style="font-size:12px;color:var(--muted);margin:7px 0">Choose a shape, then place it on the 9×9 board. Complete rows or columns to clear them and score.</p><div id="block-grid" style="display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:3px;max-width:340px;margin:auto;background:#090719;padding:5px;border-radius:9px"></div><div id="block-pieces" style="display:flex;justify-content:space-around;gap:8px;margin-top:12px"></div><div id="block-feedback" style="font-size:12px;color:var(--muted);margin-top:9px">Select a piece, then tap its top-left position.</div></div>`);startBlock();
+  shell(`<div class="card" style="text-align:center"><b>Block Puzzle</b><p style="font-size:12px;color:var(--muted);margin:4px 0 8px">Tap a grid cell to place the current piece. Fill a row to clear it!</p><div style="margin-bottom:8px;font-size:12px;color:var(--goldL)">Next piece:</div><div id="block-preview" style="margin-bottom:10px"></div><div id="block-grid" style="max-width:280px;margin:auto"></div><div id="block-feedback" style="font-size:11px;color:var(--muted);margin-top:8px">Place pieces to fill rows. 60 pts to win!</div></div>`);startBlock();
  } else if(id==='space'){
-  shell(`<div class="card" style="text-align:center"><div style="font-weight:800;margin-bottom:8px">Tap the enemy ships before they escape!</div><div id="space-field" class="grid2"></div><div style="color:var(--muted);font-size:11px;margin-top:10px">Destroy 10 ships.</div></div>`);startSpace();
+  shell(`<div class="card" style="text-align:center"><b>Space Shooter</b><p style="font-size:12px;color:var(--muted);margin:4px 0 8px">Destroy all enemy waves! Tap to shoot them down.</p><div id="space-field"></div></div>`);startSpace();
  } else if(id==='chess'){
   shell(`<div class="card"><div style="font-size:12px;color:var(--muted);margin-bottom:8px">CHESS TACTICS • 5 challenges</div><div id="chess-question" style="font-size:17px;font-weight:900;margin-bottom:14px"></div><div id="chess-options" style="display:flex;flex-direction:column;gap:8px"></div></div>`);nextChess();
  } else if(id==='patternlab'){
@@ -898,14 +1011,7 @@ function drawConnect(){const e=document.getElementById('connect-board');if(!e)re
 function connectDrop(col){if(arcadeFinished)return;const b=extraData.connect;let row=-1;for(let r=5;r>=0;r--)if(!b[r*7+col]){row=r;break;}if(row<0)return;b[row*7+col]=1;drawConnect();if(connectWon(1)){finishArcadeGame(90,'Connect Four victory');return;}if(b.every(Boolean)){finishArcadeGame(25,'Connect Four draw');return;}const cpu=connectChooseMove();if(cpu<0){finishArcadeGame(25,'Connect Four draw');return;}for(let r=5;r>=0;r--)if(!b[r*7+cpu]){b[r*7+cpu]=2;break;}drawConnect();if(connectWon(2)){set('connect-feedback','Strategic CPU connected four. Start a new match.');finishArcadeGame(5,'Connect Four match ended');}else if(b.every(Boolean)){finishArcadeGame(25,'Connect Four draw');}else set('connect-feedback','Your turn 🔴. CPU is evaluating threats.');}
 function connectWon(p){const b=extraData.connect;for(let r=0;r<6;r++)for(let c=0;c<7;c++){if(b[r*7+c]!==p)continue;for(const [dr,dc] of [[0,1],[1,0],[1,1],[1,-1]]){let ok=true;for(let k=1;k<4;k++){const rr=r+dr*k,cc=c+dc*k;if(rr<0||rr>=6||cc<0||cc>=7||b[rr*7+cc]!==p){ok=false;break;}}if(ok)return true;}}return false;}
 function connectChooseMove(){const b=extraData.connect;const legal=Array.from({length:7},(_,c)=>c).filter(c=>b[c]===0);if(!legal.length)return -1;for(const c of legal){let r=-1;for(let y=5;y>=0;y--)if(!b[y*7+c]){r=y;break;}b[r*7+c]=2;const win=connectWon(2);b[r*7+c]=0;if(win)return c;}for(const c of legal){let r=-1;for(let y=5;y>=0;y--)if(!b[y*7+c]){r=y;break;}b[r*7+c]=1;const block=connectWon(1);b[r*7+c]=0;if(block)return c;}legal.sort((a,b)=>Math.abs(3-a)-Math.abs(3-b));return legal[0];}
-const BLOCK_SHAPES=[[[1,1],[1,1]],[[1,1,1]],[[1],[1],[1]],[[1,1,1],[0,1,0]],[[1,0],[1,1]],[[0,1],[1,1]],[[1,1,0],[0,1,1]],[[1,1,1,1]]];
-function startBlock(){extraData={board:Array(81).fill(0),pieces:[],selected:0,lines:0};setArcadeScore(0);blockNextPieces();drawBlock();}
-function blockNextPieces(){extraData.pieces=Array.from({length:3},()=>BLOCK_SHAPES[Math.floor(Math.random()*BLOCK_SHAPES.length)]);extraData.selected=0;drawBlockPieces();}
-function drawBlock(){const e=document.getElementById('block-grid');if(!e)return;e.innerHTML=extraData.board.map((v,i)=>`<button class="btn" style="aspect-ratio:1;min-width:0;padding:0;border-radius:3px;background:${v?'#8b5cf6':'#201a3b'};border:1px solid #392b66" onclick="blockPlace(${i})"></button>`).join('');}
-function drawBlockPieces(){const e=document.getElementById('block-pieces');if(!e)return;e.innerHTML=extraData.pieces.map((shape,i)=>shape?`<button class="btn btn-gray" onclick="blockSelect(${i})" style="padding:8px;min-width:82px;border:2px solid ${extraData.selected===i?'var(--gold)':'var(--border)'}"><div style="display:grid;grid-template-columns:repeat(${shape[0].length},13px);gap:2px;justify-content:center">${shape.flat().map(v=>`<i style="width:13px;height:13px;border-radius:2px;background:${v?'#a78bfa':'transparent'}"></i>`).join('')}</div><small style="display:block;margin-top:5px">Piece ${i+1}</small></button>`:`<div class="card2" style="min-width:82px;padding:8px;display:grid;place-items:center;color:var(--green)">✓ Used</div>`).join('');}
-function blockSelect(i){if(!extraData.pieces[i])return;extraData.selected=i;drawBlockPieces();}
-function blockPlace(index){if(arcadeFinished)return;const shape=extraData.pieces[extraData.selected];if(!shape){toast('Select an unused shape first');return;}const r0=Math.floor(index/9),c0=index%9,cells=[];for(let r=0;r<shape.length;r++)for(let c=0;c<shape[r].length;c++)if(shape[r][c]){const rr=r0+r,cc=c0+c;if(rr>=9||cc>=9||extraData.board[rr*9+cc]){set('block-feedback','That shape does not fit there. Choose another position.');return;}cells.push(rr*9+cc);}cells.forEach(i=>extraData.board[i]=1);let clear=new Set();for(let r=0;r<9;r++)if(extraData.board.slice(r*9,r*9+9).every(Boolean))for(let c=0;c<9;c++)clear.add(r*9+c);for(let c=0;c<9;c++)if(Array.from({length:9},(_,r)=>extraData.board[r*9+c]).every(Boolean))for(let r=0;r<9;r++)clear.add(r*9+c);clear.forEach(i=>extraData.board[i]=0);extraData.lines+=clear.size?clear.size/9:0;setArcadeScore(arcadeScore+cells.length*2+clear.size*3);extraData.pieces[extraData.selected]=null;if(extraData.pieces.every(x=>!x)){blockNextPieces();}else{extraData.selected=extraData.pieces.findIndex(Boolean);drawBlockPieces();}drawBlock();if(extraData.lines>=5){finishArcadeGame(60+Math.floor(arcadeScore/4),'Block Puzzle cleared five lines');return;}if(extraData.pieces.filter(Boolean).every(sh=>!blockHasFit(sh))){set('block-feedback','No remaining piece fits. Final score recorded.');finishArcadeGame(Math.max(10,Math.floor(arcadeScore/3)),'Block Puzzle session');}else set('block-feedback',`Lines cleared: ${extraData.lines}. Keep planning your placements.`);}
-function blockHasFit(shape){if(!shape)return false;for(let r=0;r<9;r++)for(let c=0;c<9;c++){let ok=true;for(let y=0;y<shape.length;y++)for(let x=0;x<shape[y].length;x++)if(shape[y][x]&&(r+y>=9||c+x>=9||extraData.board[(r+y)*9+c+x]))ok=false;if(ok)return true;}return false;}
+// Block Puzzle v2 (6×6) is defined below — old 9×9 version removed to avoid conflicts.
 function submitTyping(){if(arcadeFinished)return;const v=(document.getElementById('typing-input')?.value||'').trim().toUpperCase();if(v===extraData.phrase)finishArcadeGame(65,'Typing Sprint completed');else document.getElementById('typing-feedback').textContent='Not an exact match. Check spelling and spaces.';}
 
 function answerExtra(v){if(arcadeFinished)return;let id=extraData.id,correct=(id==='word'||id==='anagram')?v===extraData.answer:v===extraData.answer;if(correct){extraCorrect++;setArcadeScore(arcadeScore+10);document.getElementById('extra-feedback').textContent='Correct! +10 score';}else document.getElementById('extra-feedback').textContent='Not quite — next one!';extraRound++;if(extraRound>=5){finishArcadeGame(35+extraCorrect*8,`${GAMES_DATA.find(g=>g.id===id).name} completed`);return;}setTimeout(()=>{if(!arcadeFinished)nextExtraQuestion(id)},450);}
@@ -931,587 +1037,131 @@ function startSnake(){snakeBody=[{x:5,y:5},{x:4,y:5},{x:3,y:5}];snakeDir='right'
 function setSnakeDir(d){if(({up:'down',down:'up',left:'right',right:'left'})[snakeDir]!==d)snakeDir=d;}
 function tickSnake(){let h={...snakeBody[0]};if(snakeDir==='up')h.y--;if(snakeDir==='down')h.y++;if(snakeDir==='left')h.x--;if(snakeDir==='right')h.x++;if(h.x<0||h.x>=16||h.y<0||h.y>=16||snakeBody.some((p,i)=>i<snakeBody.length-1&&p.x===h.x&&p.y===h.y)){clearInterval(snakeIv);document.getElementById('arcade-status').textContent='Game over — tap Play Again.';let b=document.createElement('button');b.className='btn btn-purple';b.style='padding:8px 15px;margin-left:8px';b.textContent='Restart';b.onclick=()=>openGame('snake');document.getElementById('arcade-status').appendChild(b);return;}snakeBody.unshift(h);if(h.x===snakeFood.x&&h.y===snakeFood.y){setArcadeScore(arcadeScore+10);snakeFood={x:Math.floor(Math.random()*16),y:Math.floor(Math.random()*16)};if(arcadeScore>=50){clearInterval(snakeIv);finishArcadeGame(75,'Snake Classic win');}}else snakeBody.pop();drawSnake();}
 function drawSnake(){let c=document.getElementById('snake-canvas');if(!c)return;let x=c.getContext('2d'),z=20;x.clearRect(0,0,320,320);x.fillStyle='#10b981';snakeBody.forEach(p=>x.fillRect(p.x*z+1,p.y*z+1,18,18));x.fillStyle='#ef4444';x.fillRect(snakeFood.x*z+2,snakeFood.y*z+2,16,16);}
-// Bubble shooter - color target clicking
-const bubbleColors=['🔴','🔵','🟢','🟡'];function startBubble(){bubbleScore=0;setArcadeScore(0);let target=bubbleColors[Math.floor(Math.random()*4)];document.getElementById('bubble-target').textContent=target;let f=document.getElementById('bubble-field');f.innerHTML=Array.from({length:20},(_,i)=>{let color=bubbleColors[Math.floor(Math.random()*4)];return `<button class="btn btn-gray" style="font-size:28px;padding:12px" onclick="popBubble(this,'${color}')">${color}</button>`}).join('');}
-function popBubble(el,color){if(arcadeFinished||el.disabled)return;el.disabled=true;el.style.opacity='.2';if(color===document.getElementById('bubble-target').textContent){bubbleScore++;setArcadeScore(bubbleScore*5);if(bubbleScore>=10)finishArcadeGame(70,'Bubble Shooter win');}else toast('Wrong color! Keep trying.');}
-// Block puzzle
-function startBlock(){blockPlaced=0;setArcadeScore(0);let e=document.getElementById('block-grid');e.innerHTML=Array.from({length:36},(_,i)=>`<button id="bc${i}" class="btn btn-gray" style="aspect-ratio:1;padding:0" onclick="placeBlock(${i})"></button>`).join('');}
-function placeBlock(i){let e=document.getElementById('bc'+i);if(!e||e.dataset.filled||arcadeFinished)return;e.dataset.filled='1';e.style.background='var(--purple)';e.textContent='🧩';blockPlaced++;setArcadeScore(blockPlaced*5);if(blockPlaced>=12)finishArcadeGame(65,'Block Puzzle completed');}
-// Space shooter
-function startSpace(){let hits=0;setArcadeScore(0);let f=document.getElementById('space-field');f.innerHTML=Array.from({length:12},(_,i)=>`<button class="btn btn-gray" style="font-size:28px;padding:13px" onclick="shootShip(this)">👾</button>`).join('');window.spaceHits=0;}
-function shootShip(el){if(arcadeFinished||el.disabled)return;el.disabled=true;el.textContent='💥';window.spaceHits++;setArcadeScore(window.spaceHits*5);if(window.spaceHits>=10)finishArcadeGame(75,'Space Shooter completed');}
-// Chess tactics quiz
-const chessQs=[['Which piece moves in an L-shape?',['Knight','Bishop','Rook'],0],['Which piece moves diagonally?',['Rook','Bishop','King'],1],['What is it called when the king is under attack?',['Check','Fork','Pin'],0],['Which piece is usually most powerful?',['Pawn','Queen','Knight'],1],['How does a pawn capture?',['Straight ahead','Diagonally','Backward'],1]];let chessRound=0;
-function nextChess(){if(chessRound>=5){finishArcadeGame(90,'Chess Challenge completed');return;}let q=chessQs[chessRound];document.getElementById('chess-question').textContent=`${chessRound+1}. ${q[0]}`;document.getElementById('chess-options').innerHTML=q[1].map((v,i)=>`<button class="btn btn-gray" style="padding:12px" onclick="answerChess(${i})">${v}</button>`).join('');}
-function answerChess(i){if(i===chessQs[chessRound][2])setArcadeScore(arcadeScore+10);else toast('Try the next challenge!');chessRound++;nextChess();}
-
-function showSub(name) {
-  document.querySelectorAll('#screen-profile .sub').forEach(s=>s.classList.remove('active'));
-  document.getElementById('sub-'+name).classList.add('active');
-  if(name==='history') renderHistory('all');
-  if(name==='settings') renderSettings();
-  if(name==='ach') renderFullAch();
+// ── BUBBLE SHOOTER (Real match-3 color chain game) ──
+const bubbleColors=['🔴','🔵','🟢','🟡'];
+let bubbleGrid=[], bubbleTarget='', bubbleChain=0, bubbleRound=0;
+function startBubble(){
+  bubbleGrid=[]; bubbleChain=0; bubbleRound=0; setArcadeScore(0);
+  newBubbleRound();
 }
-
-// ═══════════════════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════════════════
-let toastT;
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.style.display='block';
-  clearTimeout(toastT);
-  toastT = setTimeout(()=>el.style.display='none', 2200);
+function newBubbleRound(){
+  bubbleRound++;
+  bubbleTarget=bubbleColors[Math.floor(Math.random()*4)];
+  bubbleGrid=Array.from({length:16},()=>bubbleColors[Math.floor(Math.random()*4)]);
+  // Seed at least 5 matching targets so it's winnable
+  [0,3,7,10,13].forEach(i=>bubbleGrid[i]=bubbleTarget);
+  drawBubbleGrid();
+  document.getElementById('bubble-target').textContent=bubbleTarget;
+  document.getElementById('bubble-round').textContent=`Round ${bubbleRound}/3`;
+  document.getElementById('bubble-chain').textContent=`Chain: ${bubbleChain}`;
 }
-
-// ═══════════════════════════════════════════════════════
-//  RENDER ALL
-// ═══════════════════════════════════════════════════════
-function renderAll() {
-  updateHomeDisplay();
-  renderPopularGames(); set('h-games-completed',fmtN(P.gamesPlayed||0)); set('h-record-count',fmtN(Object.keys(P.gameStats||{}).length));
-  renderGames('All');
-  renderLeaderboard('Weekly');
-  renderProfileStats();
-  renderProfileMenu();
-  renderAchievements();
-  updateMissionUI();
-  updateSpinBtn();
-  updateCheckinBtn();
-  renderWheelSegs();
+function drawBubbleGrid(){
+  const f=document.getElementById('bubble-field');
+  if(!f)return;
+  f.innerHTML=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">` +
+    bubbleGrid.map((c,i)=>c?
+      `<button class="btn" style="font-size:28px;padding:10px;background:var(--bg3);border:2px solid var(--border);border-radius:12px;transition:transform .1s" onclick="popBubble2(${i})">${c}</button>`:
+      `<div style="font-size:28px;padding:10px;background:var(--bg2);border-radius:12px;opacity:.2">⬜</div>`
+    ).join('') + `</div>`;
 }
-
-// ═══════════════════════════════════════════════════════
-//  HOME DISPLAY
-// ═══════════════════════════════════════════════════════
-function updateHomeDisplay() {
-  set('h-games-completed',fmtN(P.gamesPlayed||0)); set('h-record-count',fmtN(Object.keys(P.gameStats||{}).length));
-  const pct = Math.min((P.xp/P.maxXp)*100,100);
-  set('h-av', null, {innerHTML: P.avatar});
-  set('h-name', P.name);
-  set('h-lv', 'Lv.'+P.level);
-  set('h-xp-t', P.xp+'/'+P.maxXp+' XP');
-  styleW('h-xp-f', pct+'%');
-  set('h-pts', fmtN(P.points));
-  set('h-games-played', fmtN(P.gamesPlayed)); set('h-total-earned', fmtN(P.totalPtsEarned));
-  set('h-achievements', fmtN((P.achievementsUnlocked||[]).length)); set('h-streak', fmtN(P.checkInStreak));
-  updateMissionUI();
-  // Also update profile
-  set('p-av', null, {innerHTML: P.avatar});
-  set('p-name', P.name);
-  set('p-id', 'ID: '+(P.id||'—'));
-  set('p-lv', '👑 Lv.'+P.level);
-  set('p-xp-t', P.xp+'/'+P.maxXp+' XP');
-  styleW('p-xp-f', pct+'%');
-}
-function set(id, text, attrs) {
-  const el = document.getElementById(id);
-  if(!el) return;
-  if(text!==null && text!==undefined) el.textContent = text;
-  if(attrs) Object.assign(el, attrs);
-}
-function styleW(id, w) {
-  const el = document.getElementById(id);
-  if(el) el.style.width = w;
-}
-function fmtN(n) { return Number(n||0).toLocaleString(); }
-
-// ═══════════════════════════════════════════════════════
-//  MISSION
-// ═══════════════════════════════════════════════════════
-function updateMissionUI() {
-  const prog = P.missionProgress||0;
-  const pct = Math.min((prog/3)*100,100)+'%';
-  const txt = prog+'/3';
-  ['h-miss-f','r-miss-f'].forEach(id=>styleW(id,pct));
-  ['h-miss-t','r-miss-t'].forEach(id=>set(id,txt));
-}
-
-// ═══════════════════════════════════════════════════════
-//  POINTS & XP
-// ═══════════════════════════════════════════════════════
-function addPoints(pts, label, icon) {
-  pts = Math.max(0, Math.floor(Number(pts)||0));
-  if(!pts) return;
-  P.points = Math.max(0, Number(P.points)||0) + pts;
-  P.totalPtsEarned = Math.max(0, Number(P.totalPtsEarned)||0) + pts;
-  P.xp = (Number(P.xp)||0) + Math.floor(pts/2);
-  P.maxXp = Math.max(1, Number(P.maxXp)||1000);
-  // Level up
-  while(P.xp >= P.maxXp) {
-    P.xp -= P.maxXp;
-    P.level = (P.level||1) + 1;
-    P.maxXp = Math.floor(P.maxXp * 1.2);
-    toast('🎉 Level Up! You are now Lv.'+P.level+'!');
+function popBubble2(i){
+  if(arcadeFinished||!bubbleGrid[i])return;
+  const hit=bubbleGrid[i]===bubbleTarget;
+  if(hit){
+    bubbleGrid[i]=null; bubbleChain++;
+    setArcadeScore(arcadeScore + bubbleChain*5);
+    document.getElementById('bubble-chain').textContent=`Chain: ${bubbleChain}`;
+    const left=bubbleGrid.filter(c=>c===bubbleTarget).length;
+    if(left===0){
+      if(bubbleRound>=3)finishArcadeGame(50+bubbleChain*3,'Bubble Shooter — all rounds cleared!');
+      else{toast('🎉 Round cleared! +bonus');setTimeout(newBubbleRound,700);}
+    }
+  } else {
+    bubbleGrid[i]=null; // wrong pop — still removes, but no chain
+    bubbleChain=0;
+    document.getElementById('bubble-chain').textContent=`Chain: 0 (reset)`;
+    toast('Wrong color — chain reset!');
   }
-  if(!Array.isArray(P.history)) P.history = [];
-  P.history.unshift({id:Date.now(), label, time:timeStr(), pts, icon, type:'earned'});
-  if(P.history.length > 100) P.history = P.history.slice(0,100);
-  checkAchievements();
-  updateHomeDisplay();
-  renderProfileStats();
-  renderHistoryIfVisible();
-  cachePlayerState();
-  saveToFirebase();
-  toast('⭐ +' + pts + ' points added!');
-}
-
-function renderHistoryIfVisible(){
-  const historyTab=document.getElementById('sub-history');
-  if(historyTab && historyTab.classList.contains('active')) renderHistory('all');
-}
-
-function timeStr() {
-  const d = new Date();
-  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+', '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-}
-
-// ═══════════════════════════════════════════════════════
-//  ACHIEVEMENTS
-// ═══════════════════════════════════════════════════════
-function checkAchievements() {
-  if(!Array.isArray(P.achievementsUnlocked)) P.achievementsUnlocked = [];
-  ALL_ACHIEVEMENTS.forEach(a => {
-    if(!P.achievementsUnlocked.includes(a.id) && a.cond(P)) {
-      P.achievementsUnlocked.push(a.id);
-      P.achievements = P.achievementsUnlocked.length;
-      addPoints(a.pts, 'Achievement: '+a.title, a.icon);
-      toast(a.icon+' Achievement unlocked: '+a.title+' +'+a.pts+' PTS!');
-    }
-  });
-}
-function renderAchievements() {
-  const el = document.getElementById('ach-list');
-  if(!el) return;
-  const show = ALL_ACHIEVEMENTS.slice(0,3);
-  el.innerHTML = show.map(a=>{
-    const done = (P.achievementsUnlocked||[]).includes(a.id);
-    return `<div style="display:flex;align-items:center;gap:11px;padding:11px;background:var(--bg3);border-radius:12px;border:1px solid ${done?'var(--green)':'rgba(124,58,237,.2)'}">
-      <span style="font-size:26px">${a.icon}</span>
-      <div style="flex:1"><div style="font-weight:800;font-size:13px">${a.title}</div><div style="color:var(--muted);font-size:11px">${a.desc}</div></div>
-      <div style="color:${done?'var(--green)':'var(--goldL)'};font-weight:900;font-size:13px">${done?'✅':'+'+a.pts+' PTS'}</div>
-    </div>`;
-  }).join('');
-}
-function renderFullAch() {
-  const el = document.getElementById('ach-full-list');
-  if(!el) return;
-  el.innerHTML = ALL_ACHIEVEMENTS.map(a=>{
-    const done = (P.achievementsUnlocked||[]).includes(a.id);
-    return `<div style="display:flex;align-items:center;gap:11px;padding:12px;background:var(--bg3);border-radius:12px;border:1px solid ${done?'var(--green)':'rgba(124,58,237,.2)'}">
-      <span style="font-size:26px">${a.icon}</span>
-      <div style="flex:1"><div style="font-weight:800;font-size:13px">${a.title}</div><div style="color:var(--muted);font-size:11px">${a.desc}</div></div>
-      <div style="color:${done?'var(--green)':'var(--goldL)'};font-weight:900;font-size:13px">${done?'✅ Done':'+'+a.pts+' PTS'}</div>
-    </div>`;
-  }).join('');
-}
-
-// ═══════════════════════════════════════════════════════
-//  POPULAR GAMES (home)
-// ═══════════════════════════════════════════════════════
-function renderPopularGames() {
-  const el = document.getElementById('h-pop-games');
-  if(!el) return;
-  el.innerHTML = GAMES_DATA.slice(0,4).map(g=>`
-    <div onclick="openGame('${g.id}')" style="flex-shrink:0;width:68px;background:var(--bg2);border-radius:12px;border:1px solid var(--border);padding:9px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer">
-      <div style="font-size:26px">${g.icon}</div>
-      <div style="color:var(--muted);font-size:9px;font-weight:700;text-align:center">${g.name}</div>
-    </div>`).join('');
-  renderHomeMoreGames();
-}
-function renderHomeMoreGames(){
- const el=document.getElementById('h-more-games');if(!el)return;
- el.innerHTML=GAMES_DATA.slice(4,12).map(g=>`<button class="card" onclick="openGame('${g.id}')" style="display:flex;align-items:center;gap:10px;text-align:left;color:var(--text);font:inherit;cursor:pointer;padding:11px"><span style="font-size:26px">${g.icon}</span><span style="flex:1;min-width:0"><b style="font-size:12px;display:block">${g.name}</b><small style="color:var(--green);font-size:10px">▶ PLAY NOW</small></span></button>`).join('');
-}
-
-// ═══════════════════════════════════════════════════════
-//  GAMES GRID
-// ═══════════════════════════════════════════════════════
-let currentCat = 'All';
-function renderGames(cat) {
-  currentCat = cat;
-  const cats = ['All','Puzzle','Arcade','Brain','Classic'];
-  document.getElementById('g-cats').innerHTML = cats.map(c=>
-    `<button class="cat-pill ${c===cat?'active':''}" onclick="renderGames('${c}')">${c}</button>`).join('');
-  const q=(document.getElementById('game-search')?.value||'').trim().toLowerCase();
-  const list = (cat==='All' ? GAMES_DATA : GAMES_DATA.filter(g=>g.cat===cat)).filter(g=>g.name.toLowerCase().includes(q));
-  document.getElementById('g-grid').innerHTML = list.length ? list.map(g=>`
-    <div class="game-card" onclick="openGame('${g.id}')">
-      <div style="font-size:40px">${g.icon}</div>
-      <div style="font-weight:800;font-size:13px;text-align:center">${g.name}</div>
-      <div class="play-dot">▶</div><div style="color:var(--green);font-size:9px;font-weight:800">PLAY NOW</div>${P.gameStats?.[g.id]?`<div style="font-size:9px;color:var(--goldL)">Best ${fmtN(P.gameStats[g.id].best||0)} · ${fmtN(P.gameStats[g.id].plays||0)} plays</div>`:''}
-    </div>`).join('') : '<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px">No games found</div>';
-}
-
-// ═══════════════════════════════════════════════════════
-//  CHECKIN
-// ═══════════════════════════════════════════════════════
-function claimCheckin() {
-  if(P.dailyCheckinDone) return;
-  P.dailyCheckinDone = true;
-  P.checkInStreak = (P.checkInStreak||0) + 1;
-  addPoints(25, 'Daily Check-in', '📅');
-  toast('✅ +25 PTS — Daily check-in!');
-  updateCheckinBtn();
-}
-function updateCheckinBtn() {
-  const btn = document.getElementById('checkin-btn');
-  if(!btn) return;
-  btn.textContent = P.dailyCheckinDone ? '✅ Claimed' : 'Claim';
-  btn.disabled = !!P.dailyCheckinDone;
-}
-
-// ═══════════════════════════════════════════════════════
-//  SPIN WHEEL
-// ═══════════════════════════════════════════════════════
-function renderWheelSegs() {
-  const segs = ['⭐','🎁','💎','✨','👑','🎯','🎮','🌟'];
-  const wheel = document.getElementById('spin-wheel');
-  if(!wheel) return;
-  // Remove old segs
-  wheel.querySelectorAll('.wheel-seg').forEach(s=>s.remove());
-  segs.forEach((s,i) => {
-    const el = document.createElement('div');
-    el.className = 'wheel-seg';
-    el.textContent = s;
-    el.style.transform = `rotate(${i*45+22}deg) translateY(-68px)`;
-    wheel.appendChild(el);
-  });
-}
-let spinRunning = false;
-function doSpin() {
-  if(spinRunning || P.spinUsedToday) return;
-  spinRunning = true;
-  const extra = Math.floor(Math.random()*360);
-  P.spinDeg = (P.spinDeg||0) + 1800 + extra;
-  const wheel = document.getElementById('spin-wheel');
-  wheel.style.transition = 'transform 3.2s cubic-bezier(.17,.67,.12,1)';
-  wheel.style.transform = 'rotate('+P.spinDeg+'deg)';
-  updateSpinBtn();
-  setTimeout(()=>{
-    spinRunning = false;
-    P.spinUsedToday = true;
-    P.totalSpins = (P.totalSpins||0)+1;
-    const idx = Math.floor(((P.spinDeg%360)/360)*SPIN_PRIZES.length);
-    const prize = SPIN_PRIZES[idx]||25;
-    addPoints(prize, 'Spin Reward', '🎡');
-    toast('🎡 Spin result: +'+prize+' PTS!');
-    updateSpinBtn();
-  }, 3300);
-}
-function updateSpinBtn() {
-  const btn = document.getElementById('spin-btn');
-  if(!btn) return;
-  btn.textContent = P.spinUsedToday ? '✅ Spun Today' : 'SPIN THE WHEEL';
-  btn.disabled = !!P.spinUsedToday || spinRunning;
-}
-
-// ═══════════════════════════════════════════════════════
-//  LEADERBOARD
-// ═══════════════════════════════════════════════════════
-function renderLeaderboard(tab) {
-  document.getElementById('lb-tabs').innerHTML=['Weekly','Monthly','Global'].map(t=>`<button class="tab-btn ${t===tab?'active':'off'}" onclick="renderLeaderboard('${t}')">${t}</button>`).join('');
-  const podium=document.getElementById('lb-podium'), rest=document.getElementById('lb-rest');
-  podium.innerHTML='<div style="color:var(--muted);font-size:12px;padding:18px">Loading player scores…</div>';rest.innerHTML='';
-  const draw=rows=>{let a=(rows||[]).map(x=>({id:x.id,name:String(x.name||'Player').slice(0,24),pts:Math.max(0,Number(x.points)||0),av:x.avatar||'🎮'}));if(!a.some(x=>x.id===uid))a.push({id:uid,name:P.name||'You',pts:Number(P.points)||0,av:P.avatar||'😎'});a.sort((x,y)=>y.pts-x.pts);a=a.slice(0,20);a.forEach((x,i)=>x.rank=i+1);const top=[a.find(x=>x.rank===2),a.find(x=>x.rank===1),a.find(x=>x.rank===3)].filter(Boolean);podium.innerHTML=top.map(x=>`<div class="podium-col"><div style="font-size:20px">${x.rank===1?'👑':''}</div><div style="width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--bg3);font-size:24px;border:2px solid ${x.rank===1?'var(--gold)':'var(--border)'}">${escapeHTML(x.av)}</div><b style="font-size:11px;text-align:center">${escapeHTML(x.name)}${x.id===uid?' (You)':''}</b><span style="font-size:11px;color:var(--goldL)">${fmtN(x.pts)} PTS</span><div class="podium-box" style="height:${x.rank===1?82:62}px">#${x.rank}</div></div>`).join('')||'No scores yet';rest.innerHTML=a.filter(x=>x.rank>3).map(x=>`<div class="hist-row"><b>#${x.rank}</b><span>${escapeHTML(x.av)}</span><b style="flex:1">${escapeHTML(x.name)}${x.id===uid?' (You)':''}</b><b style="color:var(--goldL)">${fmtN(x.pts)} PTS</b></div>`).join('');if(!db)rest.innerHTML+='<p style="font-size:11px;color:var(--muted);text-align:center">Guest mode: rankings are only available on this device.</p>';};
-  if(db&&uid)db.collection('users').orderBy('points','desc').limit(20).get().then(q=>draw(q.docs.map(d=>({id:d.id,...d.data()})))).catch(e=>{console.warn(e);draw([{id:uid,name:P.name,points:P.points,avatar:P.avatar}]);rest.innerHTML+='<p style="font-size:11px;color:var(--muted);text-align:center">Global scores could not load. Check Firestore read rules.</p>';});else draw([{id:uid,name:P.name,points:P.points,avatar:P.avatar}]);
-}
-function escapeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-
-// ═══════════════════════════════════════════════════════
-//  PROFILE
-// ═══════════════════════════════════════════════════════
-function renderProfileStats() {
-  const stats = [
-    {val:P.gamesPlayed||0, label:'Games', icon:'🎮'},
-    {val:fmtN(P.points), label:'Points', icon:'⭐'},
-    {val:(P.achievementsUnlocked||[]).length, label:'Badges', icon:'🏆'},
-    {val:'#'+(P.rank||'—'), label:'Rank', icon:'📊'},
-  ];
-  set('p-stats', null, {innerHTML:stats.map((s,i)=>`
-    <div class="stat-box" style="${i<3?'border-right:1px solid var(--border)':''}">
-      <div style="font-size:17px">${s.icon}</div>
-      <div style="font-size:15px;font-weight:900">${s.val}</div>
-      <div style="font-size:9px;font-weight:700;color:var(--muted);text-align:center">${s.label}</div>
-    </div>`).join('')});
-}
-function renderProfileMenu() {
-  const items = [
-    {icon:'✏️', label:'Edit Profile', action:'editProfile()'},
-    {icon:'🔊', label:'Sound Settings', action:"showSub('settings')"},
-    {icon:'🎨', label:'Appearance', sub:'Dark Mode', action:"showSub('settings')"},
-    {icon:'🔔', label:'Notifications', action:"showSub('settings')"},
-    {icon:'📊', label:'Points History', action:"showSub('history')"},
-    {icon:'📒', label:'Game Journal & Records', action:'showGameJournal()'},
-    {icon:'🏅', label:'All Achievements', action:"showSub('ach')"},
-    {icon:'❓', label:'Help & Support', action:'showHelpToast()'},
-    {icon:'ℹ️', label:'About TAKAKAMAN', action:'showAboutToast()'},
-  ];
-  set('p-menu', null, {innerHTML:items.map(m=>`
-    <div class="card2" style="display:flex;align-items:center;gap:11px;cursor:pointer;padding:12px 14px" onclick="${m.action}">
-      <div style="font-size:19px">${m.icon}</div>
-      <div style="flex:1;font-weight:700;font-size:13px">${m.label}</div>
-      ${m.sub?`<div style="color:var(--muted);font-size:12px">${m.sub}</div>`:''}
-      <div style="color:var(--muted)">›</div>
-    </div>`).join('')});
-}
-function showInfo(title,body){const m=document.getElementById('info-modal');m.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-size:18px">${title}</b><button class="btn btn-gray" onclick="document.getElementById('info-overlay').classList.remove('show')" style="padding:7px 12px">✕</button></div><div style="font-size:12px;line-height:1.7;color:var(--muted)">${body}</div>`;document.getElementById('info-overlay').classList.add('show');}
-document.getElementById('info-overlay').addEventListener('click',e=>{if(e.target.id==='info-overlay')e.currentTarget.classList.remove('show');});
-function editProfile(){const n=prompt('Display name (2–20 characters):',P.name||'Player');if(n===null)return;const v=n.trim().replace(/[<>]/g,'').slice(0,20);if(v.length<2){toast('Name must be at least 2 characters');return;}P.name=v;saveToFirebase();renderAll();toast('Profile updated');}
-function showPrivacy(){showInfo('🔒 Privacy Policy',`<b>TAKAKAMAN Privacy Summary</b><br><br>• Account identity: when launched through a configured Telegram Mini App, the app reads the Telegram WebApp user ID and display name exposed by Telegram. Outside Telegram, a local guest profile is used.<br>• Guest mode: game progress and points are stored in this browser's local storage.<br>• Cloud sync: Telegram player profile and progress may be stored in the TAKAKAMAN Firebase Firestore project configured by the operator.<br>• Advertising: an optional AdsGram rewarded ad is requested only after the user taps the clearly labelled optional ad placement. 25 in-app points are awarded only when AdsGram confirms the rewarded ad was watched to the end. Skipped or failed ads do not earn points.<br>• The app has no deposits, payments, withdrawals or cash-out feature.<br><br>Clearing browser site data removes locally stored guest data. For cloud data deletion, contact the app operator. Do not enter sensitive personal information.`);}
-function showSupport(){showInfo('💬 Help & Support',`For a technical issue, note your Player ID (<b>${escapeHTML(P.id||'Guest')}</b>), game name, device and approximate time. Never share passwords or private account details.<br><br><b>Support contact:</b> The operator has not yet configured an official support email or Telegram username. Add a verified contact before publishing the app.`);}
-function showHelpToast(){showSupport();}
-function showAboutToast(){showInfo('ℹ️ About TAKAKAMAN',`TAKAKAMAN is a casual skill-and-puzzle gaming mini app. It includes arcade, memory, number, word and logic challenges, a personal game journal, best-score tracking, player progression, achievements and daily activities.<br><br>Points are in-app game points only. They have no cash value and cannot be deposited, transferred, withdrawn or exchanged for money.<br><br>Version 2.0 · Independent skill-game collection · PLAY · LEVEL UP · REPEAT`);}
-function showNotifToast(){ document.getElementById('notif-dot').style.display='none'; toast('🔔 No new notifications'); }
-
-// ═══════════════════════════════════════════════════════
-//  HISTORY
-// ═══════════════════════════════════════════════════════
-let hTab='all';
-function renderHistory(tab) {
-  hTab=tab;
-  document.getElementById('hist-tabs').innerHTML = ['all','earned','spent'].map(t=>
-    `<button class="tab-btn ${t===tab?'active':'off'}" onclick="renderHistory('${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('');
-  const items = (P.history||[]).filter(h=>tab==='all'||h.type===tab);
-  set('hist-list', null, {innerHTML: items.length ? items.map(h=>`
-    <div class="hist-row">
-      <div style="font-size:22px">${h.icon}</div>
-      <div style="flex:1"><div style="font-weight:700;font-size:13px">${h.label}</div><div style="color:var(--muted);font-size:11px">${h.time}</div></div>
-      <div style="color:${h.type==='spent'?'var(--red)':'var(--green)'};font-weight:900;font-size:13px">${h.type==='spent'?'-':'+'}${h.pts} PTS</div>
-    </div>`).join('') : '<div style="color:var(--muted);text-align:center;padding:24px;font-size:13px">No records yet</div>'});
-}
-
-// ═══════════════════════════════════════════════════════
-//  SETTINGS
-// ═══════════════════════════════════════════════════════
-function renderSettings() {
-  const secs = [
-    {title:'Appearance', items:[
-      {key:'darkMode',label:'Dark Mode',icon:'🌙'},
-      {key:'soundEffects',label:'Sound Effects',icon:'🔊'},
-      {key:'music',label:'Music',icon:'🎵'},
-    ]},
-    {title:'Notifications', items:[
-      {key:'gameUpdates',label:'Game Updates',icon:'🎮'},
-      {key:'dailyRewards',label:'Daily Rewards',icon:'🎁'},
-    ]},
-  ];
-  const extraLinks = `
-    <div style="margin-bottom:14px">
-      <div style="font-weight:900;font-size:15px;margin-bottom:10px">Privacy & Support</div>
-      <div class="card2" style="padding:0;overflow:hidden">
-        <div class="set-row" onclick="showPrivacy()" style="cursor:pointer">
-          <div style="font-size:18px">🔒</div><div style="flex:1;font-weight:700;font-size:13px">Privacy Policy</div><div style="color:var(--muted)">›</div>
-        </div>
-        <div class="set-row" onclick="showSupport()" style="cursor:pointer;border-top:1px solid rgba(124,58,237,.12)">
-          <div style="font-size:18px">💬</div><div style="flex:1;font-weight:700;font-size:13px">Contact Support</div><div style="color:var(--muted)">›</div>
-        </div>
-      </div>
-    </div>`;
-  set('settings-list', null, {innerHTML: secs.map(sec=>`
-    <div>
-      <div style="font-weight:900;font-size:15px;margin-bottom:10px">${sec.title}</div>
-      <div class="card2" style="padding:0;overflow:hidden">
-        ${sec.items.map((item,i)=>`
-          <div class="set-row" style="${i>0?'border-top:1px solid rgba(124,58,237,.12)':''}">
-            <div style="font-size:18px">${item.icon}</div>
-            <div style="flex:1;font-weight:700;font-size:13px">${item.label}</div>
-            <button class="toggle ${(P.settings||{})[item.key]?'on':'off'}" onclick="toggleSetting('${item.key}')"></button>
-          </div>`).join('')}
-      </div>
-    </div>`).join('') + extraLinks});
-}
-function toggleSetting(key) {
-  if(!P.settings) P.settings={};
-  P.settings[key] = !P.settings[key];
-  renderSettings();
-  saveToFirebase();
-  toast(key.replace(/([A-Z])/g,' $1').trim()+': '+(P.settings[key]?'ON':'OFF'));
-}
-
-// ═══════════════════════════════════════════════════════
-//  ADSGRAM REWARDED AD INTEGRATION
-//  Numeric block ID 61634 is the Reward block supplied by the operator.
-//  Points are granted only after AdsGram's Reward promise resolves successfully.
-// ═══════════════════════════════════════════════════════
-const ADSGRAM_BLOCK_ID = '61634';
-const ADSGRAM_REWARD_POINTS = 25;
-let adsgramController = null;
-let adShowing = false;
-let adRewardGrantedThisShow = false;
-function openAdModal(_unusedPoints, ctx) {
-  adCtx = ctx || 'general';
-  const m = document.getElementById('ad-modal');
-  m.innerHTML = `
-    <div style="font-size:46px;margin-bottom:11px">🎁</div>
-    <div style="font-size:17px;font-weight:900;margin-bottom:7px">Watch Ad & Earn +${ADSGRAM_REWARD_POINTS} Points</div>
-    <div style="color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:14px">Watch the rewarded ad until it finishes to receive ${ADSGRAM_REWARD_POINTS} points. Skipping or an ad error gives no points.</div>
-    <div style="display:flex;gap:9px">
-      <button class="btn btn-gray" onclick="closeAd()" style="flex:1;padding:11px;font-size:13px">Cancel</button>
-      <button class="btn btn-gold" id="adsgram-start-btn" onclick="startAd()" style="flex:2;padding:11px;font-size:14px">Watch & Earn</button>
-    </div>`;
-  document.getElementById('ad-overlay').classList.add('show');
-}
-function closeAd() {
-  document.getElementById('ad-overlay').classList.remove('show');
-  adShowing = false;
-}
-async function startAd() {
-  if (adShowing) return;
-  const btn = document.getElementById('adsgram-start-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Loading ad…'; }
-  adShowing = true;
-  adRewardGrantedThisShow = false;
-  try {
-    if (!window.Adsgram || typeof window.Adsgram.init !== 'function') {
-      throw new Error('AdsGram SDK did not load. Open this app inside Telegram and try again.');
-    }
-    if (!adsgramController) adsgramController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
-    const result = await adsgramController.show();
-    // Reward-format promise resolves only after the ad is watched to the end.
-    if (!result || result.done !== true || result.error === true) {
-      throw new Error('Ad was not completed. No points were added.');
-    }
-    if (!adRewardGrantedThisShow) {
-      adRewardGrantedThisShow = true;
-      addPoints(ADSGRAM_REWARD_POINTS, 'AdsGram Reward Ad Completed', '🎁');
-    }
-    closeAd();
-    toast('🎉 +' + ADSGRAM_REWARD_POINTS + ' points added for watching the ad!');
-    console.log('AdsGram rewarded ad completed:', result);
-  } catch (err) {
-    adShowing = false;
-    if (btn) { btn.disabled = false; btn.textContent = 'Try Again'; }
-    const msg = (err && err.description) || (err && err.message) || 'No ad is available right now. Please try again later.';
-    const m = document.getElementById('ad-modal');
-    m.innerHTML = `<div style="font-size:38px;margin-bottom:10px">⚠️</div><div style="font-weight:900;margin-bottom:8px">Ad not completed</div><div style="color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:14px">${String(msg).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}<br><br>No points were added. You can try again later.</div><button class="btn btn-gray" onclick="closeAd()" style="width:100%;padding:11px">Close</button>`;
-    console.warn('AdsGram rewarded ad error/skip:', err);
+  drawBubbleGrid();
+  if(bubbleGrid.every(c=>!c) && !arcadeFinished){
+    if(bubbleRound>=3)finishArcadeGame(50+arcadeScore,'Bubble Shooter completed!');
+    else setTimeout(newBubbleRound,500);
   }
 }
 
-// ═══════════════════════════════════════════════════════
-//  MEMORY MATCH GAME
-// ═══════════════════════════════════════════════════════
-const EMOJIS=['🍎','⭐','🎮','🌙','💎','🌸','🔥','🎯'];
-let mCards=[], mSel=[], mMoves=0, mPairs=0, mTimer=60, mRunning=false, mTimerIv;
-let mLocked=false;
-
-function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
-
-function initMemory() {
-  clearInterval(mTimerIv);
-  mCards=shuffle([...EMOJIS,...EMOJIS].map((e,i)=>({id:i,emoji:e,flipped:false,matched:false})));
-  mSel=[]; mMoves=0; mPairs=0; mTimer=60; mRunning=true; mLocked=false;
-  document.getElementById('game-overlay').classList.remove('show');
-  renderMemGrid();
-  updateGameUI();
-  mTimerIv=setInterval(()=>{
-    if(!mRunning) return;
-    mTimer--;
-    updateGameUI();
-    if(mTimer<=0){mRunning=false;clearInterval(mTimerIv);setTimeout(()=>showGameResult(false),300);}
-  },1000);
+// ── BLOCK PUZZLE (Real Tetris-style grid fill) ──
+let blockGrid=[],blockCurrentPiece=null,blockScore2=0;
+const BLOCK_SHAPES2=[[[1,1],[1,1]],[[1,1,1]],[[1],[1],[1]],[[1,1,1],[0,1,0]],[[1,0],[1,1]],[[0,1],[1,1]]];
+function startBlock(){
+  blockGrid=Array(36).fill(0); blockScore2=0;
+  setArcadeScore(0);
+  blockPickNextPiece();
+  drawBlock2();
 }
-
-function stopMemoryTimer(){ mRunning=false; clearInterval(mTimerIv); }
-
-function renderMemGrid() {
-  document.getElementById('mem-grid').innerHTML=mCards.map(c=>`
-    <div class="mem-card ${c.flipped||c.matched?'flipped':''} ${c.matched?'matched':''}"
-      id="mc-${c.id}" onclick="flipCard(${c.id})">
-      ${c.flipped||c.matched?c.emoji:'⭐'}
-    </div>`).join('');
+function blockPickNextPiece(){
+  blockCurrentPiece=BLOCK_SHAPES2[Math.floor(Math.random()*BLOCK_SHAPES2.length)];
+  drawBlockPiece2();
 }
-
-function updateGameUI() {
-  const m=Math.floor(mTimer/60), s=mTimer%60;
-  set('g-timer',String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'));
-  set('g-pts',30+mTimer);
-  set('g-moves',mMoves);
-  set('g-pairs',mPairs+'/8');
+function drawBlock2(){
+  const e=document.getElementById('block-grid'); if(!e)return;
+  e.innerHTML=`<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:3px">` +
+    blockGrid.map((v,i)=>`<button style="aspect-ratio:1;border-radius:4px;background:${v?'#8b5cf6':'#201a3b'};border:1px solid ${v?'#a78bfa':'#392b66'};font-size:10px" onclick="blockPlace2(${i})">${v?'🧩':''}</button>`).join('') +
+    `</div>`;
 }
-
-function flipCard(id) {
-  if(!mRunning||mLocked||mSel.length>=2) return;
-  const c=mCards.find(x=>x.id===id);
-  if(!c||c.flipped||c.matched) return;
-  c.flipped=true;
-  mSel.push(id);
-  const el=document.getElementById('mc-'+id);
-  if(el){el.classList.add('flipped');el.textContent=c.emoji;}
-  if(mSel.length===2){
-    mMoves++;
-    updateGameUI();
-    mLocked=true;
-    const [a,b]=mSel;
-    const ca=mCards.find(x=>x.id===a), cb=mCards.find(x=>x.id===b);
-    if(ca.emoji===cb.emoji){
-      ca.matched=cb.matched=true;
-      mPairs++;
-      const ea=document.getElementById('mc-'+a), eb=document.getElementById('mc-'+b);
-      if(ea)ea.classList.add('matched'); if(eb)eb.classList.add('matched');
-      mSel=[]; mLocked=false;
-      updateGameUI();
-      if(mPairs===8){
-        mRunning=false;clearInterval(mTimerIv);
-        const pts=30+mTimer;
-        P.gamesPlayed=(P.gamesPlayed||0)+1;
-        P.memoryWins=(P.memoryWins||0)+1;
-        recordGameRun('memory',pts,'completed');
-        P.missionProgress=Math.min((P.missionProgress||0)+1,3);
-        addPoints(pts,'Completed: Memory Match','🏆'); if(P.missionProgress>=3&&!P.dailyMissionClaimed){P.dailyMissionClaimed=true;addPoints(100,'Daily Challenge: 3 Games','🎯');}
-        updateMissionUI();
-        setTimeout(()=>showGameResult(true,pts),400);
+function drawBlockPiece2(){
+  const e=document.getElementById('block-preview'); if(!e||!blockCurrentPiece)return;
+  const cols=blockCurrentPiece[0].length;
+  e.innerHTML=`<div style="display:grid;grid-template-columns:repeat(${cols},22px);gap:3px;justify-content:center">` +
+    blockCurrentPiece.flat().map(v=>`<div style="width:22px;height:22px;border-radius:4px;background:${v?'#a78bfa':'transparent'}"></div>`).join('') +
+    `</div>`;
+}
+function blockPlace2(idx){
+  if(arcadeFinished||!blockCurrentPiece)return;
+  const cols=6, r0=Math.floor(idx/cols), c0=idx%cols;
+  const cells=[];
+  for(let r=0;r<blockCurrentPiece.length;r++)
+    for(let c=0;c<blockCurrentPiece[r].length;c++)
+      if(blockCurrentPiece[r][c]){
+        const rr=r0+r, cc=c0+c;
+        if(rr>=6||cc>=6||blockGrid[rr*6+cc]){
+          toast("Doesn't fit there!"); return;
+        }
+        cells.push(rr*6+cc);
       }
-    } else {
-      setTimeout(()=>{
-        ca.flipped=cb.flipped=false;
-        const ea=document.getElementById('mc-'+a), eb=document.getElementById('mc-'+b);
-        if(ea){ea.classList.remove('flipped');ea.textContent='⭐';}
-        if(eb){eb.classList.remove('flipped');eb.textContent='⭐';}
-        mSel=[]; mLocked=false;
-      },750);
+  cells.forEach(i=>blockGrid[i]=1);
+  blockScore2+=cells.length*2;
+  // Clear full rows
+  let cleared=0;
+  for(let r=5;r>=0;r--){
+    if(blockGrid.slice(r*6,r*6+6).every(Boolean)){
+      blockGrid.splice(r*6,6,...Array(6).fill(0));
+      cleared++; blockScore2+=10;
     }
   }
+  setArcadeScore(blockScore2);
+  drawBlock2();
+  blockPickNextPiece();
+  if(blockScore2>=60)finishArcadeGame(65,'Block Puzzle champion!');
 }
 
-function showGameResult(won, pts) {
-  const m=document.getElementById('game-modal');
-  m.innerHTML=`
-    <div style="font-size:52px;margin-bottom:11px">${won?'🎉':'⏱'}</div>
-    <div style="font-size:19px;font-weight:900;margin-bottom:7px">${won?'You Won!':"Time's Up!"}</div>
-    ${won?`<div style="color:var(--goldL);font-size:22px;font-weight:900;margin-bottom:7px">+${pts} PTS</div>`:''}
-    <div style="color:var(--muted);font-size:13px;margin-bottom:14px">${mMoves} moves · ${mPairs}/8 pairs</div>
-    <div style="display:flex;gap:9px">
-      <button class="btn btn-purple" onclick="restartMemory()" style="flex:1;padding:11px;font-size:14px">Play Again</button>
-      <button class="btn btn-gray" onclick="document.getElementById('game-overlay').classList.remove('show');navTo('home')" style="flex:1;padding:11px;font-size:14px">Home</button>
-    </div>`;
-  document.getElementById('game-overlay').classList.add('show');
+// ── SPACE SHOOTER (Animated wave-clear game) ──
+let spaceWave=0, spaceKills=0, spaceLives=3;
+function startSpace(){
+  spaceWave=0; spaceKills=0; spaceLives=3; setArcadeScore(0);
+  spaceNextWave();
 }
-function restartMemory(){
-  document.getElementById('game-overlay').classList.remove('show');
-  initMemory();
+function spaceNextWave(){
+  spaceWave++;
+  const count=Math.min(4+spaceWave,10);
+  const f=document.getElementById('space-field'); if(!f)return;
+  const enemies=['👾','🛸','☄️','👽','🤖'];
+  f.innerHTML=`<div style="font-size:11px;color:var(--muted);margin-bottom:6px">Wave ${spaceWave} · Lives: ${'❤️'.repeat(spaceLives)} · Tap to shoot!</div>` +
+    `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">` +
+    Array.from({length:count},()=>{
+      const e=enemies[Math.floor(Math.random()*enemies.length)];
+      return `<button class="btn btn-gray" style="font-size:28px;padding:10px;border:2px solid rgba(239,68,68,.4)" onclick="shootEnemy(this)">${e}</button>`;
+    }).join('') +
+    `</div><div id="space-btn-row" style="margin-top:10px"></div>`;
 }
-
-// ═══════════════════════════════════════════════════════
-//  DAILY TIMER DISPLAY
-// ═══════════════════════════════════════════════════════
-function startDailyTimer() {
-  function update(){
-    const now=new Date();
-    const midnight=new Date(now); midnight.setHours(24,0,0,0);
-    const diff=Math.floor((midnight-now)/1000);
-    const h=Math.floor(diff/3600), m=Math.floor((diff%3600)/60);
-    set('h-timer-label','⏱ '+String(h).padStart(2,'0')+'h '+String(m).padStart(2,'0')+'m');
-  }
-  update(); setInterval(update,30000);
-}
-
-// ═══════════════════════════════════════════════════════
-//  BOOT
-// ═══════════════════════════════════════════════════════
-// Launch directly into the app; Telegram login and Firebase sync are non-blocking.
-bootstrap();
-</script>
-</body>
-</html>
+function shootEnemy(el){
+ 
