@@ -254,13 +254,33 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
         </div>
       </div>
     </div>
+
+    <!-- Quick actions and progress -->
+    <div style="padding:0 16px 14px">
+      <div class="sec-header"><span class="sec-title">⚡ Quick Actions</span></div>
+      <div class="grid2">
+        <button class="card" onclick="navTo('rewards')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">🎡</div><b style="font-size:13px">Daily Spin</b><div style="font-size:10px;color:var(--muted)">Try your luck</div></button>
+        <button class="card" onclick="claimCheckin()" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">📅</div><b style="font-size:13px">Daily Check-in</b><div style="font-size:10px;color:var(--muted)">Claim +25 points</div></button>
+        <button class="card" onclick="navTo('profile');showSub('history')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">📜</div><b style="font-size:13px">Points History</b><div style="font-size:10px;color:var(--muted)">Track your points</div></button>
+        <button class="card" onclick="navTo('ranks')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">🏆</div><b style="font-size:13px">Leaderboard</b><div style="font-size:10px;color:var(--muted)">See your rank</div></button>
+      </div>
+    </div>
+    <div style="padding:0 16px 16px"><div class="card">
+      <div class="sec-header"><span class="sec-title">📊 Your Gaming Stats</span><span class="badge">LIVE</span></div>
+      <div class="grid2" style="gap:8px">
+        <div class="card2" style="padding:12px"><div style="font-size:20px">🎮</div><b id="h-games-played">0</b><div style="font-size:10px;color:var(--muted)">Games played</div></div>
+        <div class="card2" style="padding:12px"><div style="font-size:20px">⭐</div><b id="h-total-earned">0</b><div style="font-size:10px;color:var(--muted)">Total earned</div></div>
+        <div class="card2" style="padding:12px"><div style="font-size:20px">🏅</div><b id="h-achievements">0</b><div style="font-size:10px;color:var(--muted)">Achievements</div></div>
+        <div class="card2" style="padding:12px"><div style="font-size:20px">🔥</div><b id="h-streak">0</b><div style="font-size:10px;color:var(--muted)">Check-in streak</div></div>
+      </div>
+    </div></div>
   </div>
 
   <!-- GAMES -->
   <div class="screen" id="screen-games">
     <div class="top-bar">
       <div style="font-size:18px;font-weight:900">Games Library</div>
-      <span style="font-size:20px;cursor:pointer">🔍</span>
+      <input id="game-search" oninput="renderGames(currentCat)" placeholder="Search games..." style="width:145px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:var(--text);font:700 12px Nunito,sans-serif;outline:none">
     </div>
     <div class="row" style="padding:0 16px 14px" id="g-cats"></div>
     <div class="grid2" style="padding:0 16px 16px" id="g-grid"></div>
@@ -462,13 +482,13 @@ const FB_CONFIG = {
 // ═══════════════════════════════════════════════════════
 const GAMES_DATA = [
   {id:'memory', name:'Memory Match',    icon:'🧠', cat:'Brain',   playable:true},
-  {id:'2048',   name:'2048 Puzzle',     icon:'🔢', cat:'Puzzle',  playable:false},
-  {id:'snake',  name:'Snake Classic',   icon:'🐍', cat:'Classic', playable:false},
-  {id:'bubble', name:'Bubble Shooter',  icon:'🫧', cat:'Arcade',  playable:false},
-  {id:'math',   name:'Math Master',     icon:'➗', cat:'Brain',   playable:false},
-  {id:'block',  name:'Block Puzzle',    icon:'🧩', cat:'Puzzle',  playable:false},
-  {id:'space',  name:'Space Shooter',   icon:'🚀', cat:'Arcade',  playable:false},
-  {id:'chess',  name:'Chess Challenge', icon:'♟️', cat:'Classic', playable:false},
+  {id:'2048',   name:'2048 Puzzle',     icon:'🔢', cat:'Puzzle',  playable:true},
+  {id:'snake',  name:'Snake Classic',   icon:'🐍', cat:'Classic', playable:true},
+  {id:'bubble', name:'Bubble Shooter',  icon:'🫧', cat:'Arcade',  playable:true},
+  {id:'math',   name:'Math Master',     icon:'➗', cat:'Brain',   playable:true},
+  {id:'block',  name:'Block Puzzle',    icon:'🧩', cat:'Puzzle',  playable:true},
+  {id:'space',  name:'Space Shooter',   icon:'🚀', cat:'Arcade',  playable:true},
+  {id:'chess',  name:'Chess Challenge', icon:'♟️', cat:'Classic', playable:true},
 ];
 
 const ALL_ACHIEVEMENTS = [
@@ -645,18 +665,81 @@ function navTo(id) {
   if(id==='rewards'){renderAchievements();updateSpinBtn();updateCheckinBtn();updateMissionUI();}
   document.getElementById('navbar').style.display = id==='game' ? 'none' : 'flex';
 }
-function openGame() {
+let activeGameId='memory';
+function openGame(gameId='memory') {
+  activeGameId=gameId;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('screen-game').classList.add('active');
-  document.getElementById('navbar').style.display='none';
-  curScreen='game';
-  initMemory();
+  document.getElementById('navbar').style.display='none'; curScreen='game';
+  if(gameId==='memory') { restoreMemoryScreen(); initMemory(); }
+  else { mathRound=0; chessRound=0; renderArcadeGame(gameId); }
 }
-function pauseGame() {
-  stopMemoryTimer();
-  navTo('home');
+function restoreMemoryScreen(){
+  document.getElementById('screen-game').innerHTML=`
+    <div class="top-bar" style="padding:12px 16px 10px"><button class="btn btn-gray" style="width:34px;height:34px;border-radius:9px" onclick="pauseGame()">✕</button><div style="display:flex;gap:14px"><b>⏱ <span id="g-timer">01:00</span></b><b style="color:var(--goldL)">⭐ +<span id="g-pts">90</span></b></div></div>
+    <div style="text-align:center;font-weight:800;font-size:14px;margin-bottom:12px">Find all matching pairs!</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;padding:0 16px 14px" id="mem-grid"></div>
+    <div style="display:flex;justify-content:center;gap:28px;margin-bottom:14px"><div style="text-align:center"><div style="color:var(--muted);font-size:11px">Moves</div><div id="g-moves" style="font-weight:900;font-size:17px">0</div></div><div style="text-align:center"><div style="color:var(--muted);font-size:11px">Pairs</div><div id="g-pairs" style="font-weight:900;font-size:17px">0/8</div></div></div>
+    <div style="padding:0 16px"><div class="card"><b>How to play</b><p style="color:var(--muted);font-size:12px;margin-top:5px">Flip two cards and find all 8 matching pairs before time runs out.</p></div></div>`;
 }
+function pauseGame() { stopMemoryTimer(); clearInterval(arcadeTimer); clearInterval(snakeIv); navTo('games'); }
+function finishArcadeGame(points,label='Game completed'){
+  if(arcadeFinished) return; arcadeFinished=true;
+  P.gamesPlayed=(P.gamesPlayed||0)+1; P.missionProgress=Math.min((P.missionProgress||0)+1,3);
+  addPoints(points,label,'🏆'); updateMissionUI();
+  document.getElementById('arcade-status').innerHTML=`<div style="font-size:34px">🎉</div><b>Completed! +${points} PTS</b><button class="btn btn-purple" style="padding:10px 20px;margin-top:10px" onclick="openGame('${activeGameId}')">Play Again</button>`;
+}
+let arcadeTimer=null,arcadeFinished=false,arcadeScore=0,mathRound=0,mathAnswer=0,snakeDir='right',snakeBody=[],snakeFood={},snakeIv=null,blockPlaced=0,bubbleScore=0;
+function renderArcadeGame(id){
+ clearInterval(arcadeTimer);clearInterval(snakeIv);arcadeFinished=false;arcadeScore=0;
+ const g=GAMES_DATA.find(x=>x.id===id)||GAMES_DATA[0];
+ const root=document.getElementById('screen-game');
+ const shell=(body)=>{root.innerHTML=`<div class="top-bar"><button class="btn btn-gray" onclick="pauseGame()" style="padding:9px 13px">← Back</button><b>${g.icon} ${g.name}</b><b style="color:var(--goldL)">⭐ <span id="arcade-score">0</span></b></div><div style="padding:8px 16px 20px;overflow:auto"><div id="arcade-status" class="card" style="text-align:center;margin-bottom:12px;color:var(--goldL);font-weight:800">Play and earn points!</div>${body}</div>`;};
+ if(id==='2048'){
+  shell(`<p style="text-align:center;color:var(--muted);font-size:12px;margin-bottom:10px">Join matching numbers to reach 2048. Use arrow buttons.</p><div id="g2048" style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;background:#6b5b50;padding:8px;border-radius:12px;max-width:340px;margin:auto"></div><div style="display:grid;grid-template-columns:repeat(3,58px);gap:7px;justify-content:center;margin:14px"><span></span><button class="btn btn-purple" onclick="move2048('up')">⬆</button><span></span><button class="btn btn-purple" onclick="move2048('left')">⬅</button><button class="btn btn-purple" onclick="move2048('down')">⬇</button><button class="btn btn-purple" onclick="move2048('right')">➡</button></div><button class="btn btn-gray" onclick="start2048()" style="padding:9px 18px;display:block;margin:auto">Restart</button>`);start2048();
+ } else if(id==='math'){
+  shell(`<div class="card" style="text-align:center"><div style="color:var(--muted)">Question <span id="math-count">1</span>/10</div><div id="math-question" style="font-size:34px;font-weight:900;margin:22px 0">?</div><div id="math-options" class="grid2"></div></div>`);nextMath();
+ } else if(id==='snake'){
+  shell(`<p style="text-align:center;color:var(--muted);font-size:12px">Collect 🍎. Use the controls below.</p><canvas id="snake-canvas" width="320" height="320" style="display:block;width:min(100%,320px);margin:12px auto;background:#101827;border:2px solid var(--border);border-radius:10px"></canvas><div style="display:grid;grid-template-columns:repeat(3,58px);gap:6px;justify-content:center"><span></span><button class="btn btn-purple" onclick="setSnakeDir('up')">⬆</button><span></span><button class="btn btn-purple" onclick="setSnakeDir('left')">⬅</button><button class="btn btn-purple" onclick="setSnakeDir('down')">⬇</button><button class="btn btn-purple" onclick="setSnakeDir('right')">➡</button></div><div style="text-align:center;color:var(--muted);font-size:11px;margin-top:8px">Eat 5 apples to finish.</div>`);startSnake();
+ } else if(id==='bubble'){
+  shell(`<div class="card" style="text-align:center"><div style="font-size:15px;font-weight:800;margin-bottom:12px">Tap 10 bubbles of the target color!</div><div>Target: <b id="bubble-target" style="font-size:22px">🔵</b></div><div id="bubble-field" class="grid2" style="margin-top:15px"></div></div>`);startBubble();
+ } else if(id==='block'){
+  shell(`<p style="text-align:center;color:var(--muted);font-size:12px;margin-bottom:8px">Tap empty cells to fill rows. Fill 12 cells to win.</p><div id="block-grid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px;max-width:320px;margin:auto"></div>`);startBlock();
+ } else if(id==='space'){
+  shell(`<div class="card" style="text-align:center"><div style="font-weight:800;margin-bottom:8px">Tap the enemy ships before they escape!</div><div id="space-field" class="grid2"></div><div style="color:var(--muted);font-size:11px;margin-top:10px">Destroy 10 ships.</div></div>`);startSpace();
+ } else if(id==='chess'){
+  shell(`<div class="card"><div style="font-size:12px;color:var(--muted);margin-bottom:8px">CHESS TACTICS • 5 challenges</div><div id="chess-question" style="font-size:17px;font-weight:900;margin-bottom:14px"></div><div id="chess-options" style="display:flex;flex-direction:column;gap:8px"></div></div>`);nextChess();
+ }
+}
+function setArcadeScore(n){arcadeScore=n;const e=document.getElementById('arcade-score');if(e)e.textContent=n;}
+// 2048
+let board2048=[];function start2048(){board2048=Array(16).fill(0);spawn2048();spawn2048();draw2048();setArcadeScore(0);arcadeFinished=false;document.getElementById('arcade-status').textContent='Combine tiles to reach 2048.';}
+function spawn2048(){let a=board2048.map((v,i)=>v? -1:i).filter(i=>i>=0);if(a.length)board2048[a[Math.floor(Math.random()*a.length)]]=Math.random()<.9?2:4;}
+function draw2048(){let e=document.getElementById('g2048');if(!e)return;e.innerHTML=board2048.map(v=>`<div style="aspect-ratio:1;background:${v?'#edc':'#8d8176'};border-radius:7px;display:grid;place-items:center;color:#493d35;font-size:clamp(18px,5vw,27px);font-weight:900">${v||''}</div>`).join('');}
+function move2048(dir){if(arcadeFinished)return;let old=board2048.join(',');for(let k=0;k<4;k++){let ids=dir==='left'?[0,1,2,3].map(c=>k*4+c):dir==='right'?[3,2,1,0].map(c=>k*4+c):dir==='up'?[0,1,2,3].map(r=>r*4+k):[3,2,1,0].map(r=>r*4+k);let vals=ids.map(i=>board2048[i]).filter(Boolean),out=[];for(let j=0;j<vals.length;j++){if(vals[j]===vals[j+1]){out.push(vals[j]*2);j++;}else out.push(vals[j]);}while(out.length<4)out.push(0);ids.forEach((i,j)=>board2048[i]=out[j]);}if(old!==board2048.join(',')){spawn2048();setArcadeScore(arcadeScore+5);draw2048();if(board2048.includes(2048))finishArcadeGame(100,'2048 Champion');}}
+// Math quiz
+function nextMath(){if(mathRound>=10){finishArcadeGame(80,'Math Master completed');return;}mathRound++;let a=1+Math.floor(Math.random()*20),b=1+Math.floor(Math.random()*20),op=Math.random()<.5?'+':'×';mathAnswer=op==='+'?a+b:a*b;document.getElementById('math-count').textContent=mathRound;document.getElementById('math-question').textContent=`${a} ${op} ${b} = ?`;let opts=[mathAnswer,mathAnswer+2,Math.max(1,mathAnswer-3),mathAnswer+5].sort(()=>Math.random()-.5);document.getElementById('math-options').innerHTML=opts.map(v=>`<button class="btn btn-gray" style="padding:14px;font-size:18px" onclick="answerMath(${v})">${v}</button>`).join('');}
+function answerMath(v){if(v===mathAnswer){setArcadeScore(arcadeScore+10);toast('Correct! +10 score');}else toast('Not quite — try the next one');nextMath();}
+// Snake
+function startSnake(){snakeBody=[{x:5,y:5},{x:4,y:5},{x:3,y:5}];snakeDir='right';snakeFood={x:8,y:5};setArcadeScore(0);clearInterval(snakeIv);snakeIv=setInterval(tickSnake,180);drawSnake();}
+function setSnakeDir(d){if(({up:'down',down:'up',left:'right',right:'left'})[snakeDir]!==d)snakeDir=d;}
+function tickSnake(){let h={...snakeBody[0]};if(snakeDir==='up')h.y--;if(snakeDir==='down')h.y++;if(snakeDir==='left')h.x--;if(snakeDir==='right')h.x++;if(h.x<0||h.x>=16||h.y<0||h.y>=16||snakeBody.some((p,i)=>i<snakeBody.length-1&&p.x===h.x&&p.y===h.y)){clearInterval(snakeIv);document.getElementById('arcade-status').textContent='Game over — tap Play Again.';let b=document.createElement('button');b.className='btn btn-purple';b.style='padding:8px 15px;margin-left:8px';b.textContent='Restart';b.onclick=()=>openGame('snake');document.getElementById('arcade-status').appendChild(b);return;}snakeBody.unshift(h);if(h.x===snakeFood.x&&h.y===snakeFood.y){setArcadeScore(arcadeScore+10);snakeFood={x:Math.floor(Math.random()*16),y:Math.floor(Math.random()*16)};if(arcadeScore>=50){clearInterval(snakeIv);finishArcadeGame(75,'Snake Classic win');}}else snakeBody.pop();drawSnake();}
+function drawSnake(){let c=document.getElementById('snake-canvas');if(!c)return;let x=c.getContext('2d'),z=20;x.clearRect(0,0,320,320);x.fillStyle='#10b981';snakeBody.forEach(p=>x.fillRect(p.x*z+1,p.y*z+1,18,18));x.fillStyle='#ef4444';x.fillRect(snakeFood.x*z+2,snakeFood.y*z+2,16,16);}
+// Bubble shooter - color target clicking
+const bubbleColors=['🔴','🔵','🟢','🟡'];function startBubble(){bubbleScore=0;setArcadeScore(0);let target=bubbleColors[Math.floor(Math.random()*4)];document.getElementById('bubble-target').textContent=target;let f=document.getElementById('bubble-field');f.innerHTML=Array.from({length:20},(_,i)=>{let color=bubbleColors[Math.floor(Math.random()*4)];return `<button class="btn btn-gray" style="font-size:28px;padding:12px" onclick="popBubble(this,'${color}')">${color}</button>`}).join('');}
+function popBubble(el,color){if(arcadeFinished||el.disabled)return;el.disabled=true;el.style.opacity='.2';if(color===document.getElementById('bubble-target').textContent){bubbleScore++;setArcadeScore(bubbleScore*5);if(bubbleScore>=10)finishArcadeGame(70,'Bubble Shooter win');}else toast('Wrong color! Keep trying.');}
+// Block puzzle
+function startBlock(){blockPlaced=0;setArcadeScore(0);let e=document.getElementById('block-grid');e.innerHTML=Array.from({length:36},(_,i)=>`<button id="bc${i}" class="btn btn-gray" style="aspect-ratio:1;padding:0" onclick="placeBlock(${i})"></button>`).join('');}
+function placeBlock(i){let e=document.getElementById('bc'+i);if(!e||e.dataset.filled||arcadeFinished)return;e.dataset.filled='1';e.style.background='var(--purple)';e.textContent='🧩';blockPlaced++;setArcadeScore(blockPlaced*5);if(blockPlaced>=12)finishArcadeGame(65,'Block Puzzle completed');}
+// Space shooter
+function startSpace(){let hits=0;setArcadeScore(0);let f=document.getElementById('space-field');f.innerHTML=Array.from({length:12},(_,i)=>`<button class="btn btn-gray" style="font-size:28px;padding:13px" onclick="shootShip(this)">👾</button>`).join('');window.spaceHits=0;}
+function shootShip(el){if(arcadeFinished||el.disabled)return;el.disabled=true;el.textContent='💥';window.spaceHits++;setArcadeScore(window.spaceHits*5);if(window.spaceHits>=10)finishArcadeGame(75,'Space Shooter completed');}
+// Chess tactics quiz
+const chessQs=[['Which piece moves in an L-shape?',['Knight','Bishop','Rook'],0],['Which piece moves diagonally?',['Rook','Bishop','King'],1],['What is it called when the king is under attack?',['Check','Fork','Pin'],0],['Which piece is usually most powerful?',['Pawn','Queen','Knight'],1],['How does a pawn capture?',['Straight ahead','Diagonally','Backward'],1]];let chessRound=0;
+function nextChess(){if(chessRound>=5){finishArcadeGame(90,'Chess Challenge completed');return;}let q=chessQs[chessRound];document.getElementById('chess-question').textContent=`${chessRound+1}. ${q[0]}`;document.getElementById('chess-options').innerHTML=q[1].map((v,i)=>`<button class="btn btn-gray" style="padding:12px" onclick="answerChess(${i})">${v}</button>`).join('');}
+function answerChess(i){if(i===chessQs[chessRound][2])setArcadeScore(arcadeScore+10);else toast('Try the next challenge!');chessRound++;nextChess();}
+
 function showSub(name) {
   document.querySelectorAll('#screen-profile .sub').forEach(s=>s.classList.remove('active'));
   document.getElementById('sub-'+name).classList.add('active');
@@ -704,6 +787,8 @@ function updateHomeDisplay() {
   set('h-xp-t', P.xp+'/'+P.maxXp+' XP');
   styleW('h-xp-f', pct+'%');
   set('h-pts', fmtN(P.points));
+  set('h-games-played', fmtN(P.gamesPlayed)); set('h-total-earned', fmtN(P.totalPtsEarned));
+  set('h-achievements', fmtN((P.achievementsUnlocked||[]).length)); set('h-streak', fmtN(P.checkInStreak));
   updateMissionUI();
   // Also update profile
   set('p-av', null, {innerHTML: P.avatar});
@@ -810,7 +895,7 @@ function renderPopularGames() {
   const el = document.getElementById('h-pop-games');
   if(!el) return;
   el.innerHTML = GAMES_DATA.slice(0,4).map(g=>`
-    <div onclick="${g.playable?'openGame()':'navTo(\'games\')'}" style="flex-shrink:0;width:68px;background:var(--bg2);border-radius:12px;border:1px solid var(--border);padding:9px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer">
+    <div onclick="openGame('${g.id}')" style="flex-shrink:0;width:68px;background:var(--bg2);border-radius:12px;border:1px solid var(--border);padding:9px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer">
       <div style="font-size:26px">${g.icon}</div>
       <div style="color:var(--muted);font-size:9px;font-weight:700;text-align:center">${g.name}</div>
     </div>`).join('');
@@ -825,14 +910,14 @@ function renderGames(cat) {
   const cats = ['All','Puzzle','Arcade','Brain','Classic'];
   document.getElementById('g-cats').innerHTML = cats.map(c=>
     `<button class="cat-pill ${c===cat?'active':''}" onclick="renderGames('${c}')">${c}</button>`).join('');
-  const list = cat==='All' ? GAMES_DATA : GAMES_DATA.filter(g=>g.cat===cat);
-  document.getElementById('g-grid').innerHTML = list.map(g=>`
-    <div class="game-card" onclick="${g.playable?'openGame()':''}">
+  const q=(document.getElementById('game-search')?.value||'').trim().toLowerCase();
+  const list = (cat==='All' ? GAMES_DATA : GAMES_DATA.filter(g=>g.cat===cat)).filter(g=>g.name.toLowerCase().includes(q));
+  document.getElementById('g-grid').innerHTML = list.length ? list.map(g=>`
+    <div class="game-card" onclick="openGame('${g.id}')">
       <div style="font-size:40px">${g.icon}</div>
       <div style="font-weight:800;font-size:13px;text-align:center">${g.name}</div>
-      <div class="play-dot" style="background:${g.playable?'var(--purple)':'var(--bg3)'}">▶</div>
-      ${!g.playable?'<div style="color:var(--muted);font-size:9px;font-weight:700">Coming Soon</div>':''}
-    </div>`).join('');
+      <div class="play-dot">▶</div><div style="color:var(--green);font-size:9px;font-weight:800">PLAY NOW</div>
+    </div>`).join('') : '<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px">No games found</div>';
 }
 
 // ═══════════════════════════════════════════════════════
