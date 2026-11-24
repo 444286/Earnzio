@@ -226,7 +226,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
         <div class="ad-pulse">📺</div>
         <div style="flex:1">
           <div style="color:var(--goldL);font-weight:800;font-size:13px">Watch an optional ad</div>
-          <div style="color:var(--muted);font-size:11px;margin-top:2px">Optional interstitial ad · Home screen · No points are tied to viewing</div>
+          <div style="color:var(--muted);font-size:11px;margin-top:2px">Reward ad · Watch fully to earn +25 points</div>
         </div>
         <span style="color:var(--gold);font-size:18px">▶</span>
       </div>
@@ -362,7 +362,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
         <div class="ad-pulse">📺</div>
         <div style="flex:1">
           <div style="color:var(--goldL);font-weight:800;font-size:13px">Watch an optional ad</div>
-          <div style="color:var(--muted);font-size:11px;margin-top:2px">Optional interstitial advertisement</div>
+          <div style="color:var(--muted);font-size:11px;margin-top:2px">Reward ad · Watch fully to earn +25 points</div>
         </div>
         <span style="color:var(--gold);font-size:18px">▶</span>
       </div>
@@ -472,7 +472,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
         <div class="ad-pulse sm">📺</div>
         <div style="flex:1">
           <div style="color:var(--goldL);font-weight:800;font-size:12px">Watch an optional ad</div>
-          <div style="color:var(--muted);font-size:10px">Optional interstitial advertisement</div>
+          <div style="color:var(--muted);font-size:10px">Reward ad · Watch fully to earn +25 points</div>
         </div>
       </div>
     </div>
@@ -1258,7 +1258,7 @@ function renderProfileMenu() {
 function showInfo(title,body){const m=document.getElementById('info-modal');m.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-size:18px">${title}</b><button class="btn btn-gray" onclick="document.getElementById('info-overlay').classList.remove('show')" style="padding:7px 12px">✕</button></div><div style="font-size:12px;line-height:1.7;color:var(--muted)">${body}</div>`;document.getElementById('info-overlay').classList.add('show');}
 document.getElementById('info-overlay').addEventListener('click',e=>{if(e.target.id==='info-overlay')e.currentTarget.classList.remove('show');});
 function editProfile(){const n=prompt('Display name (2–20 characters):',P.name||'Player');if(n===null)return;const v=n.trim().replace(/[<>]/g,'').slice(0,20);if(v.length<2){toast('Name must be at least 2 characters');return;}P.name=v;saveToFirebase();renderAll();toast('Profile updated');}
-function showPrivacy(){showInfo('🔒 Privacy Policy',`<b>TAKAKAMAN Privacy Summary</b><br><br>• Account identity: when launched through a configured Telegram Mini App, the app reads the Telegram WebApp user ID and display name exposed by Telegram. Outside Telegram, a local guest profile is used.<br>• Guest mode: game progress and points are stored in this browser's local storage.<br>• Cloud sync: Telegram player profile and progress may be stored in the TAKAKAMAN Firebase Firestore project configured by the operator.<br>• Advertising: an optional AdsGram interstitial is requested only after the user taps the clearly labelled optional ad placement. No points are awarded for viewing this interstitial.<br>• The app has no deposits, payments, withdrawals or cash-out feature.<br><br>Clearing browser site data removes locally stored guest data. For cloud data deletion, contact the app operator. Do not enter sensitive personal information.`);}
+function showPrivacy(){showInfo('🔒 Privacy Policy',`<b>TAKAKAMAN Privacy Summary</b><br><br>• Account identity: when launched through a configured Telegram Mini App, the app reads the Telegram WebApp user ID and display name exposed by Telegram. Outside Telegram, a local guest profile is used.<br>• Guest mode: game progress and points are stored in this browser's local storage.<br>• Cloud sync: Telegram player profile and progress may be stored in the TAKAKAMAN Firebase Firestore project configured by the operator.<br>• Advertising: an optional AdsGram rewarded ad is requested only after the user taps the clearly labelled optional ad placement. 25 in-app points are awarded only when AdsGram confirms the rewarded ad was watched to the end. Skipped or failed ads do not earn points.<br>• The app has no deposits, payments, withdrawals or cash-out feature.<br><br>Clearing browser site data removes locally stored guest data. For cloud data deletion, contact the app operator. Do not enter sensitive personal information.`);}
 function showSupport(){showInfo('💬 Help & Support',`For a technical issue, note your Player ID (<b>${escapeHTML(P.id||'Guest')}</b>), game name, device and approximate time. Never share passwords or private account details.<br><br><b>Support contact:</b> The operator has not yet configured an official support email or Telegram username. Add a verified contact before publishing the app.`);}
 function showHelpToast(){showSupport();}
 function showAboutToast(){showInfo('ℹ️ About TAKAKAMAN',`TAKAKAMAN is a casual skill-and-puzzle gaming mini app. It includes arcade, memory, number, word and logic challenges, a personal game journal, best-score tracking, player progression, achievements and daily activities.<br><br>Points are in-app game points only. They have no cash value and cannot be deposited, transferred, withdrawn or exchanged for money.<br><br>Version 2.0 · Independent skill-game collection · PLAY · LEVEL UP · REPEAT`);}
@@ -1330,23 +1330,25 @@ function toggleSetting(key) {
 }
 
 // ═══════════════════════════════════════════════════════
-//  ADSGRAM INTERSTITIAL INTEGRATION
-//  Block int-61633 is an INTERSTITIAL block, not a rewarded block.
-//  Interstitial completion/close must never grant points.
+//  ADSGRAM REWARDED AD INTEGRATION
+//  Numeric block ID 61634 is the Reward block supplied by the operator.
+//  Points are granted only after AdsGram's Reward promise resolves successfully.
 // ═══════════════════════════════════════════════════════
-const ADSGRAM_BLOCK_ID = 'int-61633';
+const ADSGRAM_BLOCK_ID = '61634';
+const ADSGRAM_REWARD_POINTS = 25;
 let adsgramController = null;
 let adShowing = false;
+let adRewardGrantedThisShow = false;
 function openAdModal(_unusedPoints, ctx) {
   adCtx = ctx || 'general';
   const m = document.getElementById('ad-modal');
   m.innerHTML = `
-    <div style="font-size:46px;margin-bottom:11px">📺</div>
-    <div style="font-size:17px;font-weight:900;margin-bottom:7px">Optional Advertisement</div>
-    <div style="color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:14px">An interstitial ad may appear. You can close it when the ad allows. No game points are attached to this ad format.</div>
+    <div style="font-size:46px;margin-bottom:11px">🎁</div>
+    <div style="font-size:17px;font-weight:900;margin-bottom:7px">Watch Ad & Earn +${ADSGRAM_REWARD_POINTS} Points</div>
+    <div style="color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:14px">Watch the rewarded ad until it finishes to receive ${ADSGRAM_REWARD_POINTS} points. Skipping or an ad error gives no points.</div>
     <div style="display:flex;gap:9px">
       <button class="btn btn-gray" onclick="closeAd()" style="flex:1;padding:11px;font-size:13px">Cancel</button>
-      <button class="btn btn-gold" id="adsgram-start-btn" onclick="startAd()" style="flex:2;padding:11px;font-size:14px">Show Ad</button>
+      <button class="btn btn-gold" id="adsgram-start-btn" onclick="startAd()" style="flex:2;padding:11px;font-size:14px">Watch & Earn</button>
     </div>`;
   document.getElementById('ad-overlay').classList.add('show');
 }
@@ -1358,25 +1360,32 @@ async function startAd() {
   if (adShowing) return;
   const btn = document.getElementById('adsgram-start-btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Loading ad…'; }
+  adShowing = true;
+  adRewardGrantedThisShow = false;
   try {
     if (!window.Adsgram || typeof window.Adsgram.init !== 'function') {
       throw new Error('AdsGram SDK did not load. Open this app inside Telegram and try again.');
     }
     if (!adsgramController) adsgramController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
-    adShowing = true;
     const result = await adsgramController.show();
-    // This is an interstitial block: resolving means viewed OR closed.
-    // Never grant points or spins from this callback.
+    // Reward-format promise resolves only after the ad is watched to the end.
+    if (!result || result.done !== true || result.error === true) {
+      throw new Error('Ad was not completed. No points were added.');
+    }
+    if (!adRewardGrantedThisShow) {
+      adRewardGrantedThisShow = true;
+      addPoints(ADSGRAM_REWARD_POINTS, 'AdsGram Reward Ad Completed', '🎁');
+    }
     closeAd();
-    toast('Advertisement closed. No points were added.');
-    console.log('AdsGram interstitial result:', result);
+    toast('🎉 +' + ADSGRAM_REWARD_POINTS + ' points added for watching the ad!');
+    console.log('AdsGram rewarded ad completed:', result);
   } catch (err) {
     adShowing = false;
     if (btn) { btn.disabled = false; btn.textContent = 'Try Again'; }
     const msg = (err && err.description) || (err && err.message) || 'No ad is available right now. Please try again later.';
     const m = document.getElementById('ad-modal');
-    m.innerHTML = `<div style="font-size:38px;margin-bottom:10px">⚠️</div><div style="font-weight:900;margin-bottom:8px">Ad unavailable</div><div style="color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:14px">${String(msg).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}</div><button class="btn btn-gray" onclick="closeAd()" style="width:100%;padding:11px">Close</button>`;
-    console.warn('AdsGram interstitial error:', err);
+    m.innerHTML = `<div style="font-size:38px;margin-bottom:10px">⚠️</div><div style="font-weight:900;margin-bottom:8px">Ad not completed</div><div style="color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:14px">${String(msg).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}<br><br>No points were added. You can try again later.</div><button class="btn btn-gray" onclick="closeAd()" style="width:100%;padding:11px">Close</button>`;
+    console.warn('AdsGram rewarded ad error/skip:', err);
   }
 }
 
