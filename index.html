@@ -8,8 +8,9 @@
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<!-- Telegram WebApp -->
+<!-- Telegram WebApp + AdsGram SDK -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
 /* ═══ RESET ═══ */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -215,12 +216,12 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
 
     <!-- Optional Ad -->
     <div style="padding:0 16px 14px">
-      <div class="opt-label">🎁 OPTIONAL BONUS</div>
-      <div class="ad-banner" onclick="openAdModal(50,'home')">
+      <div class="opt-label">📺 OPTIONAL AD</div>
+      <div class="ad-banner" onclick="openAdModal(0,'home')">
         <div class="ad-pulse">📺</div>
         <div style="flex:1">
-          <div style="color:var(--goldL);font-weight:800;font-size:13px">Watch an ad — Earn +50 PTS</div>
-          <div style="color:var(--muted);font-size:11px;margin-top:2px">Optional · 5-sec ad · Bonus instantly</div>
+          <div style="color:var(--goldL);font-weight:800;font-size:13px">Watch an optional ad</div>
+          <div style="color:var(--muted);font-size:11px;margin-top:2px">Optional interstitial advertisement</div>
         </div>
         <span style="color:var(--gold);font-size:18px">▶</span>
       </div>
@@ -310,10 +311,10 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
       </div>
       <button class="btn btn-gold" id="spin-btn" style="padding:11px 36px;font-size:14px" onclick="doSpin()">SPIN THE WHEEL</button>
       <div style="margin-top:10px;width:100%">
-        <div style="color:var(--muted);font-size:10px;text-align:center;margin-bottom:7px">— watch an ad for a bonus spin —</div>
-        <div class="ad-banner" style="padding:9px 13px" onclick="openAdModal(30,'spin')">
+        <div style="color:var(--muted);font-size:10px;text-align:center;margin-bottom:7px">— optional advertisement —</div>
+        <div class="ad-banner" style="padding:9px 13px" onclick="openAdModal(0,'spin')">
           <div class="ad-pulse sm">📺</div>
-          <div style="flex:1;font-size:12px;color:var(--goldL);font-weight:800">Watch Ad → Extra Spin +30 PTS</div>
+          <div style="flex:1;font-size:12px;color:var(--goldL);font-weight:800">Watch an optional ad</div>
         </div>
       </div>
     </div>
@@ -337,12 +338,12 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
 
     <!-- Optional Ad -->
     <div style="padding:0 16px 14px">
-      <div class="opt-label">📺 OPTIONAL AD BONUS</div>
-      <div class="ad-banner" onclick="openAdModal(50,'rewards')">
+      <div class="opt-label">📺 OPTIONAL AD</div>
+      <div class="ad-banner" onclick="openAdModal(0,'rewards')">
         <div class="ad-pulse">📺</div>
         <div style="flex:1">
-          <div style="color:var(--goldL);font-weight:800;font-size:13px">Watch an Ad — Earn +50 PTS</div>
-          <div style="color:var(--muted);font-size:11px;margin-top:2px">Optional · Short ad · Bonus instantly</div>
+          <div style="color:var(--goldL);font-weight:800;font-size:13px">Watch an optional ad</div>
+          <div style="color:var(--muted);font-size:11px;margin-top:2px">Optional interstitial advertisement</div>
         </div>
         <span style="color:var(--gold);font-size:18px">▶</span>
       </div>
@@ -447,12 +448,12 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
       <div style="text-align:center"><div style="color:var(--muted);font-size:11px">Pairs</div><div style="font-weight:900;font-size:17px" id="g-pairs">0/8</div></div>
     </div>
     <div style="padding:0 16px">
-      <div class="opt-label">📺 OPTIONAL BONUS</div>
-      <div class="ad-banner" style="padding:9px 13px" onclick="openAdModal(20,'game')">
+      <div class="opt-label">📺 OPTIONAL AD</div>
+      <div class="ad-banner" style="padding:9px 13px" onclick="openAdModal(0,'game')">
         <div class="ad-pulse sm">📺</div>
         <div style="flex:1">
-          <div style="color:var(--goldL);font-weight:800;font-size:12px">Watch Ad — Get a Hint +20 PTS</div>
-          <div style="color:var(--muted);font-size:10px">Optional · Reveals a pair briefly</div>
+          <div style="color:var(--goldL);font-weight:800;font-size:12px">Watch an optional ad</div>
+          <div style="color:var(--muted);font-size:10px">Optional interstitial advertisement</div>
         </div>
       </div>
     </div>
@@ -1239,61 +1240,54 @@ function toggleSetting(key) {
 }
 
 // ═══════════════════════════════════════════════════════
-//  AD MODAL
+//  ADSGRAM INTERSTITIAL INTEGRATION
+//  Block int-61633 is an INTERSTITIAL block, not a rewarded block.
+//  Interstitial completion/close must never grant points.
 // ═══════════════════════════════════════════════════════
-let adCtx='', adPts=0, adTimerIv;
-function openAdModal(pts, ctx) {
-  adPts=pts; adCtx=ctx;
-  renderAdPhase('confirm');
+const ADSGRAM_BLOCK_ID = 'int-61633';
+let adsgramController = null;
+let adShowing = false;
+function openAdModal(_unusedPoints, ctx) {
+  adCtx = ctx || 'general';
+  const m = document.getElementById('ad-modal');
+  m.innerHTML = `
+    <div style="font-size:46px;margin-bottom:11px">📺</div>
+    <div style="font-size:17px;font-weight:900;margin-bottom:7px">Optional Advertisement</div>
+    <div style="color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:14px">An interstitial ad may appear. You can close it when the ad allows. No game points are attached to this ad format.</div>
+    <div style="display:flex;gap:9px">
+      <button class="btn btn-gray" onclick="closeAd()" style="flex:1;padding:11px;font-size:13px">Cancel</button>
+      <button class="btn btn-gold" id="adsgram-start-btn" onclick="startAd()" style="flex:2;padding:11px;font-size:14px">Show Ad</button>
+    </div>`;
   document.getElementById('ad-overlay').classList.add('show');
 }
 function closeAd() {
   document.getElementById('ad-overlay').classList.remove('show');
-  clearInterval(adTimerIv);
+  adShowing = false;
 }
-function renderAdPhase(phase) {
-  const m = document.getElementById('ad-modal');
-  if(phase==='confirm') {
-    m.innerHTML=`
-      <div style="font-size:46px;margin-bottom:11px">📺</div>
-      <div style="font-size:17px;font-weight:900;margin-bottom:7px">Watch an Ad</div>
-      <div style="color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:9px">Watch a short optional ad to earn a bonus reward.</div>
-      <div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:12px;padding:9px;margin-bottom:11px;color:var(--goldL);font-weight:800;font-size:14px">🎁 Reward: +${adPts} PTS</div>
-      <div style="color:var(--muted);font-size:10px;margin-bottom:14px;line-height:1.4">Completely optional — the app works fine without watching.</div>
-      <div style="display:flex;gap:9px">
-        <button class="btn btn-gray" onclick="closeAd()" style="flex:1;padding:11px;font-size:13px">Skip</button>
-        <button class="btn btn-gold" onclick="startAd()" style="flex:2;padding:11px;font-size:14px">Watch &amp; Earn</button>
-      </div>`;
-  } else if(phase==='watching') {
-    m.innerHTML=`
-      <div style="font-size:46px;margin-bottom:11px">📺</div>
-      <div style="font-size:15px;font-weight:800;margin-bottom:5px">Ad is playing…</div>
-      <div class="countdown" id="ad-cd">5</div>
-      <div style="color:var(--muted);font-size:11px">Please wait for the ad to finish</div>`;
-  } else if(phase==='done') {
-    m.innerHTML=`
-      <div style="font-size:46px;margin-bottom:11px">🎉</div>
-      <div style="font-size:17px;font-weight:900;margin-bottom:7px">Reward Earned!</div>
-      <div style="color:var(--goldL);font-size:26px;font-weight:900;margin-bottom:14px">+${adPts} PTS</div>
-      <button class="btn btn-purple" onclick="claimAd()" style="width:100%;padding:12px;font-size:14px">Claim Reward</button>`;
+async function startAd() {
+  if (adShowing) return;
+  const btn = document.getElementById('adsgram-start-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Loading ad…'; }
+  try {
+    if (!window.Adsgram || typeof window.Adsgram.init !== 'function') {
+      throw new Error('AdsGram SDK did not load. Open this app inside Telegram and try again.');
+    }
+    if (!adsgramController) adsgramController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+    adShowing = true;
+    const result = await adsgramController.show();
+    // This is an interstitial block: resolving means viewed OR closed.
+    // Never grant points or spins from this callback.
+    closeAd();
+    toast('Advertisement closed. No points were added.');
+    console.log('AdsGram interstitial result:', result);
+  } catch (err) {
+    adShowing = false;
+    if (btn) { btn.disabled = false; btn.textContent = 'Try Again'; }
+    const msg = (err && err.description) || (err && err.message) || 'No ad is available right now. Please try again later.';
+    const m = document.getElementById('ad-modal');
+    m.innerHTML = `<div style="font-size:38px;margin-bottom:10px">⚠️</div><div style="font-weight:900;margin-bottom:8px">Ad unavailable</div><div style="color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:14px">${String(msg).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}</div><button class="btn btn-gray" onclick="closeAd()" style="width:100%;padding:11px">Close</button>`;
+    console.warn('AdsGram interstitial error:', err);
   }
-}
-function startAd() {
-  renderAdPhase('watching');
-  let t=5;
-  adTimerIv = setInterval(()=>{
-    t--;
-    const el=document.getElementById('ad-cd');
-    if(el) el.textContent=t;
-    if(t<=0){ clearInterval(adTimerIv); renderAdPhase('done'); }
-  },1000);
-}
-function claimAd() {
-  closeAd();
-  addPoints(adPts, 'Ad Bonus Reward', '📺');
-  toast('🎉 +'+adPts+' PTS earned from ad!');
-  if(adCtx==='spin' && P.spinUsedToday){ P.spinUsedToday=false; updateSpinBtn(); }
-  renderProfileStats();
 }
 
 // ═══════════════════════════════════════════════════════
