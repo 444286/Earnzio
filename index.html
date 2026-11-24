@@ -164,6 +164,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
     <div class="modal" id="ad-modal"></div>
   </div>
 
+  <div class="overlay" id="info-overlay"><div class="modal" id="info-modal" style="max-height:82vh;overflow:auto;text-align:left;max-width:360px"></div></div>
   <!-- GAME RESULT MODAL -->
   <div class="overlay" id="game-overlay">
     <div class="modal" id="game-modal"></div>
@@ -221,7 +222,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
         <div class="ad-pulse">📺</div>
         <div style="flex:1">
           <div style="color:var(--goldL);font-weight:800;font-size:13px">Watch an optional ad</div>
-          <div style="color:var(--muted);font-size:11px;margin-top:2px">Optional interstitial advertisement</div>
+          <div style="color:var(--muted);font-size:11px;margin-top:2px">Optional interstitial ad · Home screen · No points are tied to viewing</div>
         </div>
         <span style="color:var(--gold);font-size:18px">▶</span>
       </div>
@@ -238,7 +239,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
 
     <!-- More games on Home -->
     <div style="padding:0 16px 14px">
-      <div class="sec-header"><span class="sec-title">🎯 More Games to Play</span><span class="see-all" onclick="navTo('games')">All 30 →</span></div>
+      <div class="sec-header"><span class="sec-title">🎯 More Games to Play</span><span class="see-all" onclick="navTo('games')">All 31 →</span></div>
       <div id="h-more-games" class="grid2"></div>
     </div>
 
@@ -273,7 +274,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
       </div>
     </div>
     <div style="padding:0 16px 16px"><div class="card">
-      <div class="sec-header"><span class="sec-title">📊 Your Gaming Stats</span><span class="badge">LIVE</span></div>
+      <div class="sec-header"><span class="sec-title">📊 Your Gaming Stats</span><span class="badge">PLAYER STATS</span></div>
       <div class="grid2" style="gap:8px">
         <div class="card2" style="padding:12px"><div style="font-size:20px">🎮</div><b id="h-games-played">0</b><div style="font-size:10px;color:var(--muted)">Games played</div></div>
         <div class="card2" style="padding:12px"><div style="font-size:20px">⭐</div><b id="h-total-earned">0</b><div style="font-size:10px;color:var(--muted)">Total earned</div></div>
@@ -385,7 +386,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
       <div style="display:flex;flex-direction:column;align-items:center;padding:0 16px 18px">
         <div style="position:relative;margin-bottom:11px">
           <div id="p-av" style="width:86px;height:86px;background:var(--bg2);border:3px solid var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px">😎</div>
-          <div style="position:absolute;bottom:0;right:0;background:var(--purple);border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer">✏️</div>
+          <button onclick="editProfile()" aria-label="Edit profile" style="position:absolute;bottom:0;right:0;background:var(--purple);border:0;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;color:white">✏️</button>
         </div>
         <div id="p-name" style="font-size:20px;font-weight:900">Player</div>
         <div id="p-id" style="color:var(--muted);font-size:12px">ID: —</div>
@@ -551,7 +552,7 @@ let P = {
   totalSpins:0, checkInStreak:0,
   missionProgress:0,
   settings:{darkMode:true,soundEffects:true,music:true,gameUpdates:true,dailyRewards:true},
-  dailyCheckinDone:false, spinUsedToday:false,
+  dailyCheckinDone:false, spinUsedToday:false, dailyMissionClaimed:false,
   history:[],
   spinDeg:0
 };
@@ -564,7 +565,7 @@ async function saveToFirebase() {
   // Save locally immediately, then serialize cloud writes so rapid rewards are never dropped.
   cachePlayerState();
   if(!db || !uid) return;
-  const snapshot = JSON.parse(JSON.stringify(P));
+  const snapshot = JSON.parse(JSON.stringify(P)); snapshot.name=P.name||'Player'; snapshot.avatar=P.avatar||'😎';
   saveQueue = saveQueue.then(()=>db.collection('users').doc(uid).set(snapshot,{merge:true}))
     .catch(e=>{ console.warn('Firebase save error:',e); });
   return saveQueue;
@@ -668,14 +669,14 @@ function enterApp() {
 // ═══════════════════════════════════════════════════════
 //  DAILY RESET
 // ═══════════════════════════════════════════════════════
-function todayStr() { return new Date().toISOString().slice(0,10); }
+function todayStr() { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 
 function checkDailyReset() {
   const today = todayStr();
   if(P.lastResetDay !== today) {
     P.dailyCheckinDone = false;
     P.spinUsedToday = false;
-    P.missionProgress = 0;
+    P.missionProgress = 0; P.dailyMissionClaimed=false;
     P.lastResetDay = today;
     saveToFirebase();
   }
@@ -720,9 +721,9 @@ function restoreMemoryScreen(){
 }
 function pauseGame() { stopMemoryTimer(); clearInterval(arcadeTimer); clearInterval(snakeIv); navTo('games'); }
 function finishArcadeGame(points,label='Game completed'){
-  if(arcadeFinished) return; arcadeFinished=true;
+  if(arcadeFinished) return; arcadeFinished=true; clearInterval(arcadeTimer);clearInterval(snakeIv);clearTimeout(extraTimer);
   P.gamesPlayed=(P.gamesPlayed||0)+1; P.missionProgress=Math.min((P.missionProgress||0)+1,3);
-  addPoints(points,label,'🏆'); updateHomeDisplay(); updateMissionUI();
+  addPoints(points,label,'🏆'); if(P.missionProgress>=3&&!P.dailyMissionClaimed){P.dailyMissionClaimed=true;addPoints(100,'Daily Challenge: 3 Games','🎯');} updateHomeDisplay(); updateMissionUI();
   document.getElementById('arcade-status').innerHTML=`<div style="font-size:34px">🎉</div><b>Completed! +${points} PTS</b><button class="btn btn-purple" style="padding:10px 20px;margin-top:10px" onclick="openGame('${activeGameId}')">Play Again</button>`;
 }
 let arcadeTimer=null,arcadeFinished=false,arcadeScore=0,mathRound=0,mathAnswer=0,snakeDir='right',snakeBody=[],snakeFood={},snakeIv=null,blockPlaced=0,bubbleScore=0;
@@ -766,9 +767,11 @@ const EXTRA_INFO={
 };
 function startExtraGame(id,shell){
  extraRound=0;extraCorrect=0;clearInterval(extraTimer);extraData={id,step:0,score:0,seq:[],mine:Math.floor(Math.random()*9),safe:0,goal:15};
- const info=EXTRA_INFO[id];
- if(id==='tapfast'||id==='dino'||id==='reaction'){
-  shell(`<div class="card" style="text-align:center"><div style="font-weight:900;font-size:18px;margin-bottom:8px">${info[0]}</div><div id="extra-progress" style="color:var(--goldL);font-weight:900;margin:12px">0 / ${id==='tapfast'?15:10}</div><button id="extra-tap" class="btn btn-purple" style="width:170px;height:170px;border-radius:50%;font-size:24px;margin:14px" onclick="extraTap()">${id==='dino'?'JUMP 🦖':id==='reaction'?'⚡ TAP':'TAP!'}</button><div style="color:var(--muted);font-size:12px">Tap the button to score.</div></div>`);
+ const info=EXTRA_INFO[id]||['Complete the five-round challenge.','quiz'];
+ if(id==='reaction'){
+  extraData.phase='wait';shell(`<div class="card" style="text-align:center"><b>Reaction Test</b><p style="color:var(--muted);font-size:12px;margin:8px">Wait until the button turns green, then tap quickly.</p><div id="reaction-result" style="margin:12px">Wait…</div><button id="extra-tap" class="btn btn-gray" style="width:180px;height:140px;font-size:22px" onclick="reactionTap()">WAIT</button></div>`);extraTimer=setTimeout(()=>{if(!arcadeFinished){extraData.phase='go';extraData.started=performance.now();const b=document.getElementById('extra-tap');if(b){b.style.background='#16a34a';b.textContent='TAP NOW';}}},1000+Math.random()*2500);
+ } else if(id==='tapfast'||id==='dino'){
+  shell(`<div class="card" style="text-align:center"><div style="font-weight:900;font-size:18px;margin-bottom:8px">${info[0]}</div><div id="extra-progress" style="color:var(--goldL);font-weight:900;margin:12px">0 / ${id==='tapfast'?15:10}</div><button id="extra-tap" class="btn btn-purple" style="width:170px;height:170px;border-radius:50%;font-size:24px;margin:14px" onclick="extraTap()">${id==='dino'?'JUMP 🦖':'TAP!'}</button><div style="color:var(--muted);font-size:12px">${id==='dino'?'Jump 10 times.':'Tap 15 times.'}</div></div>`);
  } else if(id==='rps'){
   shell(`<div class="card" style="text-align:center"><b>Rock · Paper · Scissors</b><div id="extra-prompt" style="font-size:17px;margin:18px">Round 1 / 5</div><div class="grid2"><button class="btn btn-gray" style="padding:18px;font-size:25px" onclick="extraRps('✊')">✊ Rock</button><button class="btn btn-gray" style="padding:18px;font-size:25px" onclick="extraRps('✋')">✋ Paper</button><button class="btn btn-gray" style="padding:18px;font-size:25px" onclick="extraRps('✌️')">✌️ Scissors</button></div><div id="extra-feedback" style="margin-top:14px;color:var(--goldL)"></div></div>`);
  } else if(id==='coin'){
@@ -778,6 +781,25 @@ function startExtraGame(id,shell){
  } else if(id==='sequence'||id==='simon'){
   const seq=Array.from({length:5},()=>id==='simon'?['🟩','🟥','🟦','🟨'][Math.floor(Math.random()*4)]:String(1+Math.floor(Math.random()*4)));extraData.seq=seq;
   shell(`<div class="card" style="text-align:center"><div id="extra-prompt" style="margin-bottom:12px">Remember this sequence:</div><div id="extra-seq" style="font-size:30px;letter-spacing:8px;padding:20px;background:var(--bg3);border-radius:12px">${seq.join(' ')}</div><button class="btn btn-purple" style="padding:10px 20px;margin:12px" onclick="document.getElementById('extra-seq').textContent='? ? ? ? ?';document.getElementById('extra-input').style.display='grid'">I memorized it</button><div id="extra-input" class="grid2" style="display:none">${(id==='simon'?['🟩','🟥','🟦','🟨']:['1','2','3','4']).map(v=>`<button class="btn btn-gray" style="padding:15px;font-size:20px" onclick="extraSequence('${v}')">${v}</button>`).join('')}</div><div id="extra-feedback"></div></div>`);
+ } else if(id==='maze'){
+  extraData.mazePos=0; extraData.mazePath=['right','down','right','up','right','down'];
+  shell(`<div class="card" style="text-align:center"><b>Maze Escape</b><p style="color:var(--muted);font-size:12px;margin:8px">Follow the correct route through six turns to reach the exit.</p><div id="maze-view" style="font-size:48px;margin:18px">🚪</div><div class="grid2"><button class="btn btn-gray" style="padding:14px" onclick="mazeMove('left')">⬅ Left</button><button class="btn btn-gray" style="padding:14px" onclick="mazeMove('right')">Right ➡</button><button class="btn btn-gray" style="padding:14px" onclick="mazeMove('up')">⬆ Up</button><button class="btn btn-gray" style="padding:14px" onclick="mazeMove('down')">⬇ Down</button></div><div id="maze-feedback" style="margin-top:12px;color:var(--goldL)">Choose your first direction.</div></div>`);
+ } else if(id==='basket'){
+  shell(`<div class="card" style="text-align:center"><div style="font-size:48px">🏀</div><b>Hoop Shot</b><p style="color:var(--muted);font-size:12px;margin:8px">Choose your shooting position. Make 5 baskets in 8 shots.</p><div id="basket-score" style="margin:12px;color:var(--goldL)">Baskets: 0/5 · Shots: 0/8</div><div class="grid2">${['Left','Center','Right','Long shot'].map(v=>`<button class="btn btn-purple" style="padding:14px" onclick="basketShot('${v}')">${v}</button>`).join('')}</div><div id="basket-feedback" style="margin-top:12px"></div></div>`);
+ } else if(id==='penalty'){
+  shell(`<div class="card" style="text-align:center"><div style="font-size:48px">⚽</div><b>Penalty Kick</b><p style="color:var(--muted);font-size:12px;margin:8px">Choose a goal corner. Score 3 goals in 5 kicks.</p><div id="penalty-score" style="color:var(--goldL);margin:12px">Goals: 0/3 · Kicks: 0/5</div><div class="grid2">${['Top Left','Top','Top Right','Bottom Left','Bottom Right'].map((v,i)=>`<button class="btn btn-purple" style="padding:12px" onclick="penaltyKick(${i})">${v}</button>`).join('')}</div><div id="penalty-feedback" style="margin-top:12px"></div></div>`);
+ } else if(id==='match3'){
+  shell(`<div class="card" style="text-align:center"><b>Gem Match</b><p style="color:var(--muted);font-size:12px;margin:8px">Tap gems matching the target gem. Find 8 matches.</p><div>Target: <b id="gem-target" style="font-size:24px">💎</b></div><div id="gem-board" class="grid2" style="margin-top:12px"></div><div id="gem-progress" style="margin-top:10px;color:var(--goldL)">0 / 8</div></div>`);
+  const gems=['💎','🔷','🔶','🟣'];extraData.gemTarget=gems[Math.floor(Math.random()*gems.length)];document.getElementById('gem-target').textContent=extraData.gemTarget;document.getElementById('gem-board').innerHTML=Array.from({length:20},()=>{const v=gems[Math.floor(Math.random()*gems.length)];return `<button class="btn btn-gray" style="font-size:28px;padding:12px" onclick="gemPick(this,'${v}')">${v}</button>`}).join('');
+ } else if(id==='sudoku'){
+  extraData.sudoku=[1,0,3,4,3,4,0,2,2,1,4,0,0,3,2,1];extraData.selected=null;
+  shell(`<div class="card" style="text-align:center"><b>Mini Sudoku · 4×4</b><p style="color:var(--muted);font-size:12px;margin:8px">Fill the blanks. Each row and column must contain 1–4.</p><div id="sudoku-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:270px;margin:12px auto"></div><div id="sudoku-feedback" style="margin:8px;color:var(--goldL)">Select a blank cell, then choose a number.</div><div class="grid2">${[1,2,3,4].map(n=>`<button class="btn btn-purple" style="padding:13px" onclick="sudokuSet(${n})">${n}</button>`).join('')}</div></div>`);drawSudoku();
+ } else if(id==='connect'){
+  extraData.connect=Array(16).fill(0);
+  shell(`<div class="card" style="text-align:center"><b>Connect Four · Mini</b><p style="color:var(--muted);font-size:12px;margin:8px">Drop a red token into a column. Connect four before the blue opponent.</p><div id="connect-board" style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:270px;margin:12px auto"></div><div id="connect-feedback" style="color:var(--goldL)">Your turn 🔴</div></div>`);drawConnect();
+ } else if(id==='typing'){
+  const phrase=['QUICK BROWN FOX','PLAY EVERY DAY','PUZZLE MASTER','LEVEL UP NOW','GAMING TIME'][Math.floor(Math.random()*5)];extraData.phrase=phrase;
+  shell(`<div class="card" style="text-align:center"><b>Typing Sprint</b><p style="color:var(--muted);font-size:12px;margin:8px">Type the phrase exactly and submit.</p><div style="font-size:19px;font-weight:900;padding:14px;background:var(--bg3);border-radius:10px">${phrase}</div><input id="typing-input" autocomplete="off" style="width:100%;margin:12px 0;padding:13px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font:700 15px Nunito" placeholder="Type here"><button class="btn btn-purple" style="padding:12px 24px" onclick="submitTyping()">Submit</button><div id="typing-feedback" style="margin-top:10px"></div></div>`);
  } else {
   shell(`<div class="card" style="text-align:center"><div id="extra-count" style="color:var(--muted);font-size:12px">Challenge 1 / 5</div><div id="extra-prompt" style="font-size:19px;font-weight:900;margin:18px 0">Ready?</div><div id="extra-options" style="display:grid;grid-template-columns:1fr 1fr;gap:9px"></div><div id="extra-feedback" style="margin-top:12px;color:var(--goldL)"></div></div>`);
   nextExtraQuestion(id);
@@ -791,7 +813,20 @@ function nextExtraQuestion(id){
  }else{extraData.answer=q[2];document.getElementById('extra-prompt').textContent=q[0];document.getElementById('extra-options').innerHTML=q[1].map((v,i)=>`<button class="btn btn-gray" style="padding:13px" onclick="answerExtra(${i})">${v}</button>`).join('');}
  document.getElementById('extra-count').textContent=`Challenge ${extraRound+1} / 5`;
 }
+function mazeMove(dir){if(arcadeFinished)return;const path=extraData.mazePath,i=extraData.mazePos;if(dir!==path[i]){extraData.mazePos=0;setArcadeScore(0);document.getElementById('maze-view').textContent='🚪';document.getElementById('maze-feedback').textContent='Dead end. Back at entrance — try again.';return;}extraData.mazePos++;setArcadeScore(extraData.mazePos*10);document.getElementById('maze-view').textContent=extraData.mazePos===6?'🏁':'🌀';document.getElementById('maze-feedback').textContent=`Correct path: ${extraData.mazePos}/6`;if(extraData.mazePos===6)finishArcadeGame(65,'Maze Escape completed');}
+function basketShot(v){if(arcadeFinished)return;extraData.shots=(extraData.shots||0)+1;const prob=v==='Center'?.78:v==='Long shot'?.35:.55,hit=Math.random()<prob;if(hit)extraData.safe=(extraData.safe||0)+1;document.getElementById('basket-feedback').textContent=hit?'🏀 Swish!':'Missed — try another angle.';document.getElementById('basket-score').textContent=`Baskets: ${extraData.safe||0}/5 · Shots: ${extraData.shots}/8`;setArcadeScore((extraData.safe||0)*10);if((extraData.safe||0)>=5||extraData.shots>=8)finishArcadeGame(20+(extraData.safe||0)*10,'Hoop Shot completed');}
+function penaltyKick(i){if(arcadeFinished)return;extraData.shots=(extraData.shots||0)+1;const keeper=Math.floor(Math.random()*5),goal=i!==keeper;if(goal)extraData.safe=(extraData.safe||0)+1;document.getElementById('penalty-feedback').textContent=goal?'⚽ Goal!':'🧤 Saved by the goalkeeper!';document.getElementById('penalty-score').textContent=`Goals: ${extraData.safe||0}/3 · Kicks: ${extraData.shots}/5`;setArcadeScore((extraData.safe||0)*12);if((extraData.safe||0)>=3||extraData.shots>=5)finishArcadeGame(15+(extraData.safe||0)*15,'Penalty Kick completed');}
+function gemPick(el,v){if(arcadeFinished||el.disabled)return;el.disabled=true;el.style.opacity='.2';if(v===extraData.gemTarget){extraData.safe=(extraData.safe||0)+1;setArcadeScore(extraData.safe*5);document.getElementById('gem-progress').textContent=`${extraData.safe}/8`;if(extraData.safe>=8)finishArcadeGame(60,'Gem Match completed');}}
+function drawSudoku(){const e=document.getElementById('sudoku-grid');if(!e)return;e.innerHTML=extraData.sudoku.map((v,i)=>`<button class="btn btn-gray" style="aspect-ratio:1;font-size:20px;padding:0;border:${v?'1px solid var(--border)':'2px solid var(--purple)'}" onclick="sudokuSelect(${i})">${v||'_'}</button>`).join('');}
+function sudokuSelect(i){if(extraData.sudoku[i])return;extraData.selected=i;document.getElementById('sudoku-feedback').textContent=`Selected cell ${Math.floor(i/4)+1}, ${i%4+1}. Choose 1–4.`;}
+function sudokuSet(n){if(arcadeFinished)return;if(extraData.selected===null){toast('Select an empty cell first');return;}const i=extraData.selected,solution=[1,2,3,4,3,4,1,2,2,1,4,3,4,3,2,1];if(n!==solution[i]){document.getElementById('sudoku-feedback').textContent='Incorrect for this cell. Try again.';return;}extraData.sudoku[i]=n;extraData.selected=null;setArcadeScore(arcadeScore+10);drawSudoku();if(extraData.sudoku.every((v,j)=>v===solution[j]))finishArcadeGame(75,'Mini Sudoku completed');else document.getElementById('sudoku-feedback').textContent='Correct. Continue.';}
+function drawConnect(){const e=document.getElementById('connect-board');if(!e)return;e.innerHTML=extraData.connect.map((v,i)=>`<button class="btn btn-gray" style="aspect-ratio:1;border-radius:50%;font-size:22px;padding:0" onclick="connectDrop(${i%4})">${v===1?'🔴':v===2?'🔵':'⚪'}</button>`).join('');}
+function connectDrop(col){if(arcadeFinished)return;let row=-1;for(let r=3;r>=0;r--)if(!extraData.connect[r*4+col]){row=r;break;}if(row<0)return;extraData.connect[row*4+col]=1;drawConnect();if(connectWon(1)){finishArcadeGame(65,'Connect Four completed');return;}const empty=extraData.connect.map((v,i)=>v? -1:i).filter(i=>i>=0);if(!empty.length){finishArcadeGame(20,'Connect Four draw');return;}extraData.connect[empty[Math.floor(Math.random()*empty.length)]]=2;drawConnect();if(connectWon(2)){document.getElementById('connect-feedback').textContent='Blue connected four. Try again!';finishArcadeGame(10,'Connect Four round ended');}else document.getElementById('connect-feedback').textContent='Your turn 🔴';}
+function connectWon(p){const b=extraData.connect;for(let r=0;r<4;r++)for(let c=0;c<4;c++){if(c===0&&b[r*4+c]===p&&b[r*4+c+1]===p&&b[r*4+c+2]===p&&b[r*4+c+3]===p)return true;if(r===0&&b[r*4+c]===p&&b[(r+1)*4+c]===p&&b[(r+2)*4+c]===p&&b[(r+3)*4+c]===p)return true;if(r===0&&c===0&&b[r*4+c]===p&&b[(r+1)*4+c+1]===p&&b[(r+2)*4+c+2]===p&&b[(r+3)*4+c+3]===p)return true;if(r===0&&c===3&&b[r*4+c]===p&&b[(r+1)*4+c-1]===p&&b[(r+2)*4+c-2]===p&&b[(r+3)*4+c-3]===p)return true;}return false;}
+function submitTyping(){if(arcadeFinished)return;const v=(document.getElementById('typing-input')?.value||'').trim().toUpperCase();if(v===extraData.phrase)finishArcadeGame(65,'Typing Sprint completed');else document.getElementById('typing-feedback').textContent='Not an exact match. Check spelling and spaces.';}
+
 function answerExtra(v){if(arcadeFinished)return;let id=extraData.id,correct=(id==='word'||id==='anagram')?v===extraData.answer:v===extraData.answer;if(correct){extraCorrect++;setArcadeScore(arcadeScore+10);document.getElementById('extra-feedback').textContent='Correct! +10 score';}else document.getElementById('extra-feedback').textContent='Not quite — next one!';extraRound++;if(extraRound>=5){finishArcadeGame(35+extraCorrect*8,`${GAMES_DATA.find(g=>g.id===id).name} completed`);return;}setTimeout(()=>{if(!arcadeFinished)nextExtraQuestion(id)},450);}
+function reactionTap(){if(arcadeFinished)return;if(extraData.phase!=='go'){clearTimeout(extraTimer);document.getElementById('reaction-result').textContent='False start! Wait for green.';extraData.phase='wait';extraTimer=setTimeout(()=>{if(!arcadeFinished){extraData.phase='go';extraData.started=performance.now();const b=document.getElementById('extra-tap');if(b){b.style.background='#16a34a';b.textContent='TAP NOW';}}},1500+Math.random()*2200);return;}const ms=Math.round(performance.now()-extraData.started);document.getElementById('reaction-result').textContent=`Your reaction: ${ms} ms`;finishArcadeGame(Math.max(10,Math.min(80,100-Math.floor(ms/8))),'Reaction Test completed');}
 function extraTap(){if(arcadeFinished)return;extraData.step++;let goal=extraData.id==='tapfast'?15:10;document.getElementById('extra-progress').textContent=`${extraData.step} / ${goal}`;setArcadeScore(extraData.step*2);if(extraData.step>=goal)finishArcadeGame(45,`${GAMES_DATA.find(g=>g.id===extraData.id).name} completed`);}
 function extraRps(move){if(arcadeFinished)return;let arr=['✊','✋','✌️'],cpu=arr[Math.floor(Math.random()*3)],win=(move==='✊'&&cpu==='✌️')||(move==='✋'&&cpu==='✊')||(move==='✌️'&&cpu==='✋');if(win){extraCorrect++;setArcadeScore(arcadeScore+10);}document.getElementById('extra-feedback').textContent=`You ${move} · CPU ${cpu} — ${move===cpu?'Draw':win?'You win!':'CPU wins'}`;extraRound++;if(extraRound>=5){finishArcadeGame(25+extraCorrect*12,'Rock Paper Scissors completed');return;}document.getElementById('extra-prompt').textContent=`Round ${extraRound+1} / 5`}
 function extraCoin(call){if(arcadeFinished)return;let result=Math.random()<.5?'Heads':'Tails';document.getElementById('coin-result').textContent=result==='Heads'?'🙂':'🪙';if(call===result){extraCorrect++;setArcadeScore(arcadeScore+10);}document.getElementById('extra-feedback').textContent=`It was ${result}!`;extraRound++;if(extraRound>=5){finishArcadeGame(20+extraCorrect*12,'Coin Flip completed');return;}document.getElementById('extra-prompt').textContent=`Flip ${extraRound+1} / 5`}
@@ -1000,7 +1035,7 @@ function renderPopularGames() {
 }
 function renderHomeMoreGames(){
  const el=document.getElementById('h-more-games');if(!el)return;
- el.innerHTML=GAMES_DATA.slice(4,10).map(g=>`<button class="card" onclick="openGame('${g.id}')" style="display:flex;align-items:center;gap:10px;text-align:left;color:var(--text);font:inherit;cursor:pointer;padding:11px"><span style="font-size:26px">${g.icon}</span><span style="flex:1;min-width:0"><b style="font-size:12px;display:block">${g.name}</b><small style="color:var(--green);font-size:10px">▶ PLAY NOW</small></span></button>`).join('');
+ el.innerHTML=GAMES_DATA.slice(4,12).map(g=>`<button class="card" onclick="openGame('${g.id}')" style="display:flex;align-items:center;gap:10px;text-align:left;color:var(--text);font:inherit;cursor:pointer;padding:11px"><span style="font-size:26px">${g.icon}</span><span style="flex:1;min-width:0"><b style="font-size:12px;display:block">${g.name}</b><small style="color:var(--green);font-size:10px">▶ PLAY NOW</small></span></button>`).join('');
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1089,50 +1124,13 @@ function updateSpinBtn() {
 //  LEADERBOARD
 // ═══════════════════════════════════════════════════════
 function renderLeaderboard(tab) {
-  document.getElementById('lb-tabs').innerHTML = ['Weekly','Monthly','Global'].map(t=>
-    `<button class="tab-btn ${t===tab?'active':'off'}" onclick="renderLeaderboard('${t}')">${t}</button>`).join('');
-  
-  // Static board + current player injected
-  let board = [
-    {name:'GameMaster', pts:11250, rank:1, av:'🦸'},
-    {name:'PixelKing',  pts:12840, rank:2, av:'👑'},
-    {name:'NinjaPro',   pts:9870,  rank:3, av:'🥷'},
-    {name:'StarPlayer', pts:8420,  rank:4, av:'⭐'},
-    {name:'DreamGamer', pts:7950,  rank:5, av:'🌙'},
-    {name:'GamerGirl',  pts:2310,  rank:7, av:'🌸'},
-    {name:'ProPlayer',  pts:2100,  rank:8, av:'🎮'},
-  ];
-  // Insert current player
-  const myPts = P.points||0;
-  const meEntry = {name:P.name||'You', pts:myPts, av:'😎', isMe:true};
-  board.push(meEntry);
-  board.sort((a,b)=>b.pts-a.pts);
-  board.forEach((p,i)=>p.rank=i+1);
-  
-  const top3Sorted = [board.find(p=>p.rank===2),board.find(p=>p.rank===1),board.find(p=>p.rank===3)].filter(Boolean);
-  const rest = board.filter(p=>p.rank>3);
-  
-  document.getElementById('lb-podium').innerHTML = top3Sorted.map(p=>{
-    const isFirst=p.rank===1; const h=isFirst?88:68; const sz=isFirst?66:52; const fnt=isFirst?30:24;
-    const bg=isFirst?'linear-gradient(135deg,#d97706,#f59e0b)':'var(--bg3)';
-    const bdr=isFirst?'var(--gold)':'var(--border)';
-    return `<div class="podium-col">
-      ${isFirst?'<div style="font-size:20px">👑</div>':''}
-      <div style="width:${sz}px;height:${sz}px;background:${bg};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:${fnt}px;border:3px solid ${bdr}">${p.av}</div>
-      <div style="font-weight:800;font-size:12px;text-align:center;color:${p.isMe?'var(--purpleL)':'var(--text)'}">${p.name}</div>
-      <div style="color:var(--goldL);font-weight:900;font-size:11px">${fmtN(p.pts)} PTS</div>
-      <div class="podium-box" style="height:${h}px;color:${isFirst?'var(--gold)':'var(--muted)'}">#${p.rank}</div>
-    </div>`;
-  }).join('');
-  
-  document.getElementById('lb-rest').innerHTML = rest.map(p=>`
-    <div style="display:flex;align-items:center;gap:11px;padding:11px;border-radius:12px;border:1px solid ${p.isMe?'var(--purple)':'rgba(124,58,237,.18)'};background:${p.isMe?'var(--bg2)':'var(--bg3)'}">
-      <div style="color:var(--muted);font-weight:800;font-size:13px;width:22px;text-align:center">#${p.rank}</div>
-      <div style="width:34px;height:34px;background:var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px">${p.av}</div>
-      <div style="flex:1;color:${p.isMe?'var(--purpleL)':'var(--text)'};font-weight:${p.isMe?800:700};font-size:13px">${p.name}</div>
-      <div style="color:${p.isMe?'var(--purpleL)':'var(--goldL)'};font-weight:900;font-size:13px">${fmtN(p.pts)} PTS</div>
-    </div>`).join('');
+  document.getElementById('lb-tabs').innerHTML=['Weekly','Monthly','Global'].map(t=>`<button class="tab-btn ${t===tab?'active':'off'}" onclick="renderLeaderboard('${t}')">${t}</button>`).join('');
+  const podium=document.getElementById('lb-podium'), rest=document.getElementById('lb-rest');
+  podium.innerHTML='<div style="color:var(--muted);font-size:12px;padding:18px">Loading player scores…</div>';rest.innerHTML='';
+  const draw=rows=>{let a=(rows||[]).map(x=>({id:x.id,name:String(x.name||'Player').slice(0,24),pts:Math.max(0,Number(x.points)||0),av:x.avatar||'🎮'}));if(!a.some(x=>x.id===uid))a.push({id:uid,name:P.name||'You',pts:Number(P.points)||0,av:P.avatar||'😎'});a.sort((x,y)=>y.pts-x.pts);a=a.slice(0,20);a.forEach((x,i)=>x.rank=i+1);const top=[a.find(x=>x.rank===2),a.find(x=>x.rank===1),a.find(x=>x.rank===3)].filter(Boolean);podium.innerHTML=top.map(x=>`<div class="podium-col"><div style="font-size:20px">${x.rank===1?'👑':''}</div><div style="width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--bg3);font-size:24px;border:2px solid ${x.rank===1?'var(--gold)':'var(--border)'}">${escapeHTML(x.av)}</div><b style="font-size:11px;text-align:center">${escapeHTML(x.name)}${x.id===uid?' (You)':''}</b><span style="font-size:11px;color:var(--goldL)">${fmtN(x.pts)} PTS</span><div class="podium-box" style="height:${x.rank===1?82:62}px">#${x.rank}</div></div>`).join('')||'No scores yet';rest.innerHTML=a.filter(x=>x.rank>3).map(x=>`<div class="hist-row"><b>#${x.rank}</b><span>${escapeHTML(x.av)}</span><b style="flex:1">${escapeHTML(x.name)}${x.id===uid?' (You)':''}</b><b style="color:var(--goldL)">${fmtN(x.pts)} PTS</b></div>`).join('');if(!db)rest.innerHTML+='<p style="font-size:11px;color:var(--muted);text-align:center">Guest mode: rankings are only available on this device.</p>';};
+  if(db&&uid)db.collection('users').orderBy('points','desc').limit(20).get().then(q=>draw(q.docs.map(d=>({id:d.id,...d.data()})))).catch(e=>{console.warn(e);draw([{id:uid,name:P.name,points:P.points,avatar:P.avatar}]);rest.innerHTML+='<p style="font-size:11px;color:var(--muted);text-align:center">Global scores could not load. Check Firestore read rules.</p>';});else draw([{id:uid,name:P.name,points:P.points,avatar:P.avatar}]);
 }
+function escapeHTML(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 // ═══════════════════════════════════════════════════════
 //  PROFILE
@@ -1153,7 +1151,7 @@ function renderProfileStats() {
 }
 function renderProfileMenu() {
   const items = [
-    {icon:'✏️', label:'Edit Profile', action:''},
+    {icon:'✏️', label:'Edit Profile', action:'editProfile()'},
     {icon:'🔊', label:'Sound Settings', action:"showSub('settings')"},
     {icon:'🎨', label:'Appearance', sub:'Dark Mode', action:"showSub('settings')"},
     {icon:'🔔', label:'Notifications', action:"showSub('settings')"},
@@ -1170,8 +1168,13 @@ function renderProfileMenu() {
       <div style="color:var(--muted)">›</div>
     </div>`).join('')});
 }
-function showHelpToast(){ toast('❓ TAKAKAMAN Help & Support'); }
-function showAboutToast(){ toast('ℹ️ TAKAKAMAN v1.0 — Play · Level Up · Repeat'); }
+function showInfo(title,body){const m=document.getElementById('info-modal');m.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-size:18px">${title}</b><button class="btn btn-gray" onclick="document.getElementById('info-overlay').classList.remove('show')" style="padding:7px 12px">✕</button></div><div style="font-size:12px;line-height:1.7;color:var(--muted)">${body}</div>`;document.getElementById('info-overlay').classList.add('show');}
+document.getElementById('info-overlay').addEventListener('click',e=>{if(e.target.id==='info-overlay')e.currentTarget.classList.remove('show');});
+function editProfile(){const n=prompt('Display name (2–20 characters):',P.name||'Player');if(n===null)return;const v=n.trim().replace(/[<>]/g,'').slice(0,20);if(v.length<2){toast('Name must be at least 2 characters');return;}P.name=v;saveToFirebase();renderAll();toast('Profile updated');}
+function showPrivacy(){showInfo('🔒 Privacy Policy',`<b>TAKAKAMAN Privacy Summary</b><br><br>• Telegram: when launched inside Telegram, the app reads the Telegram WebApp user ID and display name provided by Telegram.<br>• Guest mode: game progress and points are stored in this browser's local storage.<br>• Cloud sync: Telegram player profile and progress may be stored in the TAKAKAMAN Firebase Firestore project configured by the operator.<br>• Advertising: an optional AdsGram interstitial is requested only after the user taps the clearly labelled optional ad placement. No points are awarded for viewing this interstitial.<br>• The app has no deposits, payments, withdrawals or cash-out feature.<br><br>Clearing browser site data removes locally stored guest data. For cloud data deletion, contact the app operator. Do not enter sensitive personal information.`);}
+function showSupport(){showInfo('💬 Help & Support',`For a technical issue, note your Player ID (<b>${escapeHTML(P.id||'Guest')}</b>), game name, device and approximate time. Never share passwords or private account details.<br><br><b>Support contact:</b> The operator has not yet configured an official support email or Telegram username. Add a verified contact before publishing the app.`);}
+function showHelpToast(){showSupport();}
+function showAboutToast(){showInfo('ℹ️ About TAKAKAMAN',`TAKAKAMAN is a casual points-based gaming mini app with puzzle, brain, arcade and classic mini-games, player progress, achievements and daily challenges.<br><br>Points are in-app game points only. They have no cash value and cannot be deposited, transferred, withdrawn or exchanged for money.<br><br>Version 1.1 · PLAY · LEVEL UP · REPEAT`);}
 function showNotifToast(){ document.getElementById('notif-dot').style.display='none'; toast('🔔 No new notifications'); }
 
 // ═══════════════════════════════════════════════════════
@@ -1187,7 +1190,7 @@ function renderHistory(tab) {
     <div class="hist-row">
       <div style="font-size:22px">${h.icon}</div>
       <div style="flex:1"><div style="font-weight:700;font-size:13px">${h.label}</div><div style="color:var(--muted);font-size:11px">${h.time}</div></div>
-      <div style="color:var(--green);font-weight:900;font-size:13px">+${h.pts} PTS</div>
+      <div style="color:${h.type==='spent'?'var(--red)':'var(--green)'};font-weight:900;font-size:13px">${h.type==='spent'?'-':'+'}${h.pts} PTS</div>
     </div>`).join('') : '<div style="color:var(--muted);text-align:center;padding:24px;font-size:13px">No records yet</div>'});
 }
 
@@ -1210,10 +1213,10 @@ function renderSettings() {
     <div style="margin-bottom:14px">
       <div style="font-weight:900;font-size:15px;margin-bottom:10px">Privacy & Support</div>
       <div class="card2" style="padding:0;overflow:hidden">
-        <div class="set-row" onclick="toast('🔒 Privacy policy coming soon')" style="cursor:pointer">
+        <div class="set-row" onclick="showPrivacy()" style="cursor:pointer">
           <div style="font-size:18px">🔒</div><div style="flex:1;font-weight:700;font-size:13px">Privacy Policy</div><div style="color:var(--muted)">›</div>
         </div>
-        <div class="set-row" onclick="toast('💬 TAKAKAMAN Support')" style="cursor:pointer;border-top:1px solid rgba(124,58,237,.12)">
+        <div class="set-row" onclick="showSupport()" style="cursor:pointer;border-top:1px solid rgba(124,58,237,.12)">
           <div style="font-size:18px">💬</div><div style="flex:1;font-weight:700;font-size:13px">Contact Support</div><div style="color:var(--muted)">›</div>
         </div>
       </div>
@@ -1359,7 +1362,7 @@ function flipCard(id) {
         P.gamesPlayed=(P.gamesPlayed||0)+1;
         P.memoryWins=(P.memoryWins||0)+1;
         P.missionProgress=Math.min((P.missionProgress||0)+1,3);
-        addPoints(pts,'Completed: Memory Match','🏆');
+        addPoints(pts,'Completed: Memory Match','🏆'); if(P.missionProgress>=3&&!P.dailyMissionClaimed){P.dailyMissionClaimed=true;addPoints(100,'Daily Challenge: 3 Games','🎯');}
         updateMissionUI();
         setTimeout(()=>showGameResult(true,pts),400);
       }
