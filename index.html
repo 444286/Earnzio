@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+<meta name="description" content="TAKAKAMAN is a casual skill gaming mini app with puzzle, memory, arcade and word challenges, player progress and personal game records."/>
+<meta name="theme-color" content="#0d0a1f"/>
 <title>TAKAKAMAN</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet"/>
 <!-- Firebase -->
@@ -25,8 +27,8 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
 
 /* ═══ PHONE SHELL ═══ */
 #app{
-  width:min(390px,100vw);
-  height:min(844px,100vh);
+  width:min(430px,100vw);
+  height:min(920px,100vh);
   background:var(--bg);
   border-radius:min(44px,0px);
   overflow:hidden;
@@ -205,6 +207,8 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
       </div>
     </div>
 
+    <div style="padding:0 16px 14px"><div class="card" style="background:linear-gradient(120deg,#20134a,#142b4b);border-color:#51408a"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:10px;color:#c4b5fd;font-weight:900;letter-spacing:1px">PLAYER DEVELOPMENT</div><b style="font-size:15px">Skill progression system</b></div><span style="font-size:27px">📈</span></div><div class="grid2" style="margin-top:12px"><div class="card2" style="padding:10px"><small style="color:var(--muted)">Games completed</small><div id="h-games-completed" style="font-size:20px;font-weight:900">0</div></div><div class="card2" style="padding:10px"><small style="color:var(--muted)">Personal records</small><div id="h-record-count" style="font-size:20px;font-weight:900">0</div></div></div><button class="btn btn-gray" style="width:100%;padding:10px;margin-top:10px" onclick="showGameJournal()">Open Performance Journal →</button></div></div>
+
     <!-- Featured -->
     <div style="padding:0 16px 14px">
       <div style="background:linear-gradient(135deg,#1e0a4a,#3b1d8c);border:1px solid var(--border);border-radius:16px;padding:18px;text-align:center">
@@ -239,7 +243,7 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
 
     <!-- More games on Home -->
     <div style="padding:0 16px 14px">
-      <div class="sec-header"><span class="sec-title">🎯 More Games to Play</span><span class="see-all" onclick="navTo('games')">All 31 →</span></div>
+      <div class="sec-header"><span class="sec-title">🎯 More Games to Play</span><span class="see-all" onclick="navTo('games')">All Games →</span></div>
       <div id="h-more-games" class="grid2"></div>
     </div>
 
@@ -259,6 +263,20 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
             <div style="color:var(--muted);font-size:10px;margin-top:3px" id="h-miss-t">0/3</div>
           </div>
           <button class="btn btn-purple" style="padding:0;width:34px;height:34px;border-radius:9px;font-size:14px" onclick="navTo('games')">→</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Original TAKAKAMAN feature: daily lab + personal game journal -->
+    <div style="padding:0 16px 14px">
+      <div class="card" style="background:linear-gradient(145deg,#21134b,#15112e);border-color:rgba(168,85,247,.55)">
+        <div class="sec-header"><span class="sec-title">🧪 TAKAKAMAN Challenge Lab</span><span class="badge badge-gold">ORIGINAL</span></div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px">Train memory, number focus and vocabulary with three skill-based challenges. Your personal records are saved on this device or synced to your player profile.</div>
+        <div class="grid2">
+          <button class="card2" onclick="openGame('patternlab')" style="padding:12px;color:var(--text);text-align:left;font:inherit;cursor:pointer"><div style="font-size:24px">🧬</div><b style="font-size:12px">Pattern Lab</b><div style="font-size:10px;color:var(--muted)">Remember sequences</div></button>
+          <button class="card2" onclick="openGame('numbertrail')" style="padding:12px;color:var(--text);text-align:left;font:inherit;cursor:pointer"><div style="font-size:24px">🔢</div><b style="font-size:12px">Number Trail</b><div style="font-size:10px;color:var(--muted)">Find numbers in order</div></button>
+          <button class="card2" onclick="openGame('wordforge')" style="padding:12px;color:var(--text);text-align:left;font:inherit;cursor:pointer"><div style="font-size:24px">⚒️</div><b style="font-size:12px">Word Forge</b><div style="font-size:10px;color:var(--muted)">Solve word puzzles</div></button>
+          <button class="card2" onclick="showGameJournal()" style="padding:12px;color:var(--text);text-align:left;font:inherit;cursor:pointer"><div style="font-size:24px">📒</div><b style="font-size:12px">Game Journal</b><div style="font-size:10px;color:var(--muted)">Your records & history</div></button>
         </div>
       </div>
     </div>
@@ -520,6 +538,9 @@ const GAMES_DATA = [
   {id:'sudoku',name:'Mini Sudoku',icon:'🔳',cat:'Brain',playable:true},
   {id:'connect',name:'Connect Four',icon:'🔴',cat:'Classic',playable:true},
   {id:'wordguess',name:'Word Guess',icon:'🧩',cat:'Brain',playable:true},
+  {id:'patternlab',name:'Pattern Lab',icon:'🧬',cat:'Brain',playable:true},
+  {id:'numbertrail',name:'Number Trail',icon:'🔢',cat:'Puzzle',playable:true},
+  {id:'wordforge',name:'Word Forge',icon:'⚒️',cat:'Puzzle',playable:true},
 ];
 
 const ALL_ACHIEVEMENTS = [
@@ -554,6 +575,7 @@ let P = {
   settings:{darkMode:true,soundEffects:true,music:true,gameUpdates:true,dailyRewards:true},
   dailyCheckinDone:false, spinUsedToday:false, dailyMissionClaimed:false,
   history:[],
+  gameStats:{}, recentRuns:[],
   spinDeg:0
 };
 
@@ -626,6 +648,10 @@ async function bootstrap() {
     };
   }
 
+  // Normalize new feature fields for existing profiles created by older app versions.
+  if(!P.gameStats || typeof P.gameStats!=='object') P.gameStats={};
+  if(!Array.isArray(P.recentRuns)) P.recentRuns=[];
+  if(!Array.isArray(P.history)) P.history=[];
   // Show the actual game immediately; never leave users on a loading/splash page.
   enterApp();
 
@@ -719,9 +745,30 @@ function restoreMemoryScreen(){
     <div style="display:flex;justify-content:center;gap:28px;margin-bottom:14px"><div style="text-align:center"><div style="color:var(--muted);font-size:11px">Moves</div><div id="g-moves" style="font-weight:900;font-size:17px">0</div></div><div style="text-align:center"><div style="color:var(--muted);font-size:11px">Pairs</div><div id="g-pairs" style="font-weight:900;font-size:17px">0/8</div></div></div>
     <div style="padding:0 16px"><div class="card"><b>How to play</b><p style="color:var(--muted);font-size:12px;margin-top:5px">Flip two cards and find all 8 matching pairs before time runs out.</p></div></div>`;
 }
-function pauseGame() { stopMemoryTimer(); clearInterval(arcadeTimer); clearInterval(snakeIv); navTo('games'); }
+function pauseGame() { stopMemoryTimer(); clearInterval(arcadeTimer); clearInterval(snakeIv); clearInterval(extraData?.iv); clearTimeout(extraTimer); navTo('games'); }
+function recordGameRun(gameId, points, outcome='completed'){
+  if(!P.gameStats || typeof P.gameStats!=='object') P.gameStats={};
+  const old=P.gameStats[gameId]||{plays:0,best:0,wins:0};
+  old.plays=(old.plays||0)+1;
+  old.best=Math.max(old.best||0,Number(points)||0);
+  if(outcome==='completed') old.wins=(old.wins||0)+1;
+  old.lastPlayed=new Date().toISOString();
+  P.gameStats[gameId]=old;
+  const g=GAMES_DATA.find(x=>x.id===gameId);
+  P.recentRuns=Array.isArray(P.recentRuns)?P.recentRuns:[];
+  P.recentRuns.unshift({gameId,name:g?.name||gameId,icon:g?.icon||'🎮',points:Number(points)||0,outcome,time:timeStr()});
+  P.recentRuns=P.recentRuns.slice(0,30);
+  cachePlayerState();
+}
+function showGameJournal(){
+  const stats=P.gameStats||{}; const runs=Array.isArray(P.recentRuns)?P.recentRuns:[];
+  const rows=runs.slice(0,12).map(r=>`<div class="hist-row"><span style="font-size:22px">${escapeHTML(r.icon||'🎮')}</span><div style="flex:1"><b>${escapeHTML(r.name||'Game')}</b><div style="font-size:10px;color:var(--muted)">${escapeHTML(r.time||'')}</div></div><b style="color:var(--goldL)">${fmtN(r.points)} pts</b></div>`).join('');
+  const best=Object.entries(stats).sort((a,b)=>(b[1].best||0)-(a[1].best||0)).slice(0,6).map(([id,v])=>{const g=GAMES_DATA.find(x=>x.id===id);return `<div class="hist-row"><span>${g?.icon||'🎮'}</span><b style="flex:1">${escapeHTML(g?.name||id)}</b><span style="color:var(--goldL)">Best ${fmtN(v.best||0)}</span><small style="color:var(--muted)">${fmtN(v.plays||0)} plays</small></div>`}).join('');
+  showInfo('📒 Game Journal',`<b>Personal bests</b><div style="display:grid;gap:7px;margin:9px 0 16px">${best||'<p>No records yet. Finish a game to start your journal.</p>'}</div><b>Recent sessions</b><div style="display:grid;gap:7px;margin-top:9px">${rows||'<p>No completed sessions yet.</p>'}</div><p style="margin-top:12px">Records are gameplay statistics, not cash rewards. Guest records stay in this browser; Telegram player records sync when Firebase access is configured.</p>`);
+}
 function finishArcadeGame(points,label='Game completed'){
-  if(arcadeFinished) return; arcadeFinished=true; clearInterval(arcadeTimer);clearInterval(snakeIv);clearTimeout(extraTimer);
+  if(arcadeFinished) return; arcadeFinished=true;
+  recordGameRun(activeGameId,points,'completed'); clearInterval(arcadeTimer);clearInterval(snakeIv);clearInterval(extraData?.iv);clearTimeout(extraTimer);
   P.gamesPlayed=(P.gamesPlayed||0)+1; P.missionProgress=Math.min((P.missionProgress||0)+1,3);
   addPoints(points,label,'🏆'); if(P.missionProgress>=3&&!P.dailyMissionClaimed){P.dailyMissionClaimed=true;addPoints(100,'Daily Challenge: 3 Games','🎯');} updateHomeDisplay(); updateMissionUI();
   document.getElementById('arcade-status').innerHTML=`<div style="font-size:34px">🎉</div><b>Completed! +${points} PTS</b><button class="btn btn-purple" style="padding:10px 20px;margin-top:10px" onclick="openGame('${activeGameId}')">Play Again</button>`;
@@ -741,11 +788,20 @@ function renderArcadeGame(id){
  } else if(id==='bubble'){
   shell(`<div class="card" style="text-align:center"><div style="font-size:15px;font-weight:800;margin-bottom:12px">Tap 10 bubbles of the target color!</div><div>Target: <b id="bubble-target" style="font-size:22px">🔵</b></div><div id="bubble-field" class="grid2" style="margin-top:15px"></div></div>`);startBubble();
  } else if(id==='block'){
-  shell(`<p style="text-align:center;color:var(--muted);font-size:12px;margin-bottom:8px">Tap empty cells to fill rows. Fill 12 cells to win.</p><div id="block-grid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px;max-width:320px;margin:auto"></div>`);startBlock();
+  shell(`<div class="card" style="text-align:center"><b>Block Puzzle · Strategic Grid</b><p style="font-size:12px;color:var(--muted);margin:7px 0">Choose a shape, then place it on the 9×9 board. Complete rows or columns to clear them and score.</p><div id="block-grid" style="display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:3px;max-width:340px;margin:auto;background:#090719;padding:5px;border-radius:9px"></div><div id="block-pieces" style="display:flex;justify-content:space-around;gap:8px;margin-top:12px"></div><div id="block-feedback" style="font-size:12px;color:var(--muted);margin-top:9px">Select a piece, then tap its top-left position.</div></div>`);startBlock();
  } else if(id==='space'){
   shell(`<div class="card" style="text-align:center"><div style="font-weight:800;margin-bottom:8px">Tap the enemy ships before they escape!</div><div id="space-field" class="grid2"></div><div style="color:var(--muted);font-size:11px;margin-top:10px">Destroy 10 ships.</div></div>`);startSpace();
  } else if(id==='chess'){
   shell(`<div class="card"><div style="font-size:12px;color:var(--muted);margin-bottom:8px">CHESS TACTICS • 5 challenges</div><div id="chess-question" style="font-size:17px;font-weight:900;margin-bottom:14px"></div><div id="chess-options" style="display:flex;flex-direction:column;gap:8px"></div></div>`);nextChess();
+ } else if(id==='patternlab'){
+  shell(`<div class="card" style="text-align:center"><b>Pattern Lab · 5 stages</b><p style="font-size:12px;color:var(--muted);margin:8px 0">Watch the lights, then repeat the exact sequence. Each stage adds one step.</p><div id="pl-stage" style="font-weight:900;color:var(--goldL);margin:8px">Stage 1 / 5</div><div id="pl-display" style="font-size:30px;min-height:48px;margin:12px">Ready?</div><div id="pl-pads" class="grid2">${['🟣','🔵','🟢','🟡'].map((v,i)=>`<button class="btn btn-gray" style="padding:22px;font-size:28px" onclick="patternTap(${i})">${v}</button>`).join('')}</div><div id="pl-feedback" style="margin-top:12px;color:var(--muted)">Press Start to begin.</div><button class="btn btn-purple" style="padding:11px 24px;margin-top:12px" onclick="startPatternLab()">Start / Replay</button></div>`);
+  extraData={stage:1,seq:[],input:0,accepting:false};
+ } else if(id==='numbertrail'){
+  shell(`<div class="card" style="text-align:center"><b>Number Trail · 1 to 16</b><p style="font-size:12px;color:var(--muted);margin:8px 0">Tap every number in ascending order as quickly as you can.</p><div id="nt-progress" style="color:var(--goldL);font-weight:900;margin:8px">Next: 1</div><div id="nt-clock" style="font-size:22px;font-weight:900">0.0s</div><div id="nt-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px"></div><div id="nt-feedback" style="margin-top:10px;color:var(--muted)">Tap Start to begin.</div><button class="btn btn-purple" style="padding:11px 24px;margin-top:12px" onclick="startNumberTrail()">Start / Replay</button></div>`);
+  extraData={next:1,started:0,iv:null,running:false};
+ } else if(id==='wordforge'){
+  shell(`<div class="card" style="text-align:center"><b>Word Forge · 5 rounds</b><p style="font-size:12px;color:var(--muted);margin:8px 0">Unscramble the letters. Use a hint if you need one.</p><div id="wf-round" style="color:var(--goldL);font-weight:900">Round 1 / 5</div><div id="wf-scramble" style="font-size:30px;letter-spacing:5px;font-weight:900;margin:16px">—</div><div id="wf-hint" style="font-size:12px;color:var(--muted)">Hint appears here</div><input id="wf-answer" autocomplete="off" autocapitalize="characters" placeholder="Your answer" style="width:100%;padding:12px;margin-top:12px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font:700 16px Nunito"><div class="grid2" style="margin-top:10px"><button class="btn btn-gray" style="padding:12px" onclick="wordForgeHint()">Show hint</button><button class="btn btn-purple" style="padding:12px" onclick="wordForgeSubmit()">Submit</button></div><div id="wf-feedback" style="margin-top:10px;color:var(--muted)"></div></div>`);
+  extraData={round:0,correct:0,word:null,usedHint:false};nextWordForge();
  } else {
   startExtraGame(id,shell);
  }
@@ -792,11 +848,9 @@ function startExtraGame(id,shell){
   shell(`<div class="card" style="text-align:center"><b>Gem Match</b><p style="color:var(--muted);font-size:12px;margin:8px">Tap gems matching the target gem. Find 8 matches.</p><div>Target: <b id="gem-target" style="font-size:24px">💎</b></div><div id="gem-board" class="grid2" style="margin-top:12px"></div><div id="gem-progress" style="margin-top:10px;color:var(--goldL)">0 / 8</div></div>`);
   const gems=['💎','🔷','🔶','🟣'];extraData.gemTarget=gems[Math.floor(Math.random()*gems.length)];document.getElementById('gem-target').textContent=extraData.gemTarget;document.getElementById('gem-board').innerHTML=Array.from({length:20},()=>{const v=gems[Math.floor(Math.random()*gems.length)];return `<button class="btn btn-gray" style="font-size:28px;padding:12px" onclick="gemPick(this,'${v}')">${v}</button>`}).join('');
  } else if(id==='sudoku'){
-  extraData.sudoku=[1,0,3,4,3,4,0,2,2,1,4,0,0,3,2,1];extraData.selected=null;
-  shell(`<div class="card" style="text-align:center"><b>Mini Sudoku · 4×4</b><p style="color:var(--muted);font-size:12px;margin:8px">Fill the blanks. Each row and column must contain 1–4.</p><div id="sudoku-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:270px;margin:12px auto"></div><div id="sudoku-feedback" style="margin:8px;color:var(--goldL)">Select a blank cell, then choose a number.</div><div class="grid2">${[1,2,3,4].map(n=>`<button class="btn btn-purple" style="padding:13px" onclick="sudokuSet(${n})">${n}</button>`).join('')}</div></div>`);drawSudoku();
+  shell(`<div class="card" style="text-align:center"><b>Mini Sudoku · 9×9</b><p style="font-size:12px;color:var(--muted);margin:8px 0">Fill every row, column and 3×3 region with 1–9. Fixed clues cannot be changed.</p><div id="sudoku-grid" style="display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:2px;max-width:340px;margin:auto;background:#080617;padding:4px;border-radius:8px"></div><div id="sudoku-feedback" style="margin:10px;color:var(--muted);min-height:20px">Select an empty cell.</div><div style="display:grid;grid-template-columns:repeat(9,1fr);gap:4px">${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="btn btn-purple" style="padding:10px 0" onclick="sudokuSet(${n})">${n}</button>`).join('')}</div><button class="btn btn-gray" style="padding:10px;margin-top:10px;width:100%" onclick="sudokuErase()">Erase selected cell</button></div>`);startSudoku();
  } else if(id==='connect'){
-  extraData.connect=Array(16).fill(0);
-  shell(`<div class="card" style="text-align:center"><b>Connect Four · Mini</b><p style="color:var(--muted);font-size:12px;margin:8px">Drop a red token into a column. Connect four before the blue opponent.</p><div id="connect-board" style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:270px;margin:12px auto"></div><div id="connect-feedback" style="color:var(--goldL)">Your turn 🔴</div></div>`);drawConnect();
+  shell(`<div class="card"><div style="font-size:12px;color:var(--muted);margin-bottom:8px">CONNECT FOUR · YOU 🔴 VS STRATEGIC CPU 🟡</div><div id="connect-board" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;background:#123b85;padding:7px;border-radius:12px"></div><div id="connect-feedback" style="margin-top:10px;color:var(--muted)">Choose a column. First to connect four wins.</div><button class="btn btn-gray" style="padding:9px 14px;margin-top:10px" onclick="openGame('connect')">New Match</button></div>`);extraData={connect:Array(42).fill(0),turn:1};drawConnect();
  } else if(id==='typing'){
   const phrase=['QUICK BROWN FOX','PLAY EVERY DAY','PUZZLE MASTER','LEVEL UP NOW','GAMING TIME'][Math.floor(Math.random()*5)];extraData.phrase=phrase;
   shell(`<div class="card" style="text-align:center"><b>Typing Sprint</b><p style="color:var(--muted);font-size:12px;margin:8px">Type the phrase exactly and submit.</p><div style="font-size:19px;font-weight:900;padding:14px;background:var(--bg3);border-radius:10px">${phrase}</div><input id="typing-input" autocomplete="off" style="width:100%;margin:12px 0;padding:13px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font:700 15px Nunito" placeholder="Type here"><button class="btn btn-purple" style="padding:12px 24px" onclick="submitTyping()">Submit</button><div id="typing-feedback" style="margin-top:10px"></div></div>`);
@@ -805,6 +859,16 @@ function startExtraGame(id,shell){
   nextExtraQuestion(id);
  }
 }
+const WORD_FORGE_BANK=[['PLANET','A world orbiting a star'],['GARDEN','A place where plants grow'],['PUZZLE','A problem to solve'],['STREAM','A flowing body of water'],['BRIGHT','Giving off much light'],['MARKET','A place to buy and sell']];
+function startPatternLab(){clearTimeout(extraTimer);extraData={stage:1,seq:[],input:0,accepting:false};set('pl-stage','Stage 1 / 5');set('pl-feedback','Watch the sequence.');patternNextStage();}
+function patternNextStage(){if(!extraData||arcadeFinished)return;extraData.seq=Array.from({length:extraData.stage+2},()=>Math.floor(Math.random()*4));extraData.input=0;extraData.accepting=false;set('pl-display','👀 Watch');const pads=document.querySelectorAll('#pl-pads button');let i=0;const show=()=>{if(arcadeFinished)return;if(i>=extraData.seq.length){pads.forEach(b=>b.style.outline='');extraData.accepting=true;set('pl-display','Your turn');set('pl-feedback','Repeat the pattern in order.');return;}pads.forEach(b=>b.style.outline='');const idx=extraData.seq[i++];if(pads[idx])pads[idx].style.outline='4px solid var(--goldL)';setTimeout(()=>{pads.forEach(b=>b.style.outline='');setTimeout(show,250)},500);};setTimeout(show,500);}
+function patternTap(i){if(!extraData?.accepting||arcadeFinished)return;if(i!==extraData.seq[extraData.input]){extraData.accepting=false;set('pl-feedback','Pattern missed. Replay the stage or start again.');return;}extraData.input++;setArcadeScore(arcadeScore+5);if(extraData.input>=extraData.seq.length){extraData.accepting=false;if(extraData.stage>=5){finishArcadeGame(55+extraData.stage*5,'Pattern Lab completed');return;}extraData.stage++;set('pl-stage',`Stage ${extraData.stage} / 5`);set('pl-feedback','Correct! Next stage is longer.');extraTimer=setTimeout(patternNextStage,650);}}
+function startNumberTrail(){if(extraData?.iv)clearInterval(extraData.iv);extraData={next:1,started:performance.now(),iv:null,running:true};const nums=shuffle(Array.from({length:16},(_,i)=>i+1));const grid=document.getElementById('nt-grid');grid.innerHTML=nums.map(n=>`<button class="btn btn-gray" id="nt-${n}" style="padding:16px 4px;font-size:17px" onclick="numberTrailTap(${n})">${n}</button>`).join('');set('nt-progress','Next: 1');set('nt-feedback','Find 1, then 2, all the way to 16.');set('nt-clock','0.0s');extraData.iv=setInterval(()=>{if(!extraData?.running)return;set('nt-clock',((performance.now()-extraData.started)/1000).toFixed(1)+'s');},100);}
+function numberTrailTap(n){if(!extraData?.running||arcadeFinished)return;if(n!==extraData.next){set('nt-feedback',`Not yet — find ${extraData.next}.`);return;}const b=document.getElementById('nt-'+n);if(b){b.disabled=true;b.style.background='var(--green)';b.style.color='#fff';}extraData.next++;setArcadeScore(arcadeScore+3);set('nt-progress',extraData.next<=16?`Next: ${extraData.next}`:'All numbers found!');if(extraData.next>16){extraData.running=false;clearInterval(extraData.iv);const sec=(performance.now()-extraData.started)/1000;finishArcadeGame(Math.max(20,Math.min(90,100-Math.floor(sec/2))),'Number Trail completed');}else if(extraData.next%4===1)set('nt-feedback','Great focus. Keep going!');}
+function nextWordForge(){if(!extraData||arcadeFinished)return;if(extraData.round>=5){finishArcadeGame(25+extraData.correct*12,'Word Forge completed');return;}const item=WORD_FORGE_BANK[Math.floor(Math.random()*WORD_FORGE_BANK.length)];let scrambled=item[0];for(let k=0;k<5&&scrambled===item[0];k++)scrambled=shuffle(item[0].split('')).join('');extraData.word=item[0];extraData.usedHint=false;set('wf-round',`Round ${extraData.round+1} / 5`);set('wf-scramble',scrambled);set('wf-hint','Hint: '+item[1]);const inp=document.getElementById('wf-answer');if(inp)inp.value='';set('wf-feedback','Unscramble the letters and submit.');}
+function wordForgeHint(){if(!extraData||arcadeFinished)return;extraData.usedHint=true;set('wf-hint','First letter: '+extraData.word[0]+' · '+extraData.word.length+' letters');}
+function wordForgeSubmit(){if(!extraData||arcadeFinished)return;const inp=document.getElementById('wf-answer');const answer=(inp?.value||'').trim().toUpperCase();if(answer===extraData.word){extraData.correct++;setArcadeScore(arcadeScore+(extraData.usedHint?5:10));set('wf-feedback','Correct!');}else set('wf-feedback','Not quite. Correct answer: '+extraData.word);extraData.round++;setTimeout(()=>{if(!arcadeFinished)nextWordForge();},650);}
+
 function nextExtraQuestion(id){
  const bank=EXTRA_BANKS[id]||EXTRA_BANKS.trivia;let q=bank[extraRound%bank.length];
  if(id==='word'||id==='anagram'){
@@ -817,12 +881,31 @@ function mazeMove(dir){if(arcadeFinished)return;const path=extraData.mazePath,i=
 function basketShot(v){if(arcadeFinished)return;extraData.shots=(extraData.shots||0)+1;const prob=v==='Center'?.78:v==='Long shot'?.35:.55,hit=Math.random()<prob;if(hit)extraData.safe=(extraData.safe||0)+1;document.getElementById('basket-feedback').textContent=hit?'🏀 Swish!':'Missed — try another angle.';document.getElementById('basket-score').textContent=`Baskets: ${extraData.safe||0}/5 · Shots: ${extraData.shots}/8`;setArcadeScore((extraData.safe||0)*10);if((extraData.safe||0)>=5||extraData.shots>=8)finishArcadeGame(20+(extraData.safe||0)*10,'Hoop Shot completed');}
 function penaltyKick(i){if(arcadeFinished)return;extraData.shots=(extraData.shots||0)+1;const keeper=Math.floor(Math.random()*5),goal=i!==keeper;if(goal)extraData.safe=(extraData.safe||0)+1;document.getElementById('penalty-feedback').textContent=goal?'⚽ Goal!':'🧤 Saved by the goalkeeper!';document.getElementById('penalty-score').textContent=`Goals: ${extraData.safe||0}/3 · Kicks: ${extraData.shots}/5`;setArcadeScore((extraData.safe||0)*12);if((extraData.safe||0)>=3||extraData.shots>=5)finishArcadeGame(15+(extraData.safe||0)*15,'Penalty Kick completed');}
 function gemPick(el,v){if(arcadeFinished||el.disabled)return;el.disabled=true;el.style.opacity='.2';if(v===extraData.gemTarget){extraData.safe=(extraData.safe||0)+1;setArcadeScore(extraData.safe*5);document.getElementById('gem-progress').textContent=`${extraData.safe}/8`;if(extraData.safe>=8)finishArcadeGame(60,'Gem Match completed');}}
-function drawSudoku(){const e=document.getElementById('sudoku-grid');if(!e)return;e.innerHTML=extraData.sudoku.map((v,i)=>`<button class="btn btn-gray" style="aspect-ratio:1;font-size:20px;padding:0;border:${v?'1px solid var(--border)':'2px solid var(--purple)'}" onclick="sudokuSelect(${i})">${v||'_'}</button>`).join('');}
-function sudokuSelect(i){if(extraData.sudoku[i])return;extraData.selected=i;document.getElementById('sudoku-feedback').textContent=`Selected cell ${Math.floor(i/4)+1}, ${i%4+1}. Choose 1–4.`;}
-function sudokuSet(n){if(arcadeFinished)return;if(extraData.selected===null){toast('Select an empty cell first');return;}const i=extraData.selected,solution=[1,2,3,4,3,4,1,2,2,1,4,3,4,3,2,1];if(n!==solution[i]){document.getElementById('sudoku-feedback').textContent='Incorrect for this cell. Try again.';return;}extraData.sudoku[i]=n;extraData.selected=null;setArcadeScore(arcadeScore+10);drawSudoku();if(extraData.sudoku.every((v,j)=>v===solution[j]))finishArcadeGame(75,'Mini Sudoku completed');else document.getElementById('sudoku-feedback').textContent='Correct. Continue.';}
-function drawConnect(){const e=document.getElementById('connect-board');if(!e)return;e.innerHTML=extraData.connect.map((v,i)=>`<button class="btn btn-gray" style="aspect-ratio:1;border-radius:50%;font-size:22px;padding:0" onclick="connectDrop(${i%4})">${v===1?'🔴':v===2?'🔵':'⚪'}</button>`).join('');}
-function connectDrop(col){if(arcadeFinished)return;let row=-1;for(let r=3;r>=0;r--)if(!extraData.connect[r*4+col]){row=r;break;}if(row<0)return;extraData.connect[row*4+col]=1;drawConnect();if(connectWon(1)){finishArcadeGame(65,'Connect Four completed');return;}const empty=extraData.connect.map((v,i)=>v? -1:i).filter(i=>i>=0);if(!empty.length){finishArcadeGame(20,'Connect Four draw');return;}extraData.connect[empty[Math.floor(Math.random()*empty.length)]]=2;drawConnect();if(connectWon(2)){document.getElementById('connect-feedback').textContent='Blue connected four. Try again!';finishArcadeGame(10,'Connect Four round ended');}else document.getElementById('connect-feedback').textContent='Your turn 🔴';}
-function connectWon(p){const b=extraData.connect;for(let r=0;r<4;r++)for(let c=0;c<4;c++){if(c===0&&b[r*4+c]===p&&b[r*4+c+1]===p&&b[r*4+c+2]===p&&b[r*4+c+3]===p)return true;if(r===0&&b[r*4+c]===p&&b[(r+1)*4+c]===p&&b[(r+2)*4+c]===p&&b[(r+3)*4+c]===p)return true;if(r===0&&c===0&&b[r*4+c]===p&&b[(r+1)*4+c+1]===p&&b[(r+2)*4+c+2]===p&&b[(r+3)*4+c+3]===p)return true;if(r===0&&c===3&&b[r*4+c]===p&&b[(r+1)*4+c-1]===p&&b[(r+2)*4+c-2]===p&&b[(r+3)*4+c-3]===p)return true;}return false;}
+const SUDOKU_PUZZLE=[
+5,3,0,0,7,0,0,0,0, 6,0,0,1,9,5,0,0,0, 0,9,8,0,0,0,0,6,0,
+8,0,0,0,6,0,0,0,3, 4,0,0,8,0,3,0,0,1, 7,0,0,0,2,0,0,0,6,
+0,6,0,0,0,0,2,8,0, 0,0,0,4,1,9,0,0,5, 0,0,0,0,8,0,0,7,9];
+const SUDOKU_SOLUTION=[
+5,3,4,6,7,8,9,1,2, 6,7,2,1,9,5,3,4,8, 1,9,8,3,4,2,5,6,7,
+8,5,9,7,6,1,4,2,3, 4,2,6,8,5,3,7,9,1, 7,1,3,9,2,4,8,5,6,
+9,6,1,5,3,7,2,8,4, 2,8,7,4,1,9,6,3,5, 3,4,5,2,8,6,1,7,9];
+function startSudoku(){extraData={sudoku:[...SUDOKU_PUZZLE],fixed:SUDOKU_PUZZLE.map(Boolean),selected:null,errors:0};drawSudoku();}
+function drawSudoku(){const e=document.getElementById('sudoku-grid');if(!e)return;e.innerHTML=extraData.sudoku.map((v,i)=>{const r=Math.floor(i/9),c=i%9,box=(r%3===2&&r!==8?'border-bottom:2px solid #a78bfa;':'')+(c%3===2&&c!==8?'border-right:2px solid #a78bfa;':'');return `<button class="btn" style="aspect-ratio:1;min-width:0;padding:0;border-radius:2px;background:${extraData.selected===i?'#4c1d95':extraData.fixed[i]?'#292344':'#17132e'};color:${extraData.fixed[i]?'#fff':'#c4b5fd'};font-size:clamp(11px,3.4vw,16px);font-weight:${extraData.fixed[i]?900:700};${box}" onclick="sudokuSelect(${i})">${v||''}</button>`}).join('');}
+function sudokuSelect(i){if(extraData.fixed[i]){set('sudoku-feedback','That is a fixed clue. Choose an empty cell.');return;}extraData.selected=i;drawSudoku();set('sudoku-feedback',`Selected row ${Math.floor(i/9)+1}, column ${i%9+1}. Choose 1–9.`);}
+function sudokuSet(n){if(arcadeFinished||extraData.selected===null){toast('Select an empty cell first');return;}const i=extraData.selected;if(n!==SUDOKU_SOLUTION[i]){extraData.errors++;set('sudoku-feedback',`Incorrect entry. Mistakes: ${extraData.errors}. Check row, column and box.`);return;}extraData.sudoku[i]=n;extraData.selected=null;setArcadeScore(arcadeScore+5);drawSudoku();if(extraData.sudoku.every((v,j)=>v===SUDOKU_SOLUTION[j]))finishArcadeGame(Math.max(60,100-extraData.errors*3),'Sudoku solved');else set('sudoku-feedback','Correct entry. Keep solving.');}
+function sudokuErase(){if(extraData.selected===null)return;extraData.sudoku[extraData.selected]=0;drawSudoku();set('sudoku-feedback','Entry erased.');}
+function drawConnect(){const e=document.getElementById('connect-board');if(!e)return;e.innerHTML=extraData.connect.map((v,i)=>`<button class="btn" aria-label="row ${Math.floor(i/7)+1} column ${i%7+1}" style="aspect-ratio:1;border-radius:50%;min-width:0;padding:0;background:${v===1?'#ef4444':v===2?'#facc15':'#0b1e50'};border:2px solid rgba(255,255,255,.15);box-shadow:inset 0 2px 5px rgba(0,0,0,.35)" onclick="connectDrop(${i%7})"></button>`).join('');}
+function connectDrop(col){if(arcadeFinished)return;const b=extraData.connect;let row=-1;for(let r=5;r>=0;r--)if(!b[r*7+col]){row=r;break;}if(row<0)return;b[row*7+col]=1;drawConnect();if(connectWon(1)){finishArcadeGame(90,'Connect Four victory');return;}if(b.every(Boolean)){finishArcadeGame(25,'Connect Four draw');return;}const cpu=connectChooseMove();if(cpu<0){finishArcadeGame(25,'Connect Four draw');return;}for(let r=5;r>=0;r--)if(!b[r*7+cpu]){b[r*7+cpu]=2;break;}drawConnect();if(connectWon(2)){set('connect-feedback','Strategic CPU connected four. Start a new match.');finishArcadeGame(5,'Connect Four match ended');}else if(b.every(Boolean)){finishArcadeGame(25,'Connect Four draw');}else set('connect-feedback','Your turn 🔴. CPU is evaluating threats.');}
+function connectWon(p){const b=extraData.connect;for(let r=0;r<6;r++)for(let c=0;c<7;c++){if(b[r*7+c]!==p)continue;for(const [dr,dc] of [[0,1],[1,0],[1,1],[1,-1]]){let ok=true;for(let k=1;k<4;k++){const rr=r+dr*k,cc=c+dc*k;if(rr<0||rr>=6||cc<0||cc>=7||b[rr*7+cc]!==p){ok=false;break;}}if(ok)return true;}}return false;}
+function connectChooseMove(){const b=extraData.connect;const legal=Array.from({length:7},(_,c)=>c).filter(c=>b[c]===0);if(!legal.length)return -1;for(const c of legal){let r=-1;for(let y=5;y>=0;y--)if(!b[y*7+c]){r=y;break;}b[r*7+c]=2;const win=connectWon(2);b[r*7+c]=0;if(win)return c;}for(const c of legal){let r=-1;for(let y=5;y>=0;y--)if(!b[y*7+c]){r=y;break;}b[r*7+c]=1;const block=connectWon(1);b[r*7+c]=0;if(block)return c;}legal.sort((a,b)=>Math.abs(3-a)-Math.abs(3-b));return legal[0];}
+const BLOCK_SHAPES=[[[1,1],[1,1]],[[1,1,1]],[[1],[1],[1]],[[1,1,1],[0,1,0]],[[1,0],[1,1]],[[0,1],[1,1]],[[1,1,0],[0,1,1]],[[1,1,1,1]]];
+function startBlock(){extraData={board:Array(81).fill(0),pieces:[],selected:0,lines:0};setArcadeScore(0);blockNextPieces();drawBlock();}
+function blockNextPieces(){extraData.pieces=Array.from({length:3},()=>BLOCK_SHAPES[Math.floor(Math.random()*BLOCK_SHAPES.length)]);extraData.selected=0;drawBlockPieces();}
+function drawBlock(){const e=document.getElementById('block-grid');if(!e)return;e.innerHTML=extraData.board.map((v,i)=>`<button class="btn" style="aspect-ratio:1;min-width:0;padding:0;border-radius:3px;background:${v?'#8b5cf6':'#201a3b'};border:1px solid #392b66" onclick="blockPlace(${i})"></button>`).join('');}
+function drawBlockPieces(){const e=document.getElementById('block-pieces');if(!e)return;e.innerHTML=extraData.pieces.map((shape,i)=>shape?`<button class="btn btn-gray" onclick="blockSelect(${i})" style="padding:8px;min-width:82px;border:2px solid ${extraData.selected===i?'var(--gold)':'var(--border)'}"><div style="display:grid;grid-template-columns:repeat(${shape[0].length},13px);gap:2px;justify-content:center">${shape.flat().map(v=>`<i style="width:13px;height:13px;border-radius:2px;background:${v?'#a78bfa':'transparent'}"></i>`).join('')}</div><small style="display:block;margin-top:5px">Piece ${i+1}</small></button>`:`<div class="card2" style="min-width:82px;padding:8px;display:grid;place-items:center;color:var(--green)">✓ Used</div>`).join('');}
+function blockSelect(i){if(!extraData.pieces[i])return;extraData.selected=i;drawBlockPieces();}
+function blockPlace(index){if(arcadeFinished)return;const shape=extraData.pieces[extraData.selected];if(!shape){toast('Select an unused shape first');return;}const r0=Math.floor(index/9),c0=index%9,cells=[];for(let r=0;r<shape.length;r++)for(let c=0;c<shape[r].length;c++)if(shape[r][c]){const rr=r0+r,cc=c0+c;if(rr>=9||cc>=9||extraData.board[rr*9+cc]){set('block-feedback','That shape does not fit there. Choose another position.');return;}cells.push(rr*9+cc);}cells.forEach(i=>extraData.board[i]=1);let clear=new Set();for(let r=0;r<9;r++)if(extraData.board.slice(r*9,r*9+9).every(Boolean))for(let c=0;c<9;c++)clear.add(r*9+c);for(let c=0;c<9;c++)if(Array.from({length:9},(_,r)=>extraData.board[r*9+c]).every(Boolean))for(let r=0;r<9;r++)clear.add(r*9+c);clear.forEach(i=>extraData.board[i]=0);extraData.lines+=clear.size?clear.size/9:0;setArcadeScore(arcadeScore+cells.length*2+clear.size*3);extraData.pieces[extraData.selected]=null;if(extraData.pieces.every(x=>!x)){blockNextPieces();}else{extraData.selected=extraData.pieces.findIndex(Boolean);drawBlockPieces();}drawBlock();if(extraData.lines>=5){finishArcadeGame(60+Math.floor(arcadeScore/4),'Block Puzzle cleared five lines');return;}if(extraData.pieces.filter(Boolean).every(sh=>!blockHasFit(sh))){set('block-feedback','No remaining piece fits. Final score recorded.');finishArcadeGame(Math.max(10,Math.floor(arcadeScore/3)),'Block Puzzle session');}else set('block-feedback',`Lines cleared: ${extraData.lines}. Keep planning your placements.`);}
+function blockHasFit(shape){if(!shape)return false;for(let r=0;r<9;r++)for(let c=0;c<9;c++){let ok=true;for(let y=0;y<shape.length;y++)for(let x=0;x<shape[y].length;x++)if(shape[y][x]&&(r+y>=9||c+x>=9||extraData.board[(r+y)*9+c+x]))ok=false;if(ok)return true;}return false;}
 function submitTyping(){if(arcadeFinished)return;const v=(document.getElementById('typing-input')?.value||'').trim().toUpperCase();if(v===extraData.phrase)finishArcadeGame(65,'Typing Sprint completed');else document.getElementById('typing-feedback').textContent='Not an exact match. Check spelling and spaces.';}
 
 function answerExtra(v){if(arcadeFinished)return;let id=extraData.id,correct=(id==='word'||id==='anagram')?v===extraData.answer:v===extraData.answer;if(correct){extraCorrect++;setArcadeScore(arcadeScore+10);document.getElementById('extra-feedback').textContent='Correct! +10 score';}else document.getElementById('extra-feedback').textContent='Not quite — next one!';extraRound++;if(extraRound>=5){finishArcadeGame(35+extraCorrect*8,`${GAMES_DATA.find(g=>g.id===id).name} completed`);return;}setTimeout(()=>{if(!arcadeFinished)nextExtraQuestion(id)},450);}
@@ -838,6 +921,8 @@ let board2048=[];function start2048(){board2048=Array(16).fill(0);spawn2048();sp
 function spawn2048(){let a=board2048.map((v,i)=>v? -1:i).filter(i=>i>=0);if(a.length)board2048[a[Math.floor(Math.random()*a.length)]]=Math.random()<.9?2:4;}
 function draw2048(){let e=document.getElementById('g2048');if(!e)return;e.innerHTML=board2048.map(v=>`<div style="aspect-ratio:1;background:${v?'#edc':'#8d8176'};border-radius:7px;display:grid;place-items:center;color:#493d35;font-size:clamp(18px,5vw,27px);font-weight:900">${v||''}</div>`).join('');}
 function move2048(dir){if(arcadeFinished)return;let old=board2048.join(',');for(let k=0;k<4;k++){let ids=dir==='left'?[0,1,2,3].map(c=>k*4+c):dir==='right'?[3,2,1,0].map(c=>k*4+c):dir==='up'?[0,1,2,3].map(r=>r*4+k):[3,2,1,0].map(r=>r*4+k);let vals=ids.map(i=>board2048[i]).filter(Boolean),out=[];for(let j=0;j<vals.length;j++){if(vals[j]===vals[j+1]){out.push(vals[j]*2);j++;}else out.push(vals[j]);}while(out.length<4)out.push(0);ids.forEach((i,j)=>board2048[i]=out[j]);}if(old!==board2048.join(',')){spawn2048();setArcadeScore(arcadeScore+5);draw2048();if(board2048.includes(2048))finishArcadeGame(100,'2048 Champion');}}
+function bind2048Gestures(){const e=document.getElementById('g2048');if(!e||e.dataset.gestures)return;e.dataset.gestures='1';let x=0,y=0;e.addEventListener('touchstart',v=>{x=v.touches[0].clientX;y=v.touches[0].clientY},{passive:true});e.addEventListener('touchend',v=>{const dx=v.changedTouches[0].clientX-x,dy=v.changedTouches[0].clientY-y;if(Math.max(Math.abs(dx),Math.abs(dy))<24)return;move2048(Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up'));},{passive:true});}
+document.addEventListener('keydown',e=>{if(activeGameId!=='2048'||curScreen!=='game')return;const d={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'}[e.key];if(d){e.preventDefault();move2048(d);}});
 // Math quiz
 function nextMath(){if(mathRound>=10){finishArcadeGame(80,'Math Master completed');return;}mathRound++;let a=1+Math.floor(Math.random()*20),b=1+Math.floor(Math.random()*20),op=Math.random()<.5?'+':'×';mathAnswer=op==='+'?a+b:a*b;document.getElementById('math-count').textContent=mathRound;document.getElementById('math-question').textContent=`${a} ${op} ${b} = ?`;let opts=[mathAnswer,mathAnswer+2,Math.max(1,mathAnswer-3),mathAnswer+5].sort(()=>Math.random()-.5);document.getElementById('math-options').innerHTML=opts.map(v=>`<button class="btn btn-gray" style="padding:14px;font-size:18px" onclick="answerMath(${v})">${v}</button>`).join('');}
 function answerMath(v){if(v===mathAnswer){setArcadeScore(arcadeScore+10);toast('Correct! +10 score');}else toast('Not quite — try the next one');nextMath();}
@@ -884,7 +969,7 @@ function toast(msg) {
 // ═══════════════════════════════════════════════════════
 function renderAll() {
   updateHomeDisplay();
-  renderPopularGames();
+  renderPopularGames(); set('h-games-completed',fmtN(P.gamesPlayed||0)); set('h-record-count',fmtN(Object.keys(P.gameStats||{}).length));
   renderGames('All');
   renderLeaderboard('Weekly');
   renderProfileStats();
@@ -900,6 +985,7 @@ function renderAll() {
 //  HOME DISPLAY
 // ═══════════════════════════════════════════════════════
 function updateHomeDisplay() {
+  set('h-games-completed',fmtN(P.gamesPlayed||0)); set('h-record-count',fmtN(Object.keys(P.gameStats||{}).length));
   const pct = Math.min((P.xp/P.maxXp)*100,100);
   set('h-av', null, {innerHTML: P.avatar});
   set('h-name', P.name);
@@ -1053,7 +1139,7 @@ function renderGames(cat) {
     <div class="game-card" onclick="openGame('${g.id}')">
       <div style="font-size:40px">${g.icon}</div>
       <div style="font-weight:800;font-size:13px;text-align:center">${g.name}</div>
-      <div class="play-dot">▶</div><div style="color:var(--green);font-size:9px;font-weight:800">PLAY NOW</div>
+      <div class="play-dot">▶</div><div style="color:var(--green);font-size:9px;font-weight:800">PLAY NOW</div>${P.gameStats?.[g.id]?`<div style="font-size:9px;color:var(--goldL)">Best ${fmtN(P.gameStats[g.id].best||0)} · ${fmtN(P.gameStats[g.id].plays||0)} plays</div>`:''}
     </div>`).join('') : '<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px">No games found</div>';
 }
 
@@ -1156,6 +1242,7 @@ function renderProfileMenu() {
     {icon:'🎨', label:'Appearance', sub:'Dark Mode', action:"showSub('settings')"},
     {icon:'🔔', label:'Notifications', action:"showSub('settings')"},
     {icon:'📊', label:'Points History', action:"showSub('history')"},
+    {icon:'📒', label:'Game Journal & Records', action:'showGameJournal()'},
     {icon:'🏅', label:'All Achievements', action:"showSub('ach')"},
     {icon:'❓', label:'Help & Support', action:'showHelpToast()'},
     {icon:'ℹ️', label:'About TAKAKAMAN', action:'showAboutToast()'},
@@ -1171,10 +1258,10 @@ function renderProfileMenu() {
 function showInfo(title,body){const m=document.getElementById('info-modal');m.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-size:18px">${title}</b><button class="btn btn-gray" onclick="document.getElementById('info-overlay').classList.remove('show')" style="padding:7px 12px">✕</button></div><div style="font-size:12px;line-height:1.7;color:var(--muted)">${body}</div>`;document.getElementById('info-overlay').classList.add('show');}
 document.getElementById('info-overlay').addEventListener('click',e=>{if(e.target.id==='info-overlay')e.currentTarget.classList.remove('show');});
 function editProfile(){const n=prompt('Display name (2–20 characters):',P.name||'Player');if(n===null)return;const v=n.trim().replace(/[<>]/g,'').slice(0,20);if(v.length<2){toast('Name must be at least 2 characters');return;}P.name=v;saveToFirebase();renderAll();toast('Profile updated');}
-function showPrivacy(){showInfo('🔒 Privacy Policy',`<b>TAKAKAMAN Privacy Summary</b><br><br>• Telegram: when launched inside Telegram, the app reads the Telegram WebApp user ID and display name provided by Telegram.<br>• Guest mode: game progress and points are stored in this browser's local storage.<br>• Cloud sync: Telegram player profile and progress may be stored in the TAKAKAMAN Firebase Firestore project configured by the operator.<br>• Advertising: an optional AdsGram interstitial is requested only after the user taps the clearly labelled optional ad placement. No points are awarded for viewing this interstitial.<br>• The app has no deposits, payments, withdrawals or cash-out feature.<br><br>Clearing browser site data removes locally stored guest data. For cloud data deletion, contact the app operator. Do not enter sensitive personal information.`);}
+function showPrivacy(){showInfo('🔒 Privacy Policy',`<b>TAKAKAMAN Privacy Summary</b><br><br>• Account identity: when launched through a configured Telegram Mini App, the app reads the Telegram WebApp user ID and display name exposed by Telegram. Outside Telegram, a local guest profile is used.<br>• Guest mode: game progress and points are stored in this browser's local storage.<br>• Cloud sync: Telegram player profile and progress may be stored in the TAKAKAMAN Firebase Firestore project configured by the operator.<br>• Advertising: an optional AdsGram interstitial is requested only after the user taps the clearly labelled optional ad placement. No points are awarded for viewing this interstitial.<br>• The app has no deposits, payments, withdrawals or cash-out feature.<br><br>Clearing browser site data removes locally stored guest data. For cloud data deletion, contact the app operator. Do not enter sensitive personal information.`);}
 function showSupport(){showInfo('💬 Help & Support',`For a technical issue, note your Player ID (<b>${escapeHTML(P.id||'Guest')}</b>), game name, device and approximate time. Never share passwords or private account details.<br><br><b>Support contact:</b> The operator has not yet configured an official support email or Telegram username. Add a verified contact before publishing the app.`);}
 function showHelpToast(){showSupport();}
-function showAboutToast(){showInfo('ℹ️ About TAKAKAMAN',`TAKAKAMAN is a casual points-based gaming mini app with puzzle, brain, arcade and classic mini-games, player progress, achievements and daily challenges.<br><br>Points are in-app game points only. They have no cash value and cannot be deposited, transferred, withdrawn or exchanged for money.<br><br>Version 1.1 · PLAY · LEVEL UP · REPEAT`);}
+function showAboutToast(){showInfo('ℹ️ About TAKAKAMAN',`TAKAKAMAN is a casual skill-and-puzzle gaming mini app. It includes arcade, memory, number, word and logic challenges, a personal game journal, best-score tracking, player progression, achievements and daily activities.<br><br>Points are in-app game points only. They have no cash value and cannot be deposited, transferred, withdrawn or exchanged for money.<br><br>Version 2.0 · Independent skill-game collection · PLAY · LEVEL UP · REPEAT`);}
 function showNotifToast(){ document.getElementById('notif-dot').style.display='none'; toast('🔔 No new notifications'); }
 
 // ═══════════════════════════════════════════════════════
@@ -1361,6 +1448,7 @@ function flipCard(id) {
         const pts=30+mTimer;
         P.gamesPlayed=(P.gamesPlayed||0)+1;
         P.memoryWins=(P.memoryWins||0)+1;
+        recordGameRun('memory',pts,'completed');
         P.missionProgress=Math.min((P.missionProgress||0)+1,3);
         addPoints(pts,'Completed: Memory Match','🏆'); if(P.missionProgress>=3&&!P.dailyMissionClaimed){P.dailyMissionClaimed=true;addPoints(100,'Daily Challenge: 3 Games','🎯');}
         updateMissionUI();
