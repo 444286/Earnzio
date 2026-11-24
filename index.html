@@ -555,14 +555,18 @@ let P = {
   spinDeg:0
 };
 
-let saving = false;
+let saveQueue = Promise.resolve();
+function cachePlayerState(){
+  try { if(uid) localStorage.setItem('takakaman_user_'+uid, JSON.stringify(P)); } catch(e) { console.warn('Player cache save failed:',e); }
+}
 async function saveToFirebase() {
-  if(!db || !uid || saving) return;
-  saving = true;
-  try {
-    await db.collection('users').doc(uid).set(P, {merge:true});
-  } catch(e){ console.warn('Firebase save error:', e); }
-  saving = false;
+  // Save locally immediately, then serialize cloud writes so rapid rewards are never dropped.
+  cachePlayerState();
+  if(!db || !uid) return;
+  const snapshot = JSON.parse(JSON.stringify(P));
+  saveQueue = saveQueue.then(()=>db.collection('users').doc(uid).set(snapshot,{merge:true}))
+    .catch(e=>{ console.warn('Firebase save error:',e); });
+  return saveQueue;
 }
 
 async function loadFromFirebase() {
@@ -604,6 +608,7 @@ async function bootstrap() {
     P.name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || 'Player';
     P.id = 'NX-' + tgUser.id;
     P.avatar = '😎';
+    try { const cached=localStorage.getItem('takakaman_user_'+uid); if(cached) Object.assign(P,JSON.parse(cached)); } catch(e) { console.warn('Telegram cache read failed:',e); }
   } else {
     uid = 'guest_local';
     P.name = 'Guest Player';
@@ -614,7 +619,7 @@ async function bootstrap() {
       if (saved) Object.assign(P, JSON.parse(saved));
     } catch(e) { console.warn('Guest data read failed:', e); }
     saveToFirebase = async () => {
-      try { localStorage.setItem('takakaman_guest', JSON.stringify(P)); }
+      try { localStorage.setItem('takakaman_guest', JSON.stringify(P)); cachePlayerState(); }
       catch(e) { console.warn('Guest save failed:', e); }
     };
   }
@@ -716,7 +721,7 @@ function pauseGame() { stopMemoryTimer(); clearInterval(arcadeTimer); clearInter
 function finishArcadeGame(points,label='Game completed'){
   if(arcadeFinished) return; arcadeFinished=true;
   P.gamesPlayed=(P.gamesPlayed||0)+1; P.missionProgress=Math.min((P.missionProgress||0)+1,3);
-  addPoints(points,label,'🏆'); updateMissionUI();
+  addPoints(points,label,'🏆'); updateHomeDisplay(); updateMissionUI();
   document.getElementById('arcade-status').innerHTML=`<div style="font-size:34px">🎉</div><b>Completed! +${points} PTS</b><button class="btn btn-purple" style="padding:10px 20px;margin-top:10px" onclick="openGame('${activeGameId}')">Play Again</button>`;
 }
 let arcadeTimer=null,arcadeFinished=false,arcadeScore=0,mathRound=0,mathAnswer=0,snakeDir='right',snakeBody=[],snakeFood={},snakeIv=null,blockPlaced=0,bubbleScore=0;
@@ -904,9 +909,12 @@ function updateMissionUI() {
 //  POINTS & XP
 // ═══════════════════════════════════════════════════════
 function addPoints(pts, label, icon) {
-  P.points = (P.points||0) + pts;
-  P.totalPtsEarned = (P.totalPtsEarned||0) + pts;
-  P.xp = (P.xp||0) + Math.floor(pts/2);
+  pts = Math.max(0, Math.floor(Number(pts)||0));
+  if(!pts) return;
+  P.points = Math.max(0, Number(P.points)||0) + pts;
+  P.totalPtsEarned = Math.max(0, Number(P.totalPtsEarned)||0) + pts;
+  P.xp = (Number(P.xp)||0) + Math.floor(pts/2);
+  P.maxXp = Math.max(1, Number(P.maxXp)||1000);
   // Level up
   while(P.xp >= P.maxXp) {
     P.xp -= P.maxXp;
@@ -919,7 +927,16 @@ function addPoints(pts, label, icon) {
   if(P.history.length > 100) P.history = P.history.slice(0,100);
   checkAchievements();
   updateHomeDisplay();
+  renderProfileStats();
+  renderHistoryIfVisible();
+  cachePlayerState();
   saveToFirebase();
+  toast('⭐ +' + pts + ' points added!');
+}
+
+function renderHistoryIfVisible(){
+  const historyTab=document.getElementById('sub-history');
+  if(historyTab && historyTab.classList.contains('active')) renderHistory('all');
 }
 
 function timeStr() {
