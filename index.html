@@ -288,10 +288,10 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
     <div style="padding:0 16px 14px">
       <div class="sec-header"><span class="sec-title">⚡ Quick Actions</span></div>
       <div class="grid2">
-        <button class="card" onclick="navTo('quiz')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">🧩</div><b style="font-size:13px">Daily Quiz</b><div style="font-size:10px;color:var(--green)">+15 pts per answer</div></button>
         <button class="card" onclick="navTo('rewards')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">🎡</div><b style="font-size:13px">Daily Spin</b><div style="font-size:10px;color:var(--muted)">Try your luck</div></button>
         <button class="card" onclick="claimCheckin()" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">📅</div><b style="font-size:13px">Daily Check-in</b><div style="font-size:10px;color:var(--muted)">Claim +25 points</div></button>
         <button class="card" onclick="navTo('profile');showSub('history')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">📜</div><b style="font-size:13px">Points History</b><div style="font-size:10px;color:var(--muted)">Track your points</div></button>
+        <button class="card" onclick="navTo('ranks')" style="color:var(--text);text-align:left;cursor:pointer;font:inherit"><div style="font-size:25px">🏆</div><b style="font-size:13px">Leaderboard</b><div style="font-size:10px;color:var(--muted)">See your rank</div></button>
       </div>
     </div>
     <div style="padding:0 16px 16px"><div class="card">
@@ -316,91 +316,6 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
     </div>
     <div class="row" style="padding:0 16px 14px" id="g-cats"></div>
     <div class="grid2" style="padding:0 16px 16px" id="g-grid"></div>
-  </div>
-
-  <!-- DAILY QUIZ -->
-  <div class="screen" id="screen-quiz">
-    <div class="top-bar" style="flex-direction:column;align-items:flex-start;gap:2px;padding-bottom:10px">
-      <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-        <div style="font-size:18px;font-weight:900">🧩 Daily Quiz</div>
-        <div id="quiz-streak-badge" style="display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:5px 10px">
-          <span style="font-size:14px">🔥</span>
-          <span id="quiz-streak-val" style="font-weight:900;font-size:13px">0</span>
-          <span style="color:var(--muted);font-size:10px">day streak</span>
-        </div>
-      </div>
-      <div style="color:var(--muted);font-size:11px">New questions every day • Earn up to 150 pts</div>
-    </div>
-
-    <!-- Quiz category tabs -->
-    <div style="display:flex;gap:7px;padding:0 16px 12px;overflow-x:auto" id="quiz-cat-tabs"></div>
-
-    <!-- Quiz card -->
-    <div style="padding:0 16px 14px">
-      <div class="card" id="quiz-card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <span id="quiz-cat-label" class="badge badge-gold">General</span>
-          <span id="quiz-q-num" style="color:var(--muted);font-size:12px">Q 1 / 10</span>
-        </div>
-        <div id="quiz-question" style="font-size:17px;font-weight:800;line-height:1.45;min-height:52px;margin-bottom:16px">Loading…</div>
-        <div id="quiz-options" style="display:flex;flex-direction:column;gap:9px"></div>
-        <div id="quiz-feedback" style="margin-top:12px;font-size:13px;font-weight:700;min-height:20px"></div>
-      </div>
-    </div>
-
-    <!-- Quiz progress bar -->
-    <div style="padding:0 16px 14px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-        <span style="font-size:12px;color:var(--muted)">Today's progress</span>
-        <span id="quiz-score-label" style="font-size:12px;font-weight:800;color:var(--goldL)">0 pts earned</span>
-      </div>
-      <div class="xp-bar"><div class="xp-fill" id="quiz-prog-fill" style="width:0%"></div></div>
-      <div style="display:flex;justify-content:space-between;margin-top:5px">
-        <span id="quiz-correct-label" style="font-size:11px;color:var(--muted)">0 correct</span>
-        <span id="quiz-attempts-label" style="font-size:11px;color:var(--muted)">0 answered</span>
-      </div>
-    </div>
-
-    <!-- Today's Quiz Stats -->
-    <div style="padding:0 16px 14px">
-      <div class="card" style="border-color:rgba(124,58,237,.4)">
-        <div class="sec-header"><span class="sec-title">📊 Today's Stats</span></div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-          <div class="card2" style="padding:10px;text-align:center">
-            <div style="font-size:22px">✅</div>
-            <div id="qs-correct" style="font-weight:900;font-size:18px">0</div>
-            <div style="font-size:10px;color:var(--muted)">Correct</div>
-          </div>
-          <div class="card2" style="padding:10px;text-align:center">
-            <div style="font-size:22px">❌</div>
-            <div id="qs-wrong" style="font-weight:900;font-size:18px">0</div>
-            <div style="font-size:10px;color:var(--muted)">Wrong</div>
-          </div>
-          <div class="card2" style="padding:10px;text-align:center">
-            <div style="font-size:22px">⭐</div>
-            <div id="qs-pts" style="font-weight:900;font-size:18px">0</div>
-            <div style="font-size:10px;color:var(--muted)">Pts earned</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- All-time Quiz Stats -->
-    <div style="padding:0 16px 16px">
-      <div class="card">
-        <div class="sec-header"><span class="sec-title">🏅 All-time Quiz Record</span><span class="badge" id="quiz-accuracy-badge">0% acc</span></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div class="card2" style="padding:10px;text-align:center">
-            <div style="font-size:11px;color:var(--muted)">Total answered</div>
-            <div id="qt-total" style="font-weight:900;font-size:17px">0</div>
-          </div>
-          <div class="card2" style="padding:10px;text-align:center">
-            <div style="font-size:11px;color:var(--muted)">Best streak</div>
-            <div id="qt-best-streak" style="font-weight:900;font-size:17px">0 🔥</div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- REWARDS -->
@@ -587,8 +502,8 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
   <div id="navbar">
     <div class="nav-item active" data-s="home" onclick="navTo('home')"><div class="nav-icon">🏠</div>Home</div>
     <div class="nav-item" data-s="games" onclick="navTo('games')"><div class="nav-icon">🎮</div>Games</div>
-    <div class="nav-item" data-s="quiz" onclick="navTo('quiz')"><div class="nav-icon">🧩</div>Quiz</div>
     <div class="nav-item" data-s="rewards" onclick="navTo('rewards')"><div class="nav-icon">🎁</div>Rewards</div>
+    <div class="nav-item" data-s="ranks" onclick="navTo('ranks')"><div class="nav-icon">🏆</div>Ranks</div>
     <div class="nav-item" data-s="profile" onclick="navTo('profile')"><div class="nav-icon">👤</div>Profile</div>
   </div>
 
@@ -830,7 +745,6 @@ function navTo(id) {
   if(id==='ranks') renderLeaderboard('Weekly');
   if(id==='profile'){showSub('main');renderProfileStats();renderProfileMenu();}
   if(id==='rewards'){renderAchievements();updateSpinBtn();updateCheckinBtn();updateMissionUI();}
-  if(id==='quiz'){initQuiz();}
   document.getElementById('navbar').style.display = id==='game' ? 'none' : 'flex';
 }
 let activeGameId='memory';
@@ -1164,4 +1078,108 @@ function spaceNextWave(){
     `</div><div id="space-btn-row" style="margin-top:10px"></div>`;
 }
 function shootEnemy(el){
- 
+  if(arcadeFinished||el.disabled)return;
+  el.disabled=true; el.textContent='💥'; el.style.background='rgba(239,68,68,.2)';
+  spaceKills++;
+  setArcadeScore(spaceKills*5);
+  const alive=document.querySelectorAll('#space-field button:not(:disabled)').length;
+  if(alive===0){
+    if(spaceWave>=4)finishArcadeGame(50+spaceKills*3,'Space Shooter — all waves cleared!');
+    else{toast(`Wave ${spaceWave} cleared! 🚀`);setTimeout(spaceNextWave,600);}
+  }
+}
+// Chess tactics quiz
+const chessQs=[['Which piece moves in an L-shape?',['Knight','Bishop','Rook'],0],['Which piece moves diagonally?',['Rook','Bishop','King'],1],['What is it called when the king is under attack?',['Check','Fork','Pin'],0],['Which piece is usually most powerful?',['Pawn','Queen','Knight'],1],['How does a pawn capture?',['Straight ahead','Diagonally','Backward'],1]];let chessRound=0;
+function nextChess(){if(chessRound>=5){finishArcadeGame(90,'Chess Challenge completed');return;}let q=chessQs[chessRound];document.getElementById('chess-question').textContent=`${chessRound+1}. ${q[0]}`;document.getElementById('chess-options').innerHTML=q[1].map((v,i)=>`<button class="btn btn-gray" style="padding:12px" onclick="answerChess(${i})">${v}</button>`).join('');}
+function answerChess(i){if(i===chessQs[chessRound][2])setArcadeScore(arcadeScore+10);else toast('Try the next challenge!');chessRound++;nextChess();}
+
+function showSub(name) {
+  document.querySelectorAll('#screen-profile .sub').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sub-'+name).classList.add('active');
+  if(name==='history') renderHistory('all');
+  if(name==='settings') renderSettings();
+  if(name==='ach') renderFullAch();
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════
+let toastT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.style.display='block';
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>el.style.display='none', 2200);
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER ALL
+// ═══════════════════════════════════════════════════════
+function renderAll() {
+  updateHomeDisplay();
+  renderPopularGames(); set('h-games-completed',fmtN(P.gamesPlayed||0)); set('h-record-count',fmtN(Object.keys(P.gameStats||{}).length));
+  renderGames('All');
+  renderLeaderboard('Weekly');
+  renderProfileStats();
+  renderProfileMenu();
+  renderAchievements();
+  updateMissionUI();
+  updateSpinBtn();
+  updateCheckinBtn();
+  renderWheelSegs();
+}
+
+// ═══════════════════════════════════════════════════════
+//  HOME DISPLAY
+// ═══════════════════════════════════════════════════════
+function updateHomeDisplay() {
+  set('h-games-completed',fmtN(P.gamesPlayed||0)); set('h-record-count',fmtN(Object.keys(P.gameStats||{}).length));
+  const pct = Math.min((P.xp/P.maxXp)*100,100);
+  set('h-av', null, {innerHTML: P.avatar});
+  set('h-name', P.name);
+  set('h-lv', 'Lv.'+P.level);
+  set('h-xp-t', P.xp+'/'+P.maxXp+' XP');
+  styleW('h-xp-f', pct+'%');
+  set('h-pts', fmtN(P.points));
+  set('h-games-played', fmtN(P.gamesPlayed)); set('h-total-earned', fmtN(P.totalPtsEarned));
+  set('h-achievements', fmtN((P.achievementsUnlocked||[]).length)); set('h-streak', fmtN(P.checkInStreak));
+  updateMissionUI();
+  // Also update profile
+  set('p-av', null, {innerHTML: P.avatar});
+  set('p-name', P.name);
+  set('p-id', 'ID: '+(P.id||'—'));
+  set('p-lv', '👑 Lv.'+P.level);
+  set('p-xp-t', P.xp+'/'+P.maxXp+' XP');
+  styleW('p-xp-f', pct+'%');
+}
+function set(id, text, attrs) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  if(text!==null && text!==undefined) el.textContent = text;
+  if(attrs) Object.assign(el, attrs);
+}
+function styleW(id, w) {
+  const el = document.getElementById(id);
+  if(el) el.style.width = w;
+}
+function fmtN(n) { return Number(n||0).toLocaleString(); }
+
+// ═══════════════════════════════════════════════════════
+//  MISSION
+// ═══════════════════════════════════════════════════════
+function updateMissionUI() {
+  const prog = P.missionProgress||0;
+  const pct = Math.min((prog/3)*100,100)+'%';
+  const txt = prog+'/3';
+  ['h-miss-f','r-miss-f'].forEach(id=>styleW(id,pct));
+  ['h-miss-t','r-miss-t'].forEach(id=>set(id,txt));
+}
+
+// ═══════════════════════════════════════════════════════
+//  POINTS & XP
+// ═══════════════════════════════════════════════════════
+function addPoints(pts, label, icon) {
+  pts = Math.max(0, Math.floor(Number(pts)||0));
+  if(!pts) return;
+  P.points = Math.max(0, Number(P.points)||0) + pts;
+  P.totalPtsE
