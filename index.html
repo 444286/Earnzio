@@ -235,6 +235,12 @@ html,body{width:100%;height:100%;background:#000;font-family:'Nunito',sans-serif
       <div class="row" id="h-pop-games"></div>
     </div>
 
+    <!-- More games on Home -->
+    <div style="padding:0 16px 14px">
+      <div class="sec-header"><span class="sec-title">🎯 More Games to Play</span><span class="see-all" onclick="navTo('games')">All 30 →</span></div>
+      <div id="h-more-games" class="grid2"></div>
+    </div>
+
     <!-- Daily Challenge -->
     <div style="padding:0 16px 16px">
       <div class="card" style="border-color:rgba(124,58,237,.5)">
@@ -489,6 +495,29 @@ const GAMES_DATA = [
   {id:'block',  name:'Block Puzzle',    icon:'🧩', cat:'Puzzle',  playable:true},
   {id:'space',  name:'Space Shooter',   icon:'🚀', cat:'Arcade',  playable:true},
   {id:'chess',  name:'Chess Challenge', icon:'♟️', cat:'Classic', playable:true},
+  {id:'word',name:'Word Scramble',icon:'🔤',cat:'Brain',playable:true},
+  {id:'color',name:'Color Rush',icon:'🎨',cat:'Arcade',playable:true},
+  {id:'rps',name:'Rock Paper Scissors',icon:'✊',cat:'Classic',playable:true},
+  {id:'reaction',name:'Reaction Test',icon:'⚡',cat:'Arcade',playable:true},
+  {id:'trivia',name:'Quick Trivia',icon:'❓',cat:'Brain',playable:true},
+  {id:'number',name:'Number Hunt',icon:'🔎',cat:'Puzzle',playable:true},
+  {id:'oddone',name:'Odd One Out',icon:'🧐',cat:'Brain',playable:true},
+  {id:'sequence',name:'Sequence Memory',icon:'🔢',cat:'Brain',playable:true},
+  {id:'tapfast',name:'Tap Challenge',icon:'👆',cat:'Arcade',playable:true},
+  {id:'higher',name:'Higher or Lower',icon:'📈',cat:'Puzzle',playable:true},
+  {id:'simon',name:'Simon Says',icon:'🟩',cat:'Classic',playable:true},
+  {id:'coin',name:'Coin Flip',icon:'🪙',cat:'Classic',playable:true},
+  {id:'typing',name:'Typing Sprint',icon:'⌨️',cat:'Brain',playable:true},
+  {id:'anagram',name:'Anagram Master',icon:'📝',cat:'Puzzle',playable:true},
+  {id:'maze',name:'Maze Escape',icon:'🌀',cat:'Puzzle',playable:true},
+  {id:'mines',name:'Safe Tiles',icon:'💣',cat:'Puzzle',playable:true},
+  {id:'basket',name:'Hoop Shot',icon:'🏀',cat:'Arcade',playable:true},
+  {id:'penalty',name:'Penalty Kick',icon:'⚽',cat:'Arcade',playable:true},
+  {id:'dino',name:'Dino Jump',icon:'🦖',cat:'Arcade',playable:true},
+  {id:'match3',name:'Gem Match',icon:'💎',cat:'Puzzle',playable:true},
+  {id:'sudoku',name:'Mini Sudoku',icon:'🔳',cat:'Brain',playable:true},
+  {id:'connect',name:'Connect Four',icon:'🔴',cat:'Classic',playable:true},
+  {id:'wordguess',name:'Word Guess',icon:'🧩',cat:'Brain',playable:true},
 ];
 
 const ALL_ACHIEVEMENTS = [
@@ -710,8 +739,58 @@ function renderArcadeGame(id){
   shell(`<div class="card" style="text-align:center"><div style="font-weight:800;margin-bottom:8px">Tap the enemy ships before they escape!</div><div id="space-field" class="grid2"></div><div style="color:var(--muted);font-size:11px;margin-top:10px">Destroy 10 ships.</div></div>`);startSpace();
  } else if(id==='chess'){
   shell(`<div class="card"><div style="font-size:12px;color:var(--muted);margin-bottom:8px">CHESS TACTICS • 5 challenges</div><div id="chess-question" style="font-size:17px;font-weight:900;margin-bottom:14px"></div><div id="chess-options" style="display:flex;flex-direction:column;gap:8px"></div></div>`);nextChess();
+ } else {
+  startExtraGame(id,shell);
  }
 }
+let extraRound=0,extraCorrect=0,extraData=null,extraTimer=null;
+const EXTRA_BANKS={
+ word:[['TAC','CAT'],['GDO','DOG'],['NUS','SUN'],['RTA','RAT'],['PMA','MAP'],['KBOO','BOOK']],
+ anagram:[['LPEPA','APPLE'],['RAEHT','HEART'],['NRAI','RAIN'],['KLOOC','CLOCK'],['RTEWA','WATER']],
+ trivia:[['Which planet is known as the Red Planet?',['Mars','Venus','Jupiter'],0],['How many sides has a hexagon?',['5','6','8'],1],['Which ocean is largest?',['Atlantic','Indian','Pacific'],2],['How many days are in a leap year?',['365','366','364'],1],['Which animal is the tallest?',['Giraffe','Elephant','Horse'],0]],
+ color:[['Tap the color name: RED',['RED','BLUE','GREEN'],0],['Tap the color name: BLUE',['GREEN','BLUE','YELLOW'],1],['Tap the color name: YELLOW',['YELLOW','RED','PURPLE'],0],['Tap the color name: GREEN',['PINK','ORANGE','GREEN'],2],['Tap the color name: PURPLE',['PURPLE','BLUE','BLACK'],0]],
+ oddone:[['Find the odd one out',['🍎','🍌','🚗','🍇'],2],['Find the odd one out',['🐶','🐱','🐰','🍕'],3],['Find the odd one out',['🚲','🚌','🚕','🌳'],3],['Find the odd one out',['⚽','🏀','🎾','🍉'],3],['Find the odd one out',['🌹','🌻','🌷','📱'],3]],
+ higher:[['Which number is highest?',['18','42','27'],1],['Which number is highest?',['9','6','13'],2],['Which number is highest?',['55','51','49'],0],['Which number is highest?',['72','27','62'],0],['Which number is highest?',['100','99','101'],2]],
+ number:[['Choose the even number',['13','21','28','35'],2],['Choose the largest number',['19','91','49','59'],1],['Choose the number divisible by 5',['22','34','45','48'],2],['Choose the smallest number',['17','7','27','70'],1],['Choose the odd number',['12','18','24','31'],3]],
+ typing:[['Which word is spelled correctly?',['FRIEND','FREIND','FREND'],0],['Which word is spelled correctly?',['PUZZLE','PUZLE','PUZZEL'],0],['Which word is spelled correctly?',['GAMING','GAMIN','GAMMING'],0],['Which word is spelled correctly?',['PLANET','PLENET','PLANIT'],0],['Which word is spelled correctly?',['PURPLE','PURPEL','PURPUL'],0]],
+ wordguess:[['I have keys but no locks. What am I?',['Keyboard','Door','Map'],0],['I have a face and two hands.',['Clock','Book','Shoe'],0],['I get wetter as I dry.',['Towel','Cloud','Soap'],0],['I have pages but am not a website.',['Book','Bottle','Chair'],0],['I have a neck but no head.',['Bottle','Snake','Shirt'],0]],
+};
+const EXTRA_INFO={
+ rps:['Choose your move. Best of five rounds.','rps'],reaction:['Tap the glowing target as quickly as you can.','tap'],sequence:['Remember the number sequence and choose it in order.','sequence'],tapfast:['Tap the target 15 times to finish.','tap'],coin:['Call heads or tails. Five lucky flips!','coin'],maze:['Find the exit by choosing the correct path.','quiz'],mines:['Choose safe tiles. Avoid the hidden mine.','mines'],basket:['Aim for the hoop: choose the best shot.','quiz'],penalty:['Pick a corner to score the penalty.','quiz'],dino:['Jump over obstacles by tapping JUMP.','tap'],match3:['Match the gem shown by tapping matching gems.','quiz'],sudoku:['Solve each mini number clue.','quiz'],connect:['Connect four matching tokens in the target row.','quiz'],simon:['Repeat the displayed color pattern.','sequence']
+};
+function startExtraGame(id,shell){
+ extraRound=0;extraCorrect=0;clearInterval(extraTimer);extraData={id,step:0,score:0,seq:[],mine:Math.floor(Math.random()*9),safe:0,goal:15};
+ const info=EXTRA_INFO[id];
+ if(id==='tapfast'||id==='dino'||id==='reaction'){
+  shell(`<div class="card" style="text-align:center"><div style="font-weight:900;font-size:18px;margin-bottom:8px">${info[0]}</div><div id="extra-progress" style="color:var(--goldL);font-weight:900;margin:12px">0 / ${id==='tapfast'?15:10}</div><button id="extra-tap" class="btn btn-purple" style="width:170px;height:170px;border-radius:50%;font-size:24px;margin:14px" onclick="extraTap()">${id==='dino'?'JUMP 🦖':id==='reaction'?'⚡ TAP':'TAP!'}</button><div style="color:var(--muted);font-size:12px">Tap the button to score.</div></div>`);
+ } else if(id==='rps'){
+  shell(`<div class="card" style="text-align:center"><b>Rock · Paper · Scissors</b><div id="extra-prompt" style="font-size:17px;margin:18px">Round 1 / 5</div><div class="grid2"><button class="btn btn-gray" style="padding:18px;font-size:25px" onclick="extraRps('✊')">✊ Rock</button><button class="btn btn-gray" style="padding:18px;font-size:25px" onclick="extraRps('✋')">✋ Paper</button><button class="btn btn-gray" style="padding:18px;font-size:25px" onclick="extraRps('✌️')">✌️ Scissors</button></div><div id="extra-feedback" style="margin-top:14px;color:var(--goldL)"></div></div>`);
+ } else if(id==='coin'){
+  shell(`<div class="card" style="text-align:center"><div id="extra-prompt" style="font-size:17px;margin:10px">${info[0]}</div><div id="coin-result" style="font-size:55px;margin:20px">🪙</div><div class="grid2"><button class="btn btn-purple" style="padding:15px" onclick="extraCoin('Heads')">Heads</button><button class="btn btn-purple" style="padding:15px" onclick="extraCoin('Tails')">Tails</button></div><div id="extra-feedback" style="margin-top:12px"></div></div>`);
+ } else if(id==='mines'){
+  shell(`<div class="card" style="text-align:center"><div style="margin-bottom:12px">Find 6 safe tiles. Avoid the hidden mine!</div><div id="extra-tiles" class="grid2">${Array.from({length:9},(_,i)=>`<button class="btn btn-gray" style="padding:20px;font-size:24px" onclick="extraMine(${i})">❔</button>`).join('')}</div></div>`);
+ } else if(id==='sequence'||id==='simon'){
+  const seq=Array.from({length:5},()=>id==='simon'?['🟩','🟥','🟦','🟨'][Math.floor(Math.random()*4)]:String(1+Math.floor(Math.random()*4)));extraData.seq=seq;
+  shell(`<div class="card" style="text-align:center"><div id="extra-prompt" style="margin-bottom:12px">Remember this sequence:</div><div id="extra-seq" style="font-size:30px;letter-spacing:8px;padding:20px;background:var(--bg3);border-radius:12px">${seq.join(' ')}</div><button class="btn btn-purple" style="padding:10px 20px;margin:12px" onclick="document.getElementById('extra-seq').textContent='? ? ? ? ?';document.getElementById('extra-input').style.display='grid'">I memorized it</button><div id="extra-input" class="grid2" style="display:none">${(id==='simon'?['🟩','🟥','🟦','🟨']:['1','2','3','4']).map(v=>`<button class="btn btn-gray" style="padding:15px;font-size:20px" onclick="extraSequence('${v}')">${v}</button>`).join('')}</div><div id="extra-feedback"></div></div>`);
+ } else {
+  shell(`<div class="card" style="text-align:center"><div id="extra-count" style="color:var(--muted);font-size:12px">Challenge 1 / 5</div><div id="extra-prompt" style="font-size:19px;font-weight:900;margin:18px 0">Ready?</div><div id="extra-options" style="display:grid;grid-template-columns:1fr 1fr;gap:9px"></div><div id="extra-feedback" style="margin-top:12px;color:var(--goldL)"></div></div>`);
+  nextExtraQuestion(id);
+ }
+}
+function nextExtraQuestion(id){
+ const bank=EXTRA_BANKS[id]||EXTRA_BANKS.trivia;let q=bank[extraRound%bank.length];
+ if(id==='word'||id==='anagram'){
+  let answer=q[1],scramble=q[0].split('').sort(()=>Math.random()-.5).join('');extraData.answer=answer;document.getElementById('extra-prompt').textContent=`Unscramble: ${scramble}`;
+  document.getElementById('extra-options').innerHTML=[answer,...answer.split('').sort(()=>Math.random()-.5).join(''),answer.split('').reverse().join(''),answer+'S'].sort(()=>Math.random()-.5).map(v=>`<button class="btn btn-gray" style="padding:13px" onclick="answerExtra('${v}')">${v}</button>`).join('');
+ }else{extraData.answer=q[2];document.getElementById('extra-prompt').textContent=q[0];document.getElementById('extra-options').innerHTML=q[1].map((v,i)=>`<button class="btn btn-gray" style="padding:13px" onclick="answerExtra(${i})">${v}</button>`).join('');}
+ document.getElementById('extra-count').textContent=`Challenge ${extraRound+1} / 5`;
+}
+function answerExtra(v){if(arcadeFinished)return;let id=extraData.id,correct=(id==='word'||id==='anagram')?v===extraData.answer:v===extraData.answer;if(correct){extraCorrect++;setArcadeScore(arcadeScore+10);document.getElementById('extra-feedback').textContent='Correct! +10 score';}else document.getElementById('extra-feedback').textContent='Not quite — next one!';extraRound++;if(extraRound>=5){finishArcadeGame(35+extraCorrect*8,`${GAMES_DATA.find(g=>g.id===id).name} completed`);return;}setTimeout(()=>{if(!arcadeFinished)nextExtraQuestion(id)},450);}
+function extraTap(){if(arcadeFinished)return;extraData.step++;let goal=extraData.id==='tapfast'?15:10;document.getElementById('extra-progress').textContent=`${extraData.step} / ${goal}`;setArcadeScore(extraData.step*2);if(extraData.step>=goal)finishArcadeGame(45,`${GAMES_DATA.find(g=>g.id===extraData.id).name} completed`);}
+function extraRps(move){if(arcadeFinished)return;let arr=['✊','✋','✌️'],cpu=arr[Math.floor(Math.random()*3)],win=(move==='✊'&&cpu==='✌️')||(move==='✋'&&cpu==='✊')||(move==='✌️'&&cpu==='✋');if(win){extraCorrect++;setArcadeScore(arcadeScore+10);}document.getElementById('extra-feedback').textContent=`You ${move} · CPU ${cpu} — ${move===cpu?'Draw':win?'You win!':'CPU wins'}`;extraRound++;if(extraRound>=5){finishArcadeGame(25+extraCorrect*12,'Rock Paper Scissors completed');return;}document.getElementById('extra-prompt').textContent=`Round ${extraRound+1} / 5`}
+function extraCoin(call){if(arcadeFinished)return;let result=Math.random()<.5?'Heads':'Tails';document.getElementById('coin-result').textContent=result==='Heads'?'🙂':'🪙';if(call===result){extraCorrect++;setArcadeScore(arcadeScore+10);}document.getElementById('extra-feedback').textContent=`It was ${result}!`;extraRound++;if(extraRound>=5){finishArcadeGame(20+extraCorrect*12,'Coin Flip completed');return;}document.getElementById('extra-prompt').textContent=`Flip ${extraRound+1} / 5`}
+function extraMine(i){if(arcadeFinished)return;let b=document.querySelectorAll('#extra-tiles button')[i];if(i===extraData.mine){b.textContent='💣';b.disabled=true;finishArcadeGame(10+extraData.safe*8,'Safe Tiles round ended');return;}b.textContent='💎';b.disabled=true;extraData.safe++;setArcadeScore(extraData.safe*8);if(extraData.safe>=6)finishArcadeGame(60,'Safe Tiles completed');}
+function extraSequence(v){if(arcadeFinished)return;let i=extraData.step||0;if(v!==extraData.seq[i]){document.getElementById('extra-feedback').textContent='Sequence missed!';finishArcadeGame(10+i*5,'Sequence challenge ended');return;}extraData.step=i+1;if(extraData.step>=extraData.seq.length)finishArcadeGame(70,'Sequence Memory completed');else document.getElementById('extra-feedback').textContent=`Correct ${extraData.step}/5`}
 function setArcadeScore(n){arcadeScore=n;const e=document.getElementById('arcade-score');if(e)e.textContent=n;}
 // 2048
 let board2048=[];function start2048(){board2048=Array(16).fill(0);spawn2048();spawn2048();draw2048();setArcadeScore(0);arcadeFinished=false;document.getElementById('arcade-status').textContent='Combine tiles to reach 2048.';}
@@ -899,6 +978,11 @@ function renderPopularGames() {
       <div style="font-size:26px">${g.icon}</div>
       <div style="color:var(--muted);font-size:9px;font-weight:700;text-align:center">${g.name}</div>
     </div>`).join('');
+  renderHomeMoreGames();
+}
+function renderHomeMoreGames(){
+ const el=document.getElementById('h-more-games');if(!el)return;
+ el.innerHTML=GAMES_DATA.slice(4,10).map(g=>`<button class="card" onclick="openGame('${g.id}')" style="display:flex;align-items:center;gap:10px;text-align:left;color:var(--text);font:inherit;cursor:pointer;padding:11px"><span style="font-size:26px">${g.icon}</span><span style="flex:1;min-width:0"><b style="font-size:12px;display:block">${g.name}</b><small style="color:var(--green);font-size:10px">▶ PLAY NOW</small></span></button>`).join('');
 }
 
 // ═══════════════════════════════════════════════════════
